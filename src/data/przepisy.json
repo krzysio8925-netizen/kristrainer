@@ -1,0 +1,1198 @@
+{
+ "schema": "kris-trainer/recipes@1",
+ "note": "Przepisy bazowe na ok. 1 porcję. Rola składnika r: P – źródło białka, C – węglowodanów, F – tłuszczu (te trzy silnik skaluje do makro posiłku), X – dodatek o stałej ilości (warzywa, sosy). Gramatury produktów surowych/suchych.",
+ "serveLabels": {
+  "hot": "na ciepło",
+  "cold": "na zimno",
+  "micro": "do odgrzania w mikrofali",
+  "cold_or_micro": "na zimno lub z mikrofali"
+ },
+ "menus": {
+  "T": [
+   {
+    "id": "A",
+    "name": "Klasyka meal prep",
+    "meals": [
+     "t-owsianka",
+     "t-teriyaki",
+     "t-makaron-tunczyk",
+     "t-bolognese",
+     "t-dorsz"
+    ]
+   },
+   {
+    "id": "B",
+    "name": "Tex-mex i burger",
+    "meals": [
+     "t-jajecznica-awokado",
+     "t-chili",
+     "t-bajgiel",
+     "t-stirfry",
+     "t-burger"
+    ]
+   },
+   {
+    "id": "C",
+    "name": "Śródziemnomorsko",
+    "meals": [
+     "t-placuszki",
+     "t-tabbouleh",
+     "t-makaron-ananas",
+     "t-krewetki",
+     "t-poledwiczka"
+    ]
+   }
+  ],
+  "N": [
+   {
+    "id": "A",
+    "name": "Domowo i sycąco",
+    "meals": [
+     "n-shakshuka",
+     "n-curry",
+     "n-nicejska",
+     "n-gulasz"
+    ]
+   },
+   {
+    "id": "B",
+    "name": "Włoskie smaki",
+    "meals": [
+     "n-zapiekanki",
+     "n-makaron-szpinak",
+     "n-miska-meksykanska",
+     "n-pizza-tortilla"
+    ]
+   },
+   {
+    "id": "C",
+    "name": "Azja i Meksyk",
+    "meals": [
+     "n-burrito",
+     "n-klopsiki",
+     "n-poke",
+     "n-blacha"
+    ]
+   }
+  ]
+ },
+ "recipes": {
+  "t-owsianka": {
+   "name": "Owsianka białkowa z bananem i masłem orzechowym",
+   "serve": "hot",
+   "time": 7,
+   "ingredients": [
+    {
+     "p": "Płatki owsiane",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Banan",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "WPI",
+     "g": 30,
+     "r": "P"
+    },
+    {
+     "p": "Masło orzechowe 100%",
+     "g": 15,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Płatki zalej ok. 200 ml wody, dodaj szczyptę soli i gotuj 3–4 min (albo 2 min w mikrofali).",
+    "Zdejmij z ognia, odczekaj minutę i wmieszaj odżywkę – nie gotuj jej, bo się zważy.",
+    "Dodaj pokrojonego banana, masło orzechowe i cynamon."
+   ],
+   "tip": "Szczypta soli i cynamon robią z owsianki deser – bez dodatkowych kalorii."
+  },
+  "t-teriyaki": {
+   "name": "Kurczak teriyaki z ryżem jaśminowym i brokułem",
+   "serve": "micro",
+   "time": 25,
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Brokuł",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 8,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Brokuł ugotuj na parze 4 min, żeby został chrupiący.",
+    "Kurczaka w kostce obsmaż na oleju sezamowym 6–7 min.",
+    "Dodaj sos sojowy, miód, starty imbir i czosnek; redukuj 1–2 min, aż sos oblepi mięso.",
+    "Przełóż do pojemnika. W pracy odgrzewaj 2 min w mikrofali, pod przykrywką."
+   ],
+   "tip": "Ugotuj od razu 3 porcje – teriyaki trzyma się w lodówce 3 dni."
+  },
+  "t-makaron-tunczyk": {
+   "name": "Sałatka makaronowa z tuńczykiem i kukurydzą",
+   "serve": "cold",
+   "time": 15,
+   "ingredients": [
+    {
+     "p": "Makaron durum",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Tuńczyk w wodzie",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj makaron al dente i przelej zimną wodą.",
+    "Wymieszaj z odsączonym tuńczykiem, kukurydzą i pokrojoną papryką.",
+    "Sos: jogurt + łyżeczka musztardy + sok z cytryny + pieprz. Polej i wymieszaj."
+   ],
+   "tip": "Najlepsza schłodzona – zrób wieczorem, w lodówce trzyma się 2 dni."
+  },
+  "t-bolognese": {
+   "name": "Spaghetti bolognese z indykiem",
+   "serve": "hot",
+   "time": 20,
+   "ingredients": [
+    {
+     "p": "Pierś z indyka mielona",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Makaron durum",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 200,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę zeszklij na suchej patelni z łyżką wody, dodaj mięso i rozbij widelcem.",
+    "Wlej passatę, dopraw oregano, bazylią, czosnkiem, solą i szczyptą cukru; duś 10 min.",
+    "Wymieszaj z ugotowanym makaronem."
+   ],
+   "tip": "Po treningu bez parmezanu i oliwy – tłuszcz trzymamy tu nisko."
+  },
+  "t-dorsz": {
+   "name": "Dorsz pieczony z ziemniakami i mizerią",
+   "serve": "hot",
+   "time": 25,
+   "ingredients": [
+    {
+     "p": "Dorsz",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj w osolonej wodzie z gałązką koperku.",
+    "Dorsza skrop oliwą i cytryną, posól, posyp papryką słodką; piecz 12–15 min w 200°C.",
+    "Mizeria: ogórek w plasterkach + jogurt + koperek + sól i pieprz."
+   ],
+   "tip": "Ryba jest gotowa, gdy łatwo rozchodzi się na płatki – nie przepiekaj jej."
+  },
+  "t-jajecznica-awokado": {
+   "name": "Jajecznica na toście z awokado i pomidorkami",
+   "serve": "hot",
+   "time": 8,
+   "ingredients": [
+    {
+     "p": "Białka jaj",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Pieczywo pełnoziarniste",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Roztrzep jajka z białkami, solą i pieprzem.",
+    "Smaż na małym ogniu, cały czas mieszając; zdejmij, gdy jest jeszcze lekko wilgotna.",
+    "Chleb opiecz, posmaruj awokado rozgniecionym z solą i cytryną, połóż jajecznicę; obok pomidorki."
+   ],
+   "tip": "Jajecznica dochodzi na talerzu – zdejmij ją chwilę wcześniej, będzie kremowa."
+  },
+  "t-chili": {
+   "name": "Chili con carne z ryżem",
+   "serve": "micro",
+   "time": 30,
+   "ingredients": [
+    {
+     "p": "Wołowina mielona 95%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę podsmaż na oliwie, dodaj mięso i smaż do zrumienienia.",
+    "Dodaj kumin, wędzoną paprykę, chili i czosnek, potem passatę, fasolę i kukurydzę; duś 15 min.",
+    "Podawaj z ryżem."
+   ],
+   "tip": "Chili smakuje lepiej na drugi dzień – idealne do pojemnika."
+  },
+  "t-bajgiel": {
+   "name": "Bajgiel z twarożkiem, miodem i bananem",
+   "serve": "cold",
+   "time": 5,
+   "ingredients": [
+    {
+     "p": "Bajgiel",
+     "g": 90,
+     "r": "C"
+    },
+    {
+     "p": "Banan",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Miód",
+     "g": 15,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Twaróg rozgnieć widelcem z miodem i szczyptą cynamonu.",
+    "Bajgiel przekrój, nałóż twarożek i plasterki banana.",
+    "Zawiń w folię lub papier – spokojnie wytrzyma kilka godzin."
+   ],
+   "tip": "Zjedz 60–90 min przed treningiem – szybkie węgle, mało tłuszczu, lekki żołądek."
+  },
+  "t-stirfry": {
+   "name": "Stir-fry z kurczakiem i makaronem ryżowym",
+   "serve": "hot",
+   "time": 15,
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Makaron ryżowy",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Mieszanka warzyw stir-fry",
+     "g": 200,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 20,
+     "r": "X"
+    },
+    {
+     "p": "Sos słodkie chili",
+     "g": 15,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Makaron zalej wrzątkiem na 5 min i odcedź.",
+    "Kurczaka w paskach smaż na mocno rozgrzanej patelni z powłoką (bez tłuszczu lub z kroplą oleju w sprayu) 5 min.",
+    "Dodaj warzywa na 3–4 min, potem makaron, sos sojowy i słodkie chili; wymieszaj i posyp szczypiorkiem."
+   ],
+   "tip": "Patelnia musi być bardzo gorąca – wtedy warzywa są chrupiące, a nie duszone."
+  },
+  "t-burger": {
+   "name": "Burger wołowy z guacamole i sosem jogurtowym",
+   "serve": "hot",
+   "time": 15,
+   "ingredients": [
+    {
+     "p": "Wołowina mielona 95%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Bułka pełnoziarnista",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 30,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Mięso dopraw solą, pieprzem i czosnkiem, uformuj kotlet nieco szerszy od bułki.",
+    "Smaż na mocno rozgrzanej patelni grillowej 3–4 min z każdej strony.",
+    "Bułkę opiecz; posmaruj guacamole (awokado + limonka + sól), dodaj kotlet, pomidor, cebulę i sos jogurtowo-czosnkowy."
+   ],
+   "tip": "Zrób kciukiem wgłębienie na środku kotleta – nie napuchnie przy smażeniu."
+  },
+  "t-placuszki": {
+   "name": "Placuszki owsiane ze skyrem i malinami",
+   "serve": "hot",
+   "time": 12,
+   "ingredients": [
+    {
+     "p": "Płatki owsiane",
+     "g": 50,
+     "r": "C"
+    },
+    {
+     "p": "Maliny",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Masło orzechowe 100%",
+     "g": 10,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Zblenduj płatki z białkami, jajkiem, łyżeczką proszku do pieczenia i szczyptą soli.",
+    "Smaż małe placuszki na suchej patelni z powłoką, ok. 1,5 min z każdej strony.",
+    "Podawaj ze skyrem, malinami i masłem orzechowym."
+   ],
+   "tip": "Ciasto odstaw na 2 min przed smażeniem – płatki napęcznieją i placki nie będą się rozlewać."
+  },
+  "t-tabbouleh": {
+   "name": "Tabbouleh z kurczakiem i fetą",
+   "serve": "cold",
+   "time": 25,
+   "ingredients": [
+    {
+     "p": "Kasza bulgur",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Ser feta light",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bulgur zalej wrzątkiem w proporcji 1:2 i przykryj na 10 min.",
+    "Kurczaka przypraw papryką, czosnkiem i oregano, upiecz lub usmaż, pokrój.",
+    "Wymieszaj z kaszą, ogórkiem, pomidorem, natką, miętą, fetą, oliwą i sokiem z cytryny."
+   ],
+   "tip": "Je się na zimno – nic nie trzeba odgrzewać, a dzień później jest jeszcze lepsze."
+  },
+  "t-makaron-ananas": {
+   "name": "Sałatka makaronowa z kurczakiem, ananasem i słodkim chili",
+   "serve": "cold",
+   "time": 20,
+   "ingredients": [
+    {
+     "p": "Makaron durum",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Ananas",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 130,
+     "r": "P"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Sos słodkie chili",
+     "g": 20,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Makaron ugotuj i przestudź.",
+    "Kurczaka ugotuj lub upiecz bez tłuszczu, pokrój w kostkę.",
+    "Wymieszaj z ananasem, papryką, dymką, sosem słodkie chili i sokiem z limonki."
+   ],
+   "tip": "Słodko-pikantny sos zastępuje majonez – sałatka zostaje lekka przed treningiem."
+  },
+  "t-krewetki": {
+   "name": "Krewetki czosnkowe ze spaghetti i pomidorkami",
+   "serve": "hot",
+   "time": 15,
+   "ingredients": [
+    {
+     "p": "Krewetki",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Makaron durum",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Pomidor",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Makaron ugotuj al dente, zachowaj pół szklanki wody z gotowania.",
+    "Na patelnię wrzuć czosnek i chili z 2–3 łyżkami wody z makaronu, dodaj krewetki – po 2 min z każdej strony.",
+    "Dodaj przekrojone pomidorki, makaron i natkę; wymieszaj i dopraw cytryną."
+   ],
+   "tip": "Skrobia z wody po makaronie robi kremowy sos bez kropli tłuszczu."
+  },
+  "t-poledwiczka": {
+   "name": "Polędwiczka wieprzowa z pieczonymi ziemniakami i surówką z marchewki",
+   "serve": "hot",
+   "time": 35,
+   "ingredients": [
+    {
+     "p": "Polędwiczka wieprzowa",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Marchew",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Jabłko",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki w ćwiartkach wymieszaj z połową oliwy, solą i rozmarynem; piecz 30 min w 210°C.",
+    "Polędwiczkę natrzyj musztardą, czosnkiem i tymiankiem; obsmaż i dopiecz 12–15 min razem z ziemniakami.",
+    "Surówka: starta marchew + jabłko + sok z cytryny + reszta oliwy."
+   ],
+   "tip": "Po upieczeniu odstaw mięso na 5 min przed krojeniem – zostanie soczyste."
+  },
+  "n-shakshuka": {
+   "name": "Szybka shakshuka z chlebem żytnim",
+   "serve": "hot",
+   "time": 15,
+   "ingredients": [
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Chleb żytni",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 200,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę i paprykę podsmaż 3 min na oliwie, dodaj passatę, kumin, paprykę słodką i sól; gotuj 5 min.",
+    "Zrób dołki, wlej białka, a na nie wbij jajka; przykryj i gotuj 5–6 min na małym ogniu.",
+    "Posyp natką, podawaj z pieczywem do maczania."
+   ],
+   "tip": "Przykrywka to klucz – białko się zetnie, a żółtko zostanie płynne."
+  },
+  "n-curry": {
+   "name": "Kurczak curry z ryżem basmati i szpinakiem",
+   "serve": "micro",
+   "time": 25,
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 80,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Szpinak",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę zeszklij, dodaj kurczaka i łyżkę pasty curry (albo curry w proszku + kurkuma + imbir).",
+    "Wlej mleczko kokosowe i passatę, duś 10 min; na koniec wmieszaj szpinak.",
+    "Podawaj z ryżem."
+   ],
+   "tip": "Curry świetnie znosi mikrofalę – 2 min i smakuje jak świeże."
+  },
+  "n-nicejska": {
+   "name": "Sałatka nicejska z tuńczykiem",
+   "serve": "cold",
+   "time": 20,
+   "ingredients": [
+    {
+     "p": "Tuńczyk w wodzie",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 200,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Fasolka szparagowa",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Oliwki zielone",
+     "g": 20,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki i fasolkę ugotuj; jajko ugotuj na twardo (9 min).",
+    "Wymieszaj z tuńczykiem, pomidorem i oliwkami.",
+    "Sos: oliwa + musztarda dijon + ocet winny + sól i pieprz."
+   ],
+   "tip": "Sos trzymaj w osobnym słoiczku i polej tuż przed jedzeniem."
+  },
+  "n-gulasz": {
+   "name": "Gulasz wołowy z kaszą gryczaną i ogórkiem kiszonym",
+   "serve": "hot",
+   "time": 70,
+   "ingredients": [
+    {
+     "p": "Wołowina chuda",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Kasza gryczana",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek kiszony",
+     "g": 80,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Wołowinę w kostce obsmaż na oliwie, dodaj cebulę, paprykę, liść laurowy, ziele angielskie i paprykę słodką.",
+    "Podlej wodą i duś pod przykryciem 50–60 min (w szybkowarze 20 min).",
+    "Podawaj z kaszą i ogórkiem kiszonym."
+   ],
+   "tip": "Gulasz ugotuj od razu na 3 dni – każdego dnia jest lepszy."
+  },
+  "n-zapiekanki": {
+   "name": "Gorące kanapki z szynką z indyka i mozzarellą",
+   "serve": "hot",
+   "time": 8,
+   "ingredients": [
+    {
+     "p": "Pieczywo pełnoziarniste",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Szynka z indyka",
+     "g": 80,
+     "r": "P"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Mozzarella light",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Awokado",
+     "g": 50,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Rukola",
+     "g": 20,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Na chlebie ułóż szynkę, plastry pomidora i mozzarellę, posyp oregano.",
+    "Zapiekaj 5–6 min w piekarniku 220°C albo w opiekaczu.",
+    "Na wierzch rukola, plasterki awokado i kilka kropli octu balsamicznego; skyr zjedz obok, np. z cynamonem."
+   ],
+   "tip": "Opiekacz albo frytkownica beztłuszczowa zrobią to w 4 minuty."
+  },
+  "n-makaron-szpinak": {
+   "name": "Makaron pełnoziarnisty z kurczakiem w sosie szpinakowo-jogurtowym",
+   "serve": "micro",
+   "time": 20,
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Makaron pełnoziarnisty",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Parmezan",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Szpinak",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka w kostce usmaż na oliwie z czosnkiem, dodaj szpinak i poczekaj, aż zwiędnie.",
+    "Zdejmij z ognia, wmieszaj jogurt i parmezan, dopraw gałką muszkatołową.",
+    "Wymieszaj z ugotowanym makaronem."
+   ],
+   "tip": "Jogurt dodany poza ogniem się nie zważy. Przy odgrzewaniu dodaj łyżkę wody."
+  },
+  "n-miska-meksykanska": {
+   "name": "Meksykańska miska z indykiem, ryżem i fasolą",
+   "serve": "cold_or_micro",
+   "time": 25,
+   "ingredients": [
+    {
+     "p": "Pierś z indyka",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Indyka przypraw kuminem, wędzoną papryką, czosnkiem i limonką; usmaż i pokrój.",
+    "Ułóż w pojemniku ryż, indyka, fasolę, kukurydzę i salsę.",
+    "Awokado dodaj tuż przed jedzeniem i skrop limonką."
+   ],
+   "tip": "Jeśli odgrzewasz, wyjmij najpierw awokado i salsę – dodaj je na zimno."
+  },
+  "n-pizza-tortilla": {
+   "name": "Pizza na tortilli z kurczakiem i pieczarkami",
+   "serve": "hot",
+   "time": 20,
+   "ingredients": [
+    {
+     "p": "Tortilla pełnoziarnista",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 130,
+     "r": "P"
+    },
+    {
+     "p": "Mozzarella light",
+     "g": 50,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Pieczarki",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Rukola",
+     "g": 20,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka pokrój cienko i podsmaż z oregano; pieczarki pokrój w plasterki.",
+    "Tortillę posmaruj passatą z czosnkiem i oregano, ułóż kurczaka, pieczarki i mozzarellę.",
+    "Piecz 8–10 min w 220°C na rozgrzanej blasze; na wierzch rukola skropiona oliwą."
+   ],
+   "tip": "Rozgrzej blachę razem z piekarnikiem – spód będzie chrupiący jak w pizzerii."
+  },
+  "n-burrito": {
+   "name": "Burrito śniadaniowe z jajecznicą i fasolą",
+   "serve": "hot",
+   "time": 10,
+   "ingredients": [
+    {
+     "p": "Tortilla pszenna",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Awokado",
+     "g": 30,
+     "r": "F"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Zrób jajecznicę z białek i jajka z solą, pieprzem i szczyptą kuminu.",
+    "Tortillę podgrzej 20 s na suchej patelni.",
+    "Nałóż jajecznicę, fasolę, salsę i plasterki awokado; zawiń i przekrój na pół."
+   ],
+   "tip": "Zawinięte burrito obsmaż 30 s na patelni złączeniem do dołu – nie rozwinie się."
+  },
+  "n-klopsiki": {
+   "name": "Klopsiki z indyka w sosie pomidorowym z kaszą bulgur",
+   "serve": "micro",
+   "time": 30,
+   "ingredients": [
+    {
+     "p": "Pierś z indyka mielona",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Kasza bulgur",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Mięso wymieszaj ze startą cebulą, czosnkiem, natką, solą i pieprzem; uformuj małe klopsiki.",
+    "Obsmaż na oliwie, wlej passatę z bazylią i duś pod przykryciem 12 min.",
+    "Podawaj z bulgurem."
+   ],
+   "tip": "Mokre dłonie = gładkie klopsiki, które się nie kleją."
+  },
+  "n-poke": {
+   "name": "Poke bowl z krewetkami, mango i edamame",
+   "serve": "cold",
+   "time": 20,
+   "ingredients": [
+    {
+     "p": "Krewetki",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Mango",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Edamame",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż i dopraw łyżką octu ryżowego; krewetki ugotuj 2–3 min w osolonej wodzie.",
+    "Ułóż w misce ryż, krewetki, edamame, ogórek i mango.",
+    "Polej sosem: sos sojowy + olej sezamowy + limonka; posyp sezamem i dymką."
+   ],
+   "tip": "Ocet ryżowy w ryżu daje smak sushi i sprawia, że ryż dobrze trzyma się na zimno."
+  },
+  "n-blacha": {
+   "name": "Kurczak z batatami i warzywami z jednej blachy",
+   "serve": "hot",
+   "time": 35,
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Batat",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Cukinia",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 100,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bataty w kostce wymieszaj z połową oliwy, solą i wędzoną papryką; piecz 15 min w 210°C.",
+    "Dołóż kurczaka w kawałkach i warzywa wymieszane z resztą oliwy, czosnkiem i ziołami.",
+    "Piecz jeszcze 15–18 min, aż kurczak się zrumieni."
+   ],
+   "tip": "Rozłóż wszystko w jednej warstwie – wtedy się piecze, a nie dusi."
+  }
+ }
+}

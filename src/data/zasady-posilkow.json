@@ -1,0 +1,131 @@
+{
+ "schema": "kris-trainer/meal-rules@1",
+ "note": "Rozkład dziennego makro na posiłki w propozycjach. weights to wagi względne (silnik je normalizuje). Okołotreningowo: węglowodany 2x więcej niż w pozostałych posiłkach, tłuszcz minimalny; najwięcej tłuszczu w śniadaniu.",
+ "principles": [
+  "Posiłki przed i po treningu mają 2 razy więcej węglowodanów niż pozostałe i minimum tłuszczu – szybciej się trawią i lepiej uzupełniają glikogen.",
+  "Najwięcej tłuszczu jest w śniadaniu (ok. 1/3 dziennego tłuszczu w dzień treningowy), które ma być na ciepło i szybkie w przygotowaniu.",
+  "Posiłki 2 i 3 można zjeść na zimno albo odgrzać w mikrofali – nadają się do pracy.",
+  "Białko jest rozłożone równo na wszystkie posiłki.",
+  "Produkty ważone na surowo; dodatki (warzywa, sosy) rosną lub maleją razem z wielkością posiłku."
+ ],
+ "days": {
+  "T": {
+   "name": "Dzień treningowy",
+   "slots": [
+    {
+     "id": "P1",
+     "name": "Posiłek 1",
+     "label": "Śniadanie",
+     "requirement": "na ciepło, szybkie",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 6
+     },
+     "periWorkout": false
+    },
+    {
+     "id": "P2",
+     "name": "Posiłek 2",
+     "label": "Obiad do pracy",
+     "requirement": "na zimno lub z mikrofali",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 5
+     },
+     "periWorkout": false
+    },
+    {
+     "id": "P3",
+     "name": "Posiłek 3",
+     "label": "Przed treningiem",
+     "requirement": "na zimno lub z mikrofali",
+     "weights": {
+      "p": 1,
+      "c": 2,
+      "f": 1
+     },
+     "periWorkout": true
+    },
+    {
+     "id": "P4",
+     "name": "Posiłek 4",
+     "label": "Po treningu",
+     "requirement": "dowolny",
+     "weights": {
+      "p": 1,
+      "c": 2,
+      "f": 1
+     },
+     "periWorkout": true
+    },
+    {
+     "id": "P5",
+     "name": "Posiłek 5",
+     "label": "Kolacja",
+     "requirement": "dowolny",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 5
+     },
+     "periWorkout": false
+    }
+   ]
+  },
+  "N": {
+   "name": "Dzień nietreningowy",
+   "slots": [
+    {
+     "id": "P1",
+     "name": "Posiłek 1",
+     "label": "Śniadanie",
+     "requirement": "na ciepło, szybkie",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 1.5
+     },
+     "periWorkout": false
+    },
+    {
+     "id": "P2",
+     "name": "Posiłek 2",
+     "label": "Obiad do pracy",
+     "requirement": "na zimno lub z mikrofali",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 1
+     },
+     "periWorkout": false
+    },
+    {
+     "id": "P3",
+     "name": "Posiłek 3",
+     "label": "Drugi posiłek do pracy",
+     "requirement": "na zimno lub z mikrofali",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 1
+     },
+     "periWorkout": false
+    },
+    {
+     "id": "P4",
+     "name": "Posiłek 4",
+     "label": "Kolacja",
+     "requirement": "dowolny",
+     "weights": {
+      "p": 1,
+      "c": 1,
+      "f": 1
+     },
+     "periWorkout": false
+    }
+   ]
+  }
+ }
+}

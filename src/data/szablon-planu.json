@@ -1,0 +1,24 @@
+{
+ "schema": "kris-trainer/plan-template@1",
+ "note": "Plan bazowy z arkusza (karty 'Dzień treningowy/nietreningowy — Panel zmiany'). Gramatury bazowe, które silnik skaluje grupami. add=true: tłuszcz dodany, używany tylko gdy produktów tłuszczowych z planu nie wystarcza.",
+ "planKcal": { "T": 4315, "N": 4159 },
+ "planSplit": { "T": { "p": 26, "f": 6.5 }, "N": { "p": 28.5, "f": 10.5 } },
+ "restDayRatio": 0.96385,
+ "days": {
+  "T": [
+   { "meal": "Posiłek 1", "items": [ { "p": "Białka jaj", "g": 350 }, { "p": "Płatki owsiane", "g": 140 }, { "p": "Borówki", "g": 50 }, { "p": "Pieczywo białe", "g": 100 }, { "p": "Masło orzechowe 100%", "g": 10, "add": true } ] },
+   { "meal": "Posiłek 2", "items": [ { "p": "Pierś z indyka", "g": 175 }, { "p": "Ryż biały", "g": 125 }, { "p": "Olej makadamia", "g": 5, "add": true }, { "p": "Pomidor", "g": 150 } ] },
+   { "meal": "Pre-workout", "items": [ { "p": "Cream of rice", "g": 175 }, { "p": "WPI", "g": 40 }, { "p": "Banan", "g": 100 }, { "p": "Masło migdałowe", "g": 10 } ] },
+   { "meal": "Intra-workout", "items": [ { "p": "EAA", "g": 10 }, { "p": "Dekstroza", "g": 20 } ] },
+   { "meal": "Post-workout", "items": [ { "p": "Cream of rice", "g": 200 }, { "p": "WPI", "g": 40 }, { "p": "Banan", "g": 100 } ] },
+   { "meal": "Posiłek 5", "items": [ { "p": "Pierś z indyka", "g": 175 }, { "p": "Ryż biały", "g": 125 }, { "p": "Olej makadamia", "g": 5, "add": true }, { "p": "Cukinia", "g": 150 } ] }
+  ],
+  "N": [
+   { "meal": "Posiłek 1", "items": [ { "p": "Białka jaj", "g": 350 }, { "p": "Płatki owsiane", "g": 140 }, { "p": "Borówki", "g": 50 }, { "p": "Pieczywo białe", "g": 100 }, { "p": "Masło orzechowe 100%", "g": 10, "add": true } ] },
+   { "meal": "Posiłek 2", "items": [ { "p": "Pierś z indyka", "g": 175 }, { "p": "Ryż biały", "g": 150 }, { "p": "Olej makadamia", "g": 5, "add": true }, { "p": "Pomidor", "g": 150 } ] },
+   { "meal": "Posiłek 3", "items": [ { "p": "Pierś z indyka", "g": 175 }, { "p": "Ryż biały", "g": 150 }, { "p": "Olej makadamia", "g": 5, "add": true }, { "p": "Cukinia", "g": 150 } ] },
+   { "meal": "Posiłek 4", "items": [ { "p": "Pierś z indyka", "g": 175 }, { "p": "Ziemniaki", "g": 650 }, { "p": "Olej makadamia", "g": 5, "add": true }, { "p": "Brokuł", "g": 150 } ] },
+   { "meal": "Posiłek 5", "items": [ { "p": "Skyr naturalny 0%", "g": 300 }, { "p": "Masło migdałowe", "g": 40 }, { "p": "Wafle ryżowe", "g": 100 }, { "p": "Banan", "g": 100 }, { "p": "WPI", "g": 15 } ] }
+  ]
+ }
+}

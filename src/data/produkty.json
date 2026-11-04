@@ -1,0 +1,998 @@
+{
+ "schema": "kris-trainer/products@1",
+ "note": "Wartości na 100 g produktu w stanie surowym/suchym. group: P białko, C węglowodany, F tłuszcz, V warzywa, X dodatki/sosy.",
+ "products": [
+  {
+   "name": "Pierś z kurczaka",
+   "group": "P",
+   "category": "Mięso",
+   "p": 23.1,
+   "c": 0.0,
+   "f": 1.2,
+   "kcal": 110.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Pierś z indyka",
+   "group": "P",
+   "category": "Mięso",
+   "p": 24.0,
+   "c": 0.0,
+   "f": 1.0,
+   "kcal": 110.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Pierś z indyka mielona",
+   "group": "P",
+   "category": "Mięso",
+   "p": 23.0,
+   "c": 0.0,
+   "f": 1.5,
+   "kcal": 106.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Polędwiczka wieprzowa",
+   "group": "P",
+   "category": "Mięso",
+   "p": 22.0,
+   "c": 0.0,
+   "f": 3.5,
+   "kcal": 125.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Wołowina chuda",
+   "group": "P",
+   "category": "Mięso",
+   "p": 21.0,
+   "c": 0.0,
+   "f": 6.0,
+   "kcal": 140.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Wołowina mielona 90%",
+   "group": "P",
+   "category": "Mięso",
+   "p": 20.0,
+   "c": 0.0,
+   "f": 10.0,
+   "kcal": 176.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Wołowina mielona 95%",
+   "group": "P",
+   "category": "Mięso",
+   "p": 21.4,
+   "c": 0.0,
+   "f": 5.0,
+   "kcal": 137.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Wołowina mielona 97%",
+   "group": "P",
+   "category": "Mięso",
+   "p": 21.5,
+   "c": 0.0,
+   "f": 3.0,
+   "kcal": 121.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Wędlina z kurczaka",
+   "group": "P",
+   "category": "Mięso",
+   "p": 18.0,
+   "c": 2.0,
+   "f": 3.0,
+   "kcal": 110.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Szynka z indyka",
+   "group": "P",
+   "category": "Mięso",
+   "p": 19.0,
+   "c": 1.5,
+   "f": 2.0,
+   "kcal": 98.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Dorsz",
+   "group": "P",
+   "category": "Ryby",
+   "p": 17.8,
+   "c": 0.0,
+   "f": 0.7,
+   "kcal": 82.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Mintaj",
+   "group": "P",
+   "category": "Ryby",
+   "p": 17.2,
+   "c": 0.0,
+   "f": 0.8,
+   "kcal": 76.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Łosoś dziki",
+   "group": "P",
+   "category": "Ryby",
+   "p": 20.0,
+   "c": 0.0,
+   "f": 6.0,
+   "kcal": 140.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Łosoś atlantycki",
+   "group": "P",
+   "category": "Ryby",
+   "p": 20.4,
+   "c": 0.0,
+   "f": 13.4,
+   "kcal": 208.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Krewetki",
+   "group": "P",
+   "category": "Ryby",
+   "p": 20.1,
+   "c": 0.9,
+   "f": 0.5,
+   "kcal": 85.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Tuńczyk w wodzie",
+   "group": "P",
+   "category": "Ryby",
+   "p": 25.5,
+   "c": 0.0,
+   "f": 0.8,
+   "kcal": 109.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Białka jaj",
+   "group": "P",
+   "category": "Jaja",
+   "p": 10.9,
+   "c": 0.7,
+   "f": 0.2,
+   "kcal": 52.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Jajo całe",
+   "group": "P",
+   "category": "Jaja",
+   "p": 12.6,
+   "c": 0.7,
+   "f": 9.5,
+   "kcal": 143.0,
+   "source": "arkusz Baza_Produktow",
+   "unitG": 60.0,
+   "unitName": "szt."
+  },
+  {
+   "name": "WPI",
+   "group": "P",
+   "category": "Odżywka",
+   "p": 86.0,
+   "c": 3.0,
+   "f": 1.5,
+   "kcal": 370.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "WPC 80",
+   "group": "P",
+   "category": "Odżywka",
+   "p": 80.0,
+   "c": 7.0,
+   "f": 6.0,
+   "kcal": 400.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "EAA",
+   "group": "P",
+   "category": "Odżywka",
+   "p": 100.0,
+   "c": 0.0,
+   "f": 0.0,
+   "kcal": 400.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Skyr naturalny 0%",
+   "group": "P",
+   "category": "Nabiał",
+   "p": 11.0,
+   "c": 4.0,
+   "f": 0.2,
+   "kcal": 63.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Jogurt grecki 0%",
+   "group": "P",
+   "category": "Nabiał",
+   "p": 10.3,
+   "c": 3.6,
+   "f": 0.4,
+   "kcal": 59.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Twaróg chudy",
+   "group": "P",
+   "category": "Nabiał",
+   "p": 19.8,
+   "c": 3.5,
+   "f": 0.5,
+   "kcal": 99.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Serek wiejski lekki",
+   "group": "P",
+   "category": "Nabiał",
+   "p": 11.0,
+   "c": 3.0,
+   "f": 2.8,
+   "kcal": 81.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Serek wiejski klasyczny",
+   "group": "P",
+   "category": "Nabiał",
+   "p": 11.0,
+   "c": 5.0,
+   "f": 2.0,
+   "kcal": 97.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Ryż biały",
+   "group": "C",
+   "category": "Zboża",
+   "p": 7.0,
+   "c": 78.0,
+   "f": 0.7,
+   "kcal": 350.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Ryż basmati",
+   "group": "C",
+   "category": "Zboża",
+   "p": 7.5,
+   "c": 78.0,
+   "f": 0.9,
+   "kcal": 355.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Płatki owsiane",
+   "group": "C",
+   "category": "Zboża",
+   "p": 13.0,
+   "c": 60.0,
+   "f": 7.0,
+   "kcal": 370.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Cream of rice",
+   "group": "C",
+   "category": "Zboża",
+   "p": 7.0,
+   "c": 80.0,
+   "f": 1.0,
+   "kcal": 360.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Wafle ryżowe",
+   "group": "C",
+   "category": "Zboża",
+   "p": 7.0,
+   "c": 78.0,
+   "f": 0.7,
+   "kcal": 350.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Kasza manna",
+   "group": "C",
+   "category": "Zboża",
+   "p": 8.7,
+   "c": 74.8,
+   "f": 1.3,
+   "kcal": 348.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Kasza kuskus",
+   "group": "C",
+   "category": "Zboża",
+   "p": 12.8,
+   "c": 77.4,
+   "f": 0.6,
+   "kcal": 376.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Kasza bulgur",
+   "group": "C",
+   "category": "Zboża",
+   "p": 12.3,
+   "c": 76.0,
+   "f": 1.3,
+   "kcal": 342.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Kasza gryczana",
+   "group": "C",
+   "category": "Zboża",
+   "p": 11.7,
+   "c": 74.9,
+   "f": 2.7,
+   "kcal": 346.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Makaron durum",
+   "group": "C",
+   "category": "Zboża",
+   "p": 12.0,
+   "c": 71.0,
+   "f": 1.5,
+   "kcal": 350.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Makaron pełnoziarnisty",
+   "group": "C",
+   "category": "Zboża",
+   "p": 13.0,
+   "c": 64.0,
+   "f": 2.5,
+   "kcal": 347.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Makaron bezglutenowy",
+   "group": "C",
+   "category": "Zboża",
+   "p": 7.0,
+   "c": 78.0,
+   "f": 1.2,
+   "kcal": 355.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Makaron ryżowy",
+   "group": "C",
+   "category": "Zboża",
+   "p": 6.0,
+   "c": 80.0,
+   "f": 0.6,
+   "kcal": 364.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Mąka ziemniaczana",
+   "group": "C",
+   "category": "Zboża",
+   "p": 0.1,
+   "c": 83.0,
+   "f": 0.1,
+   "kcal": 333.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Pieczywo białe",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 8.9,
+   "c": 49.0,
+   "f": 3.2,
+   "kcal": 266.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Pieczywo pełnoziarniste",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 12.5,
+   "c": 43.0,
+   "f": 3.5,
+   "kcal": 247.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Chleb żytni",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 8.5,
+   "c": 48.3,
+   "f": 3.3,
+   "kcal": 259.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Bułka pełnoziarnista",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 10.0,
+   "c": 45.0,
+   "f": 4.0,
+   "kcal": 260.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Bajgiel",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 10.0,
+   "c": 53.0,
+   "f": 1.5,
+   "kcal": 264.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Tortilla pszenna",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 8.3,
+   "c": 49.4,
+   "f": 8.1,
+   "kcal": 304.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Tortilla pełnoziarnista",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 9.0,
+   "c": 45.0,
+   "f": 7.0,
+   "kcal": 290.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Ziemniaki",
+   "group": "C",
+   "category": "Warzywa skrobiowe",
+   "p": 2.0,
+   "c": 17.0,
+   "f": 0.1,
+   "kcal": 77.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Batat",
+   "group": "C",
+   "category": "Warzywa skrobiowe",
+   "p": 1.6,
+   "c": 20.0,
+   "f": 0.1,
+   "kcal": 86.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Fasola czerwona (puszka)",
+   "group": "C",
+   "category": "Strączki",
+   "p": 8.7,
+   "c": 22.8,
+   "f": 0.5,
+   "kcal": 127.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Kukurydza (puszka)",
+   "group": "C",
+   "category": "Warzywa skrobiowe",
+   "p": 2.5,
+   "c": 17.0,
+   "f": 1.2,
+   "kcal": 82.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Banan",
+   "group": "C",
+   "category": "Owoce",
+   "p": 1.1,
+   "c": 23.0,
+   "f": 0.3,
+   "kcal": 89.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Borówki",
+   "group": "C",
+   "category": "Owoce",
+   "p": 0.7,
+   "c": 14.5,
+   "f": 0.3,
+   "kcal": 57.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Jabłko",
+   "group": "C",
+   "category": "Owoce",
+   "p": 0.3,
+   "c": 13.8,
+   "f": 0.2,
+   "kcal": 52.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Truskawki",
+   "group": "C",
+   "category": "Owoce",
+   "p": 0.7,
+   "c": 7.7,
+   "f": 0.3,
+   "kcal": 32.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Maliny",
+   "group": "C",
+   "category": "Owoce",
+   "p": 1.2,
+   "c": 11.9,
+   "f": 0.7,
+   "kcal": 52.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Kiwi",
+   "group": "C",
+   "category": "Owoce",
+   "p": 1.1,
+   "c": 14.7,
+   "f": 0.5,
+   "kcal": 61.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Pomarańcza",
+   "group": "C",
+   "category": "Owoce",
+   "p": 0.9,
+   "c": 11.8,
+   "f": 0.1,
+   "kcal": 47.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Ananas",
+   "group": "C",
+   "category": "Owoce",
+   "p": 0.5,
+   "c": 13.1,
+   "f": 0.1,
+   "kcal": 50.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Mango",
+   "group": "C",
+   "category": "Owoce",
+   "p": 0.8,
+   "c": 15.0,
+   "f": 0.4,
+   "kcal": 60.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Dekstroza",
+   "group": "C",
+   "category": "Cukry",
+   "p": 0.0,
+   "c": 100.0,
+   "f": 0.0,
+   "kcal": 400.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Miód",
+   "group": "C",
+   "category": "Cukry",
+   "p": 0.3,
+   "c": 82.4,
+   "f": 0.0,
+   "kcal": 304.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Dżem owocowy niskosłodzony",
+   "group": "C",
+   "category": "Cukry",
+   "p": 0.5,
+   "c": 36.0,
+   "f": 0.1,
+   "kcal": 145.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Masło migdałowe",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 21.0,
+   "c": 19.0,
+   "f": 55.0,
+   "kcal": 614.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Masło orzechowe 100%",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 25.0,
+   "c": 20.0,
+   "f": 50.0,
+   "kcal": 588.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Olej makadamia",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 0.0,
+   "c": 0.0,
+   "f": 100.0,
+   "kcal": 900.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Oliwa z oliwek",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 0.0,
+   "c": 0.0,
+   "f": 100.0,
+   "kcal": 884.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Olej sezamowy",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 0.0,
+   "c": 0.0,
+   "f": 100.0,
+   "kcal": 884.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Awokado",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 2.0,
+   "c": 8.5,
+   "f": 14.7,
+   "kcal": 160.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Orzechy włoskie",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 15.2,
+   "c": 13.7,
+   "f": 65.2,
+   "kcal": 654.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Nerkowce",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 18.2,
+   "c": 30.2,
+   "f": 43.8,
+   "kcal": 553.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Czekolada gorzka 85%",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 11.9,
+   "c": 19.0,
+   "f": 46.0,
+   "kcal": 598.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Mleczko kokosowe light",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 0.8,
+   "c": 2.5,
+   "f": 7.0,
+   "kcal": 72.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Parmezan",
+   "group": "F",
+   "category": "Sery",
+   "p": 35.8,
+   "c": 3.2,
+   "f": 25.8,
+   "kcal": 392.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Mozzarella light",
+   "group": "F",
+   "category": "Sery",
+   "p": 19.0,
+   "c": 1.0,
+   "f": 8.0,
+   "kcal": 152.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Ser feta light",
+   "group": "F",
+   "category": "Sery",
+   "p": 17.0,
+   "c": 1.0,
+   "f": 10.0,
+   "kcal": 162.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Oliwki zielone",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 1.0,
+   "c": 3.8,
+   "f": 15.0,
+   "kcal": 145.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Brokuł",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 2.8,
+   "c": 6.6,
+   "f": 0.4,
+   "kcal": 34.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Kalafior",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.9,
+   "c": 5.0,
+   "f": 0.3,
+   "kcal": 25.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Szparagi",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 2.2,
+   "c": 3.9,
+   "f": 0.1,
+   "kcal": 20.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Cukinia",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.2,
+   "c": 3.1,
+   "f": 0.3,
+   "kcal": 17.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Szpinak",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 2.9,
+   "c": 3.6,
+   "f": 0.4,
+   "kcal": 23.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Fasolka szparagowa",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.8,
+   "c": 7.0,
+   "f": 0.2,
+   "kcal": 31.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Ogórek",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 0.7,
+   "c": 3.6,
+   "f": 0.1,
+   "kcal": 15.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Ogórek kiszony",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 0.6,
+   "c": 2.3,
+   "f": 0.2,
+   "kcal": 12.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Papryka czerwona",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.0,
+   "c": 6.0,
+   "f": 0.3,
+   "kcal": 31.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Pomidor",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 0.9,
+   "c": 3.9,
+   "f": 0.2,
+   "kcal": 18.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Cebula",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.1,
+   "c": 9.3,
+   "f": 0.1,
+   "kcal": 40.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Pieczarki",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 3.1,
+   "c": 3.3,
+   "f": 0.3,
+   "kcal": 22.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Rukola",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 2.6,
+   "c": 3.7,
+   "f": 0.7,
+   "kcal": 25.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Marchew",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 0.9,
+   "c": 9.6,
+   "f": 0.2,
+   "kcal": 41.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Mieszanka warzyw stir-fry",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 2.0,
+   "c": 7.0,
+   "f": 0.3,
+   "kcal": 38.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Przecier pomidorowy (passata)",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.4,
+   "c": 7.8,
+   "f": 0.0,
+   "kcal": 34.0,
+   "source": "arkusz Baza_Produktow"
+  },
+  {
+   "name": "Edamame",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 11.9,
+   "c": 8.9,
+   "f": 5.2,
+   "kcal": 121.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Jogurt naturalny 0%",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 4.6,
+   "c": 6.2,
+   "f": 0.1,
+   "kcal": 44.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Sos sojowy",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 8.1,
+   "c": 4.9,
+   "f": 0.6,
+   "kcal": 53.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Sos słodkie chili",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 0.3,
+   "c": 50.0,
+   "f": 0.2,
+   "kcal": 200.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Salsa pomidorowa",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 1.5,
+   "c": 6.6,
+   "f": 0.2,
+   "kcal": 36.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Czosnek",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 6.4,
+   "c": 33.0,
+   "f": 0.5,
+   "kcal": 149.0,
+   "source": "USDA FoodData Central"
+  }
+ ]
+}
