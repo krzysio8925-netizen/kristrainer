@@ -235,14 +235,14 @@ export function validate(data: Data): string[] {
   }));
   const cuisines = new Set(data.chef.cuisines.map(c => c.id));
   Object.entries(data.recipes.recipes).forEach(([id, r]) => {
-    if (!cuisines.has(r.cuisine)) errs.push(`przepis ${id}: nieznana kuchnia ${r.cuisine}`);
+    if (!cuisines.has(r.cuisine) && !(r.shake && r.cuisine === 'szejk')) errs.push(`przepis ${id}: nieznana kuchnia ${r.cuisine}`);
     if (!r.slots?.length || r.slots.some(k => !'SWOK'.includes(k))) errs.push(`przepis ${id}: złe typy posiłków`);
     if (!data.recipes.serveLabels[r.serve]) errs.push(`przepis ${id}: nieznany sposób podania ${r.serve}`);
   });
   data.chef.exclusions.forEach(e => e.products.forEach(p => { if (!P[p]) errs.push(`wykluczenie ${e.id}: brak produktu ${p}`); }));
   // Każda kuchnia ma danie na każdy typ posiłku z zasad (także „do zabrania”).
   data.chef.cuisines.forEach(c => (Object.values(data.rules.days)).forEach(d => d.slots.forEach(s => {
-    const ok = Object.values(data.recipes.recipes).some(r => r.cuisine === c.id && r.slots.includes(s.kind) && (!s.portable || r.serve !== 'hot'));
+    const ok = Object.values(data.recipes.recipes).some(r => !r.shake && r.cuisine === c.id && r.slots.includes(s.kind) && (!s.portable || r.serve !== 'hot'));
     if (!ok) errs.push(`kuchnia ${c.id}: brak dania na ${s.name} (${s.label})`);
   })));
   return errs;

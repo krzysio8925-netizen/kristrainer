@@ -1343,6 +1343,56 @@
    "f": 0.6,
    "kcal": 169.0,
    "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Napój migdałowy niesłodzony",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 0.4,
+   "c": 0.3,
+   "f": 1.1,
+   "kcal": 13.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Kakao naturalne",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 22.0,
+   "c": 12.0,
+   "f": 16.0,
+   "kcal": 280.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Kefir 2%",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 3.4,
+   "c": 4.7,
+   "f": 2.0,
+   "kcal": 50.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Siemię lniane",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 18.3,
+   "c": 28.9,
+   "f": 42.2,
+   "kcal": 569.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Nasiona chia",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 16.5,
+   "c": 42.1,
+   "f": 30.7,
+   "kcal": 511.0,
+   "source": "USDA FoodData Central"
   }
  ]
 }

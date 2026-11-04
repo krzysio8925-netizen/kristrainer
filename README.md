@@ -1,6 +1,6 @@
 # Kris Trainer — kalkulator doboru diety
 
-Aplikacja webowa trenera (React + Vite + TypeScript) do układania planów żywieniowych: osoby, wersje planów, zapotrzebowanie w kcal lub makro, plan z arkusza z zamiennikami, przykładowe posiłki układane przez „kucharza” (3 propozycje na dzień treningowy i 3 na nietreningowy – według wybranych kuchni, trybu ekspres, wykluczeń i ulubionych produktów) i PDF z logo do wyboru: Kris Trainer albo GabiTrainer.
+Aplikacja webowa trenera (React + Vite + TypeScript) do układania planów żywieniowych: osoby, wersje planów, zapotrzebowanie w kcal lub makro, plan z arkusza z zamiennikami, przykładowe posiłki układane przez „kucharza” (3 propozycje na dzień treningowy i 3 na nietreningowy – kuchnia osobno dla każdej propozycji: wybrana, losowa z „Losuj” albo miks; tryb ekspres, dieta, wykluczenia, ulubione i szejki zamiast wybranych posiłków; baza ok. 300 przepisów) i PDF z logo do wyboru: Kris Trainer albo GabiTrainer.
 
 Adres po publikacji: `https://krzysio8925-netizen.github.io/<repozytorium>/`. Dostęp ma tylko jedno konto (`src/backend/config.ts` i `isKris()` w `firebase/firestore.rules`).
 
@@ -38,7 +38,7 @@ Dane w bazie: `kris_clients/{id}` (osoba) i `kris_clients/{id}/versions/{vN}` (w
 
 Dopisz przepis w `src/data/przepisy.json`:
 
-- `cuisine` – id kuchni z `src/data/kuchnie.json`,
+- `cuisine` – id kuchni z `src/data/kuchnie.json` (szejk: `"cuisine": "szejk"` i `"shake": true` – kucharz wstawia go tylko zamiast posiłków wybranych w „Szejk zamiast posiłku”),
 - `slots` – typy posiłków: `S` śniadanie (na ciepło), `W` do pracy (na zimno / z mikrofali), `O` okołotreningowy (mało tłuszczu), `K` obiad / kolacja,
 - `serve`, `time` (minuty – do 10 min danie liczy się do trybu ekspres),
 - składniki z `produkty.json` z rolą P/C/F/X (P, C, F są skalowane do makro posiłku, X to stały dodatek).
@@ -49,7 +49,7 @@ Kucharz sam włączy przepis do propozycji. `npm test` sprawdzi spójność dany
 
 1. Odrzuca przepisy niezgodne z dietą (wege, pescetariańska), grupami wykluczeń i listą „Nie je”. „Lubi” i „Nie je” to dowolny tekst (produkt, danie albo grupa, np. „łosoś”, „curry”, „grzyby”) dopasowywany do nazw dań i składników.
 2. Na każdy posiłek bierze dania pasujące do jego typu (śniadanie na ciepło, posiłki do pracy bez dań tylko na ciepło).
-3. Wybrane kuchnie i tryb ekspres traktuje jako warunek – odstępuje od nich tylko, gdy nie ma żadnego pasującego dania, i zapisuje o tym notatkę.
+3. Każda propozycja (A, B, C) ma swoją kuchnię: wybraną, wylosowaną (różną od pozostałych; „Losuj” losuje od nowa tylko tę propozycję, ta sama kuchnia w obu dniach) albo miks. Kuchnię i tryb ekspres traktuje jako warunek – odstępuje od nich tylko, gdy nie ma żadnego pasującego dania, i zapisuje o tym notatkę (przy kuchni wylosowanej ekspres ma pierwszeństwo). Na posiłki wybrane w „Szejk zamiast posiłku” (maks. 2 na dzień) wstawia szejk – w każdej propozycji inny.
 4. Spośród reszty wybiera dania najlepiej trafiające w makro posiłku po przeskalowaniu, z karą za powtórki (to samo danie, białko lub węglowodan). Każda propozycja ma swoją „gwiazdę” z listy „Lubi” (A – pierwsza pozycja, B – druga…), która trafia do niej nawet kosztem dokładności posiłku; wtedy kucharz zostawia notatkę.
 5. Na koniec wyrównuje cały dzień: to, czego jedno danie nie zmieściło, przechodzi na pozostałe posiłki.
 

@@ -1,8 +1,8 @@
 import { useEffect, useId, useState, type FormEvent } from 'react';
 
 import { DATA as D } from '../data';
-import { hasPrefs, termReport } from '../engine/kucharz';
-import type { Menu, MenuPrefs } from '../engine/types';
+import { EMPTY_PREFS, LOS, MAX_SHAKES, MIX, cuisineName, hasPrefs, menuThemes, termReport } from '../engine/kucharz';
+import type { Day, Menu, MenuPrefs } from '../engine/types';
 
 const toggle = (list: string[], x: string) => (list.includes(x) ? list.filter(y => y !== x) : [...list, x]);
 const same = (a: MenuPrefs, b: MenuPrefs) => JSON.stringify({ ...a, seed: 0 }) === JSON.stringify({ ...b, seed: 0 });
@@ -59,8 +59,8 @@ function TermList({ title, hint, tone, items, applied, prefs, menus, disabled, o
 }
 
 /** Preferencje kucharza. Zmiany to szkic – stosuje je dopiero „Przelicz propozycje”. */
-export function ChefPanel({ prefs, menus, dayName, disabled, onApply }: {
-  prefs: MenuPrefs; menus: Menu[]; dayName: string; disabled?: boolean; onApply: (p: MenuPrefs) => void;
+export function ChefPanel({ prefs, menus, day, dayName, disabled, onApply }: {
+  prefs: MenuPrefs; menus: Menu[]; day: Day; dayName: string; disabled?: boolean; onApply: (p: MenuPrefs) => void;
 }) {
   const [draft, setDraft] = useState(prefs);
   const appliedKey = JSON.stringify(prefs);
@@ -70,6 +70,12 @@ export function ChefPanel({ prefs, menus, dayName, disabled, onApply }: {
   const set = (patch: Partial<MenuPrefs>) => setDraft(d => ({ ...d, ...patch }));
   const diet = DIETS.find(d => draft.exclude.includes(d.id))?.id ?? '';
   const setDiet = (id: string) => set({ exclude: [...draft.exclude.filter(x => !D.chef.diets.includes(x)), ...(id ? [id] : [])] });
+  const themes = menuThemes(draft, D);
+  const setPick = (i: number, pick: string) => set({ menuCuisines: draft.menuCuisines.map((c, j) => (j === i ? pick : c)) });
+  // „Losuj” od razu losuje nową kuchnię tej propozycji i przelicza (razem z resztą szkicu).
+  const roll = (i: number) => onApply({ ...draft, rolls: draft.rolls.map((r, j) => (j === i ? r + 1 : r)) });
+  const slots = D.rules.days[day].slots, shakes = draft.shakes[day];
+  const toggleShake = (id: string) => set({ shakes: { ...draft.shakes, [day]: shakes.includes(id) ? shakes.filter(x => x !== id) : [...shakes, id].slice(-MAX_SHAKES) } });
 
   return (
     <section className="chef" aria-labelledby="chef-h">
@@ -82,7 +88,7 @@ export function ChefPanel({ prefs, menus, dayName, disabled, onApply }: {
           <button type="button" className="btn" disabled={disabled} onClick={() => onApply({ ...draft, seed: prefs.seed + 1 })} title="Inne propozycje przy tych samych ustawieniach">
             <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 6h3.5c2 0 3 1 4.2 3l.6 1c1.2 2 2.2 3 4.2 3H17m0 0-2.5-2.5M17 13l-2.5 2.5M3 14h3.5c1 0 1.7-.3 2.3-.8M17 6h-1.5c-1 0-1.7.3-2.3.8M17 6l-2.5-2.5M17 6l-2.5 2.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
             Wymieszaj</button>
-          {hasPrefs(draft) && <button type="button" className="linkbtn" disabled={disabled} onClick={() => setDraft({ cuisines: [], express: false, exclude: [], avoid: [], like: [], seed: prefs.seed })}>Wyczyść</button>}
+          {hasPrefs(draft) && <button type="button" className="linkbtn" disabled={disabled} onClick={() => setDraft({ ...EMPTY_PREFS, seed: prefs.seed, rolls: prefs.rolls })}>Wyczyść</button>}
         </div>
       </div>
 
@@ -95,15 +101,41 @@ export function ChefPanel({ prefs, menus, dayName, disabled, onApply }: {
       </div>
 
       <div className="field">
-        <span className="label" id="lbl-cuisine">Kuchnie <em>{draft.cuisines.length ? `wybrane: ${draft.cuisines.length}` : 'dowolne – zaznacz, by zawęzić'}</em></span>
-        <div className="cuisines" role="group" aria-labelledby="lbl-cuisine">
-          {D.chef.cuisines.map(c => (
-            <button key={c.id} type="button" className="cuisine" aria-pressed={draft.cuisines.includes(c.id)} disabled={disabled}
-              onClick={() => set({ cuisines: toggle(draft.cuisines, c.id) })}>{c.name}</button>))}
-          <button type="button" className="cuisine express" aria-pressed={draft.express} disabled={disabled} onClick={() => set({ express: !draft.express })}>
-            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.2 1.5 3.5 9h4l-1 5.5L12.5 7h-4l.7-5.5Z" fill="currentColor" /></svg>
-            <span>Ekspres<small>maks. oszczędność czasu · do {D.chef.expressMaxMin} min</small></span></button>
+        <span className="label">Kuchnia każdej propozycji <em>losowa, miks albo konkretna kuchnia</em></span>
+        <div className="menu-cuisines">
+          {themes.map((t, i) => (
+            <div key={i} className="mc">
+              <label className="mc-label" htmlFor={`mc-${i}`}>Propozycja {'ABC'[i]}</label>
+              <select id={`mc-${i}`} value={draft.menuCuisines[i]} disabled={disabled} onChange={e => setPick(i, e.target.value)}>
+                <option value={LOS}>Losowa kuchnia</option>
+                <option value={MIX}>Miks kuchni</option>
+                {D.chef.cuisines.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+              {t.pick === LOS && (
+                <div className="mc-roll">
+                  <span>wylosowano: <b>{cuisineName(D, t.theme!)}</b></span>
+                  <button type="button" className="btn" disabled={disabled} onClick={() => roll(i)} title="Wylosuj inną kuchnię dla tej propozycji">
+                    <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="3.5" fill="none" stroke="currentColor" strokeWidth="1.6" /><circle cx="7.3" cy="7.3" r="1.3" fill="currentColor" /><circle cx="12.7" cy="12.7" r="1.3" fill="currentColor" /><circle cx="10" cy="10" r="1.3" fill="currentColor" /></svg>
+                    Losuj</button>
+                </div>)}
+              {t.pick === MIX && <div className="mc-roll"><span>dania z dowolnych kuchni, najlepiej trafiające w makro</span></div>}
+            </div>))}
         </div>
+        <button type="button" className="cuisine express" aria-pressed={draft.express} disabled={disabled} onClick={() => set({ express: !draft.express })}>
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.2 1.5 3.5 9h4l-1 5.5L12.5 7h-4l.7-5.5Z" fill="currentColor" /></svg>
+          <span>Ekspres<small>maks. oszczędność czasu · dania do {D.chef.expressMaxMin} min we wszystkich propozycjach</small></span></button>
+      </div>
+
+      <div className="field">
+        <span className="label" id="lbl-shake">Szejk zamiast posiłku <em>{dayName.toLowerCase()} · maks. {MAX_SHAKES}</em></span>
+        <div className="exclusions shakes" role="group" aria-labelledby="lbl-shake">
+          {slots.map(sl => {
+            const on = shakes.includes(sl.id);
+            return <button key={sl.id} type="button" className="xchip shake" aria-pressed={on} disabled={disabled || (!on && shakes.length >= MAX_SHAKES)}
+              onClick={() => toggleShake(sl.id)}>{sl.name} · {sl.label}</button>;
+          })}
+        </div>
+        <p className="hint">Kucharz wstawi szejk dopasowany do makro tego posiłku – w każdej propozycji inny. Drugi dzień ustawisz po przełączeniu „Pokaż dzień”.</p>
       </div>
 
       <div className="field">

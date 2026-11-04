@@ -29,12 +29,15 @@ export interface Slot {
 export interface MealRules { principles: string[]; days: Record<Day, { name: string; slots: Slot[] }> }
 
 export interface Recipe {
-  name: string; serve: string; time: number; cuisine: string; slots: Kind[];
+  name: string; serve: string; time: number; cuisine: string; slots: Kind[]; shake?: boolean;
   ingredients: { p: string; g: number; r: Role }[];
   steps: string[]; tip?: string;
 }
 /** Propozycja dnia ułożona przez kucharza: przepisy po kolei dla posiłków dnia. */
-export interface Menu { id: string; name: string; meals: string[]; cuisines: string[]; time: number; notes: string[] }
+export interface Menu {
+  id: string; name: string; meals: string[]; cuisines: string[]; time: number; notes: string[];
+  pick: string; theme: string | null;   // wybór kuchni (los / mix / id) i kuchnia przewodnia
+}
 export interface Recipes { serveLabels: Record<string, string>; recipes: Record<string, Recipe> }
 
 export interface Cuisine { id: string; name: string }
@@ -43,12 +46,15 @@ export interface ChefData { expressMaxMin: number; cuisines: Cuisine[]; diets: s
 
 /** Preferencje do propozycji posiłków (zapisywane w wersji planu). */
 export interface MenuPrefs {
-  cuisines: string[];   // wybrane kuchnie (puste = wszystkie)
-  express: boolean;     // maksymalna oszczędność czasu
-  exclude: string[];    // id grup wykluczeń
-  avoid: string[];      // pojedyncze produkty, których osoba nie je
-  like: string[];       // produkty lubiane
-  seed: number;         // „Wymieszaj” – inne propozycje przy tych samych ustawieniach
+  menuCuisines: string[];   // kuchnia propozycji A, B, C: id kuchni, „los” (losowa) albo „mix”
+  rolls: number[];          // licznik „Losuj” każdej propozycji
+  express: boolean;         // maksymalna oszczędność czasu
+  exclude: string[];        // id grup wykluczeń (w tym diety)
+  avoid: string[];          // „Nie je” – dowolny tekst
+  like: string[];           // „Lubi” – dowolny tekst
+  seed: number;             // „Wymieszaj” – inne propozycje przy tych samych ustawieniach
+  shakes: Record<Day, string[]>; // id posiłków dnia zastąpionych szejkiem (maks. 2)
+  cuisines?: string[];      // stary zapis (lista kuchni) – zamieniany na menuCuisines
 }
 
 export interface Data {

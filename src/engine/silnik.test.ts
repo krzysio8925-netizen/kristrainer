@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
-import { allowedRecipes, bannedProducts, fitsSlot, matcher, normPrefs, planMenus, termReport } from './kucharz.ts';
+import { LOS, MIX, allowedRecipes, bannedProducts, fitsSlot, matcher, menuThemes, normPrefs, planMenus, termReport } from './kucharz.ts';
 import { makeData, menuDay, planDay, validate } from './silnik.ts';
 import type { MenuPrefs, PlanVersion } from './types.ts';
 
@@ -28,8 +28,10 @@ const variants: Record<string, Partial<MenuPrefs>> = {
   ekspres: { express: true },
   wege_bezglutenu: { exclude: ['wege', 'gluten'] },
   bez_nabialu_jaj: { exclude: ['nabial', 'jaja'], like: ['Krewetki'] },
-  ...Object.fromEntries(D.chef.cuisines.map(c => [c.id, { cuisines: [c.id] }])),
-  azja_ekspres: { cuisines: ['japonska', 'chinska', 'tajska'], express: true, avoid: ['Tuńczyk w wodzie'] },
+  ...Object.fromEntries(D.chef.cuisines.map(c => [c.id, { menuCuisines: [c.id, c.id, c.id] }])),
+  azja_ekspres: { menuCuisines: ['japonska', 'chinska', 'tajska'], express: true, avoid: ['Tuńczyk w wodzie'] },
+  miks_szejki: { menuCuisines: [MIX, LOS, 'wloska'], shakes: { T: ['P1', 'P3'], N: ['P2'] } },
+  szejki_bez_odzywek: { exclude: ['odzywki', 'nabial'], shakes: { T: ['P5'], N: ['P1', 'P4'] } },
   pesce_gusta: { exclude: ['mieso'], like: ['łosoś', 'curry', 'jajka'], avoid: ['grzyby'] },
 };
 let checked = 0;
@@ -43,18 +45,36 @@ for (const [name, v0] of Object.entries(people)) for (const [vn, pr] of Object.e
     const R = menuDay(v, day, m, D);
     assert.equal(R.meals.length, slots.length);
     R.meals.forEach((M, i) => {
-      if (!pr.exclude?.includes('wege')) assert.ok(fitsSlot(M.recipe, slots[i]), `${tag}/${m.id}: ${M.recipeId} nie pasuje do ${slots[i].name}`);
+      if (!pr.exclude?.includes('wege') && !M.recipe.shake) assert.ok(fitsSlot(M.recipe, slots[i]), `${tag}/${m.id}: ${M.recipeId} nie pasuje do ${slots[i].name}`);
       M.rows.forEach(r => { assert.ok(!ban.has(r.prod), `${tag}: wykluczony ${r.prod}`); assert.ok(r.g > 0 && Number.isFinite(r.g)); });
     });
-    if (pr.cuisines?.length === 1 && !pr.express) assert.ok(m.meals.every(id => D.recipes.recipes[id].cuisine === pr.cuisines![0]), `${tag}/${m.id}: tylko wybrana kuchnia`);
-    if (pr.express && !pr.cuisines) assert.ok(m.time <= slots.length * 12, `${tag}/${m.id}: ekspres ${m.time} min`);
-    assert.ok(Math.abs(R.tot[3] - R.T.kcal) <= Math.max(120, R.T.kcal * (pr.like?.length ? 0.1 : 0.07)), `${tag}/${m.id}: kcal ${R.tot[3]} vs ${R.T.kcal}`);
+    const pick = v.prefs.menuCuisines['ABC'.indexOf(m.id)], shakeIds = v.prefs.shakes[day];
+    R.meals.forEach(M => {
+      if (shakeIds.includes(M.slot.id)) assert.ok(M.recipe.shake || m.notes.some(n => n.includes('szejku')), `${tag}/${m.id}: ${M.slot.id} miał być szejk`);
+      else assert.ok(!M.recipe.shake, `${tag}/${m.id}: szejk na ${M.slot.id}`);
+      if (pick !== LOS && pick !== MIX && !pr.express && !M.recipe.shake) assert.equal(M.recipe.cuisine, pick, `${tag}/${m.id}: tylko kuchnia ${pick}`);
+    });
+    if (pr.express && !pr.menuCuisines) assert.ok(m.time <= slots.length * 12, `${tag}/${m.id}: ekspres ${m.time} min`);
+    assert.ok(Math.abs(R.tot[3] - R.T.kcal) <= Math.max(120, R.T.kcal * (pr.like?.length || pr.express ? 0.1 : 0.07)), `${tag}/${m.id}: kcal ${R.tot[3]} vs ${R.T.kcal}`);
     assert.ok(Math.abs(R.tot[0] - R.T.g[0]) <= Math.max(10, R.T.g[0] * 0.07), `${tag}/${m.id}: białko ${R.tot[0]} vs ${R.T.g[0]}`);
     assert.ok(Math.abs(R.tot[1] - R.T.g[1]) <= Math.max(20, R.T.g[1] * 0.07), `${tag}/${m.id}: węgle ${R.tot[1]} vs ${R.T.g[1]}`);
     checked++;
   });
 }
 console.log(`kucharz: sprawdzono ${checked} propozycji`);
+
+// Losowe kuchnie: różne od siebie i od wybranych, takie same w obu dniach, „Losuj” zmienia tylko swoją propozycję.
+{
+  const p0 = normPrefs({ menuCuisines: [LOS, 'tajska', LOS] });
+  const t0 = menuThemes(p0, D);
+  assert.ok(t0[0].theme !== t0[2].theme && t0[0].theme !== 'tajska' && t0[2].theme !== 'tajska', 'losowe kuchnie się nie powtarzają');
+  const v = { ...people.kobieta, prefs: p0 };
+  assert.deepEqual(planMenus(v, 'T', D).map(m => m.theme), planMenus(v, 'N', D).map(m => m.theme), 'ta sama kuchnia w obu dniach');
+  let changed = false;
+  for (let k = 1; k <= 5 && !changed; k++) { const t1 = menuThemes({ ...p0, rolls: [k, 0, 0] }, D); changed = t1[0].theme !== t0[0].theme; assert.equal(t1[1].theme, 'tajska'); }
+  assert.ok(changed, '„Losuj” zmienia kuchnię propozycji');
+  assert.deepEqual(normPrefs({ cuisines: ['wloska', 'polska'] }).menuCuisines, ['wloska', 'polska', 'wloska'], 'stary zapis kuchni');
+}
 
 // „Lubi” / „Nie je” jako dowolny tekst.
 const R = D.recipes.recipes;

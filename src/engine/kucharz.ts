@@ -3,26 +3,59 @@
 //   1) twarde warunki – wykluczone produkty, typ posiłku (śniadanie / do pracy / okołotreningowy / kolacja),
 //      dania „do zabrania” nie mogą być tylko na ciepło;
 //   2) trafienie w makro – przepis jest skalowany do celu posiłku (tak jak w widoku), liczy się błąd kcal i makro;
-//   3) kuchnia – każda propozycja ma swoją kuchnię przewodnią, inne wybrane kuchnie są dopuszczalne, niewybrane tylko awaryjnie;
+//   3) kuchnia – każda propozycja (A, B, C) ma swoją kuchnię: wybraną, wylosowaną („Losuj”) albo miks;
+//      inna kuchnia tylko awaryjnie, gdy w wybranej nie ma żadnego pasującego dania;
 //   4) ekspres – dania do `expressMaxMin` minut mają pierwszeństwo, dłuższe tylko gdy nie ma innych;
 //   5) gust i różnorodność – premia za lubiane produkty/dania (każda propozycja ma swój „ulubiony” na pierwszym planie),
 //      kara za powtórzone danie, to samo główne białko lub węglowodan.
 // „Lubi” i „Nie je” to dowolny tekst (produkt, danie, grupa: „łosoś”, „curry”, „owoce”), dopasowywany do nazw dań i składników.
+// Szejki (przepisy z shake: true) trafiają tylko na posiłki wybrane w „Szejk zamiast posiłku” (maks. 2 na dzień).
 // Wynik jest powtarzalny: te same dane i preferencje = te same propozycje („Wymieszaj” zmienia ziarno losowania).
 import { cookMeal, slotTargets, targets } from './silnik.ts';
 import type { Data, Day, Macro4, Menu, MenuPrefs, PlanVersion, Recipe, Slot } from './types.ts';
 
-export const EMPTY_PREFS: MenuPrefs = { cuisines: [], express: false, exclude: [], avoid: [], like: [], seed: 0 };
+/** Wybór kuchni dla propozycji: konkretna kuchnia (id), wylosowana albo miks wszystkich. */
+export const LOS = 'los', MIX = 'mix';
+export const MENU_COUNT = 3, MAX_SHAKES = 2;
 
-/** Uzupełnia brakujące pola (starsze wersje planu nie mają preferencji). */
+export const EMPTY_PREFS: MenuPrefs = {
+  menuCuisines: [LOS, LOS, LOS], rolls: [0, 0, 0], express: false, exclude: [], avoid: [], like: [], seed: 0, shakes: { T: [], N: [] },
+};
+
+/** Uzupełnia brakujące pola (starsze wersje planu nie mają preferencji albo mają stare „cuisines”). */
 export function normPrefs(p?: Partial<MenuPrefs> | null): MenuPrefs {
+  const legacy = p?.cuisines ?? [];
+  const mc = Array.from({ length: MENU_COUNT }, (_, i) => p?.menuCuisines?.[i] ?? (legacy.length ? legacy[i % legacy.length] : LOS));
   return {
-    cuisines: [...(p?.cuisines ?? [])], express: !!p?.express, exclude: [...(p?.exclude ?? [])],
-    avoid: [...(p?.avoid ?? [])], like: [...(p?.like ?? [])], seed: p?.seed ?? 0,
+    menuCuisines: mc, rolls: Array.from({ length: MENU_COUNT }, (_, i) => p?.rolls?.[i] ?? 0),
+    express: !!p?.express, exclude: [...(p?.exclude ?? [])], avoid: [...(p?.avoid ?? [])], like: [...(p?.like ?? [])],
+    seed: p?.seed ?? 0, shakes: { T: [...(p?.shakes?.T ?? [])].slice(0, MAX_SHAKES), N: [...(p?.shakes?.N ?? [])].slice(0, MAX_SHAKES) },
   };
 }
 
-export const hasPrefs = (p: MenuPrefs) => !!(p.cuisines.length || p.express || p.exclude.length || p.avoid.length || p.like.length);
+export const hasPrefs = (p: MenuPrefs) => !!(p.menuCuisines.some(c => c !== LOS) || p.express || p.exclude.length || p.avoid.length
+  || p.like.length || p.shakes.T.length || p.shakes.N.length);
+
+/**
+ * Kuchnia każdej propozycji. „Losowa” dostaje kuchnię spoza wybranych w innych propozycjach i różną od pozostałych
+ * wylosowanych; losowanie zależy od ziarna i licznika „Losuj” tej propozycji, więc jest takie samo w obu dniach.
+ */
+export function menuThemes(p: MenuPrefs, data: Data): { pick: string; theme: string | null }[] {
+  const ids = data.chef.cuisines.map(c => c.id);
+  const fixed = p.menuCuisines.filter(c => ids.includes(c));
+  const taken = new Set<string>();
+  return p.menuCuisines.map((pick, i) => {
+    if (ids.includes(pick)) return { pick, theme: pick };
+    if (pick === MIX) return { pick, theme: null };
+    let pool = ids.filter(c => !fixed.includes(c) && !taken.has(c));
+    if (!pool.length) pool = ids.filter(c => !taken.has(c));
+    if (!pool.length) pool = ids;
+    const rand = rng((p.seed + 1) * 104729 + (i + 1) * 7919 + p.rolls[i] * 15485863);
+    const theme = pool[Math.floor(rand() * pool.length)];
+    taken.add(theme);
+    return { pick: LOS, theme };
+  });
+}
 
 /** Produkty, których nie wolno użyć (grupy wykluczeń + pojedyncze produkty). */
 export function bannedProducts(p: MenuPrefs, data: Data): Set<string> {
@@ -81,7 +114,7 @@ function fitError(sum: Macro4, goal: { g: [number, number, number]; kcal: number
 /** Główny składnik danej roli (największa gramatura bazowa), np. białko dania. */
 const mainOf = (r: Recipe, role: 'P' | 'C') => r.ingredients.filter(i => i.r === role).sort((a, b) => b.g - a.g)[0]?.p ?? '';
 
-const cuisineName = (data: Data, id: string) => data.chef.cuisines.find(c => c.id === id)?.name ?? id;
+export const cuisineName = (data: Data, id: string) => (id === 'szejk' ? 'Szejk' : data.chef.cuisines.find(c => c.id === id)?.name ?? id);
 
 /** Nazwa propozycji z kuchni, które w niej wyszły. */
 function menuName(cuisines: string[], data: Data, express: boolean) {
@@ -95,57 +128,56 @@ function menuName(cuisines: string[], data: Data, express: boolean) {
 }
 
 /**
- * Propozycje dnia (domyślnie 3) dla wersji planu i jej preferencji.
+ * Propozycje dnia (3) dla wersji planu i jej preferencji.
  * Zwraca pustą listę, gdy wykluczenia nie zostawiły żadnego przepisu.
  */
-export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu[] {
+export function planMenus(v: PlanVersion, day: Day, data: Data): Menu[] {
   const prefs = normPrefs(v.prefs), slots = data.rules.days[day].slots;
-  const pool = allowedRecipes(prefs, data);
+  const allowed = allowedRecipes(prefs, data);
+  const pool = allowed.filter(([, r]) => !r.shake), shakes = allowed.filter(([, r]) => r.shake);
   if (!pool.length) return [];
   const goals = slotTargets(targets(v, day), slots);
   const maxT = data.chef.expressMaxMin;
-  const sel = prefs.cuisines.filter(c => data.chef.cuisines.some(x => x.id === c));
   const likes = prefs.like.map(t => matcher(t, data));
+  const shakeSlots = new Set(prefs.shakes[day].filter(id => slots.some(s => s.id === id)).slice(0, MAX_SHAKES));
 
   // Kandydaci na każdy posiłek + ich dopasowanie do makro (liczone raz dla wszystkich propozycji).
+  const evalList = (list: [string, Recipe][], i: number) => list.map(([id, r]) => ({ id, r, err: fitError(cookMeal(r, goals[i], data.P).sum, goals[i]),
+    likes: likes.map(m => m(r)), P: mainOf(r, 'P'), C: mainOf(r, 'C') }));
+  const shakeCands = slots.map((s, i) => (shakeSlots.has(s.id) ? evalList(shakes, i) : []));
   const cands = slots.map((s, i) => {
     let list = pool.filter(([, r]) => fitsSlot(r, s));
     if (!list.length) list = pool.filter(([, r]) => !s.portable || r.serve !== 'hot');
     if (!list.length) list = pool;
-    return list.map(([id, r]) => ({ id, r, err: fitError(cookMeal(r, goals[i], data.P).sum, goals[i]),
-      likes: likes.map(m => m(r)), P: mainOf(r, 'P'), C: mainOf(r, 'C') }));
+    return evalList(list, i);
   });
+  type Cand = (typeof cands)[number][number];
 
-  // Kuchnie przewodnie: wybrane po kolei; bez wyboru – losowe różne kuchnie.
   const rand = rng(prefs.seed * 7919 + (day === 'T' ? 17 : 29));
-  let themes: string[];
-  if (sel.length) themes = Array.from({ length: count }, (_, i) => sel[(i + prefs.seed) % sel.length]);
-  else {
-    const all = data.chef.cuisines.map(c => c.id);
-    for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
-    themes = all.slice(0, count);
-  }
-
   const usedAll = new Map<string, number>();
   const menus: Menu[] = [];
-  themes.forEach((theme, mi) => {
+  menuThemes(prefs, data).forEach(({ pick, theme }, mi) => {
     const chosen: string[] = [], notes: string[] = [], proteins = new Set<string>(), carbs = new Set<string>();
     const star = likes.length ? (mi + prefs.seed) % likes.length : -1;
     let starHit = false;
     slots.forEach((s, i) => {
-      let best: (typeof cands)[number][number] | null = null, bestScore = -Infinity;
+      let best: Cand | null = null, bestScore = -Infinity;
       // Ostatni posiłek nie może zamienić propozycji w kopię wcześniejszej.
       const twins = i === slots.length - 1 ? menus.filter(m => m.meals.slice(0, i).join() === chosen.join()).map(m => m.meals[i]) : [];
-      // Wybrane kuchnie i ekspres to warunki: łagodzimy je dopiero, gdy nie ma żadnego pasującego dania.
-      const free = cands[i].filter(c => !chosen.includes(c.id) && !twins.includes(c.id));
-      const inCuisine = (c: (typeof free)[number]) => !sel.length || sel.includes(c.r.cuisine);
-      const fast = (c: (typeof free)[number]) => !prefs.express || c.r.time <= maxT;
-      const tiers = [free.filter(c => inCuisine(c) && fast(c)), free.filter(inCuisine), free.filter(fast), free];
+      const ok = (c: Cand) => !chosen.includes(c.id) && !twins.includes(c.id);
+      // Szejk, jeśli został jeszcze jakiś inny niż wybrane w tym dniu; inaczej zwykły posiłek.
+      const shakeFree = shakeCands[i].filter(ok), isShake = shakeFree.length > 0;
+      // Kuchnia propozycji i ekspres to warunki: łagodzimy je dopiero, gdy nie ma żadnego pasującego dania. Szejki są poza kuchniami.
+      const free = isShake ? shakeFree : cands[i].filter(ok);
+      const inCuisine = (c: Cand) => isShake || !theme || c.r.cuisine === theme;
+      const fast = (c: Cand) => !prefs.express || c.r.time <= maxT;
+      // Kuchnię wybraną ręcznie stawiamy przed ekspresem; wylosowana ustępuje ekspresowi.
+      const tiers = pick === LOS
+        ? [free.filter(c => inCuisine(c) && fast(c)), free.filter(fast), free.filter(inCuisine), free]
+        : [free.filter(c => inCuisine(c) && fast(c)), free.filter(inCuisine), free.filter(fast), free];
       const tier = tiers.find(t => t.length) ?? [];
       tier.forEach(c => {
         let sc = -160 * c.err - (c.err > 0.12 ? 300 * (c.err - 0.12) : 0);
-        if (c.r.cuisine === theme) sc += 25;
-        else if (sel.length) sc += sel.includes(c.r.cuisine) ? 12 : -140;
         if (prefs.express) sc += c.r.time <= maxT ? 18 - c.r.time * 0.3 : -2.5 * (c.r.time - maxT);
         else if (s.kind === 'S' && c.r.time > 15) sc -= c.r.time - 15;
         // Lubiane: premia za każde trafienie, a „gwiazda” tej propozycji (kolejny ulubiony) dostaje dużo więcej.
@@ -157,24 +189,26 @@ export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu
         if (star >= 0 && starHit && c.likes[star]) sc -= 180; // gwiazda raz na propozycję – reszta dla różnorodności
         if (sc > bestScore) { bestScore = sc; best = c; }
       });
-      const b = best ?? cands[i][0];
+      const b: Cand = best ?? cands[i][0];
       chosen.push(b.id); proteins.add(b.P); carbs.add(b.C);
       if (star >= 0 && b.likes[star]) starHit = true;
       usedAll.set(b.id, (usedAll.get(b.id) ?? 0) + 1);
       const label = `${s.name} (${s.label.toLowerCase()})`;
-      if (!fitsSlot(b.r, s)) notes.push(`${label}: wykluczenia nie zostawiły typowego dania – wybrano najbliższe.`);
-      else if (sel.length && !sel.includes(b.r.cuisine))
-        notes.push(`${label}: brak pasującego dania z wybranych kuchni – dobrano z kuchni ${cuisineName(data, b.r.cuisine).toLowerCase()}.`);
+      if (shakeSlots.has(s.id) && !isShake) notes.push(`${label}: przy tych wykluczeniach brak ${shakes.length ? 'kolejnego, innego' : 'żadnego'} szejku – zostawiono zwykły posiłek.`);
+      else if (!isShake && !fitsSlot(b.r, s)) notes.push(`${label}: wykluczenia nie zostawiły typowego dania – wybrano najbliższe.`);
+      else if (!isShake && theme && b.r.cuisine !== theme)
+        notes.push(`${label}: brak pasującego dania kuchni ${cuisineName(data, theme).toLowerCase()} – dobrano z kuchni ${cuisineName(data, b.r.cuisine).toLowerCase()}.`);
       if (b.likes.some(Boolean) && b.err > 0.2)
         notes.push(`${label}: ulubione danie odbiega od makro tego posiłku – kucharz wyrównał resztę dnia, sprawdź podsumowanie.`);
       if (prefs.express && b.r.time > maxT) notes.push(`${label}: brak dania do ${maxT} min spełniającego pozostałe warunki – to zajmie ok. ${b.r.time} min.`);
     });
-    const recs = chosen.map(id => data.recipes.recipes[id]);
+    const recs = chosen.map(id => data.recipes.recipes[id]).filter(r => !r.shake);
     const freq = new Map<string, number>();
     recs.forEach(r => freq.set(r.cuisine, (freq.get(r.cuisine) ?? 0) + 1));
     const cuisines = [...freq.entries()].sort((a, b) => b[1] - a[1] || (a[0] === theme ? -1 : b[0] === theme ? 1 : 0)).map(e => e[0]);
-    menus.push({ id: 'ABCDEFGH'[mi], name: menuName(cuisines, data, prefs.express), meals: chosen, cuisines,
-      time: recs.reduce((a, r) => a + r.time, 0), notes });
+    const all = chosen.map(id => data.recipes.recipes[id]);
+    menus.push({ id: 'ABCDEFGH'[mi], name: (pick === MIX ? 'Miks · ' : '') + menuName(cuisines.length ? cuisines : [theme ?? 'szejk'], data, prefs.express), meals: chosen, cuisines,
+      time: all.reduce((a, r) => a + r.time, 0), notes, pick, theme });
   });
   return menus;
 }
@@ -192,12 +226,15 @@ export function termReport(terms: string[], menus: Menu[], data: Data, prefs?: M
 }
 
 /** Krótki opis preferencji (do PDF i podpowiedzi). */
-export function prefsSummary(p: MenuPrefs, data: Data): string[] {
+export function prefsSummary(p: MenuPrefs, data: Data, day?: Day): string[] {
   const out: string[] = [];
-  if (p.cuisines.length) out.push('Kuchnie: ' + p.cuisines.map(c => cuisineName(data, c).toLowerCase()).join(', '));
+  const th = menuThemes(p, data);
+  if (p.menuCuisines.some(c => c !== LOS)) out.push('Kuchnie: ' + th.map((t, i) => `${'ABC'[i]} ${t.pick === MIX ? 'miks' : t.pick === LOS ? `losowa (${cuisineName(data, t.theme!).toLowerCase()})` : cuisineName(data, t.pick).toLowerCase()}`).join(', '));
   if (p.express) out.push(`Ekspres: dania do ${data.chef.expressMaxMin} min`);
   const ex = data.chef.exclusions.filter(e => p.exclude.includes(e.id)).map(e => e.label.toLowerCase());
   if (ex.length || p.avoid.length) out.push('Bez: ' + [...ex, ...p.avoid.map(x => x.toLowerCase())].join(', '));
   if (p.like.length) out.push('Lubi: ' + p.like.map(x => x.toLowerCase()).join(', '));
+  const sh = (d: Day) => p.shakes[d].map(id => data.rules.days[d].slots.find(s => s.id === id)?.label.toLowerCase()).filter(Boolean).join(', ');
+  (day ? [day] : (['T', 'N'] as Day[])).forEach(d => { if (p.shakes[d].length) out.push(`Szejk zamiast: ${sh(d)}${day ? '' : d === 'T' ? ' (dzień treningowy)' : ' (nietreningowy)'}`); });
   return out;
 }

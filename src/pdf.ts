@@ -90,7 +90,7 @@ function menuSection(v: PlanVersion, D: Data) {
     out.push({ text: `Suma dnia: ${fmt(R.tot[3])} kcal · B ${fmt(R.tot[0])} g · W ${fmt(R.tot[1])} g · T ${fmt(R.tot[2])} g   (cel: ${fmt(R.T.kcal)} kcal · B ${fmt(R.T.g[0])} · W ${fmt(R.T.g[1])} · T ${fmt(R.T.g[2])})`, fontSize: 8.5, color: C.grey, margin: [0, 0, 0, 8] });
     R.meals.forEach(M => {
       const r = M.recipe;
-      const tags = [D.chef.cuisines.find(c => c.id === r.cuisine)?.name ?? '', serveLabel(r, D), `${r.time} min`].filter(Boolean).concat(M.slot.periWorkout ? ['okołotreningowy'] : []).join(' · ');
+      const tags = [r.shake ? 'Szejk' : D.chef.cuisines.find(c => c.id === r.cuisine)?.name ?? '', serveLabel(r, D), `${r.time} min`].filter(Boolean).concat(M.slot.periWorkout ? ['okołotreningowy'] : []).join(' · ');
       const ingr = { table: { headerRows: 1, widths: ['*', 40, 27, 27, 27, 28], body: [head(), ...M.rows.map(x => [{ text: x.prod }, { text: qtyTxt(x, D), bold: true, alignment: 'right' }, ...cells(x.m)]),
         [{ text: 'Razem', bold: true }, {}, ...cells(M.sum, true)]] }, fontSize: 8, layout };
       out.push({ unbreakable: true, margin: [0, 0, 0, 10], stack: [

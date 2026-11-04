@@ -1,6 +1,6 @@
 {
  "schema": "kris-trainer/chef@1",
- "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspres (czas przygotowania w minutach), gotowe grupy wykluczeń (listy produktów); diets – wykluczenia pokazywane jako wybór diety.",
+ "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspres (czas przygotowania w minutach), gotowe grupy wykluczeń (listy produktów); diets – wykluczenia pokazywane jako wybór diety. Przepisy z shake: true to szejki (cuisine „szejk”) – kucharz wstawia je tylko zamiast wybranych posiłków.",
  "expressMaxMin": 10,
  "cuisines": [
   {
@@ -120,10 +120,10 @@
    "id": "wolowina",
    "label": "Wołowina",
    "products": [
-    "Wołowina mielona 97%",
-    "Wołowina mielona 90%",
     "Wołowina chuda",
-    "Wołowina mielona 95%"
+    "Wołowina mielona 95%",
+    "Wołowina mielona 97%",
+    "Wołowina mielona 90%"
    ]
   },
   {
@@ -142,7 +142,8 @@
     "Jogurt naturalny 0%",
     "Masło 82%",
     "Ser cheddar",
-    "Mleko 2%"
+    "Mleko 2%",
+    "Kefir 2%"
    ]
   },
   {

@@ -240,7 +240,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
   const mIdx = Math.max(0, Math.min(menuIdx[day], menus.length - 1));
   const menu = view === 'menu' && menus.length ? menuDay(v, day, menus[mIdx], D) : null;
   const prefs = normPrefs(v.prefs);
-  const cuisineName = (id: string) => D.chef.cuisines.find(c => c.id === id)?.name ?? id;
+  const cuisineName = (id: string) => (id === 'szejk' ? 'Szejk' : D.chef.cuisines.find(c => c.id === id)?.name ?? id);
   const removed = [...(v.removed[day] ?? [])].sort((a, b) => a - b);
   const tmpl = D.template.days[day];
 
@@ -393,7 +393,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
           </>)}
 
           {view === 'menu' && (
-            <ChefPanel prefs={prefs} menus={menus} dayName={DAY_NAME[day]} disabled={ro} onApply={p => {
+            <ChefPanel prefs={prefs} menus={menus} day={day} dayName={DAY_NAME[day]} disabled={ro} onApply={p => {
               updateVersion(x => { x.prefs = p; }); setMenuIdx({ T: 0, N: 0 }); setFlash(true);
               requestAnimationFrame(() => document.getElementById('propozycje')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
             }} />
@@ -410,7 +410,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
             <p className="menu-lead">{DAY_NAME[day]}: {menu.meals.length} posiłki. {day === 'T'
               ? 'Posiłki 3 i 4 są okołotreningowe: 2× więcej węglowodanów i minimum tłuszczu.'
               : 'Bez okna treningowego – węglowodany rozłożone równo, najwięcej tłuszczu w śniadaniu.'}
-              {prefsSummary(prefs, D).length > 0 && <> Ustawienia: {prefsSummary(prefs, D).join(' · ')}.</>}</p>
+              {prefsSummary(prefs, D, day).length > 0 && <> Ustawienia: {prefsSummary(prefs, D, day).join(' · ')}.</>}</p>
             {menu.menu.notes.length > 0 && <ul className="chef-notes">{menu.menu.notes.map(n => <li key={n}>{n}</li>)}</ul>}
             <div className="stack">{menu.meals.map(M => {
               const r = M.recipe, tg = M.target.g;
