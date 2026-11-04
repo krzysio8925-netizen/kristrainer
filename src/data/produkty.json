@@ -993,6 +993,356 @@
    "f": 0.5,
    "kcal": 149.0,
    "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Tofu naturalne",
+   "group": "P",
+   "category": "Roślinne",
+   "p": 12.0,
+   "c": 2.0,
+   "f": 7.0,
+   "kcal": 119.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Łosoś wędzony",
+   "group": "P",
+   "category": "Ryby",
+   "p": 20.0,
+   "c": 0.0,
+   "f": 9.0,
+   "kcal": 161.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Pierś z kurczaka pieczona (gotowa)",
+   "group": "P",
+   "category": "Mięso",
+   "p": 29.0,
+   "c": 0.0,
+   "f": 3.5,
+   "kcal": 148.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Udko z kurczaka bez skóry",
+   "group": "P",
+   "category": "Mięso",
+   "p": 19.7,
+   "c": 0.0,
+   "f": 4.1,
+   "kcal": 116.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Komosa ryżowa (quinoa)",
+   "group": "C",
+   "category": "Zboża",
+   "p": 14.1,
+   "c": 64.2,
+   "f": 6.1,
+   "kcal": 368.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Kasza jaglana",
+   "group": "C",
+   "category": "Zboża",
+   "p": 11.0,
+   "c": 72.9,
+   "f": 4.2,
+   "kcal": 373.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Soczewica czerwona",
+   "group": "C",
+   "category": "Strączki",
+   "p": 24.6,
+   "c": 63.1,
+   "f": 2.2,
+   "kcal": 371.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Ciecierzyca (puszka)",
+   "group": "C",
+   "category": "Strączki",
+   "p": 7.1,
+   "c": 17.6,
+   "f": 2.6,
+   "kcal": 122.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Makaron soba",
+   "group": "C",
+   "category": "Zboża",
+   "p": 14.4,
+   "c": 74.6,
+   "f": 0.7,
+   "kcal": 362.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Gnocchi ziemniaczane",
+   "group": "C",
+   "category": "Zboża",
+   "p": 4.0,
+   "c": 33.0,
+   "f": 0.5,
+   "kcal": 152.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Ryż gotowy (saszetka)",
+   "group": "C",
+   "category": "Zboża",
+   "p": 2.7,
+   "c": 28.0,
+   "f": 0.3,
+   "kcal": 126.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Tortilla kukurydziana",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 5.7,
+   "c": 44.6,
+   "f": 2.9,
+   "kcal": 227.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Chleb pita",
+   "group": "C",
+   "category": "Pieczywo",
+   "p": 9.1,
+   "c": 55.7,
+   "f": 1.2,
+   "kcal": 270.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Daktyle suszone",
+   "group": "C",
+   "category": "Owoce",
+   "p": 2.5,
+   "c": 75.0,
+   "f": 0.4,
+   "kcal": 314.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Masło 82%",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 0.7,
+   "c": 0.7,
+   "f": 82.5,
+   "kcal": 748.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Masło klarowane (ghee)",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 0.0,
+   "c": 0.0,
+   "f": 99.5,
+   "kcal": 896.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Tahini",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 17.0,
+   "c": 21.0,
+   "f": 54.0,
+   "kcal": 638.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Hummus",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 7.9,
+   "c": 14.3,
+   "f": 9.6,
+   "kcal": 175.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Orzeszki ziemne",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 25.8,
+   "c": 16.1,
+   "f": 49.2,
+   "kcal": 610.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Pesto bazyliowe",
+   "group": "F",
+   "category": "Tłuszcze",
+   "p": 5.0,
+   "c": 6.0,
+   "f": 45.0,
+   "kcal": 449.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Ser cheddar",
+   "group": "F",
+   "category": "Sery",
+   "p": 25.0,
+   "c": 1.3,
+   "f": 33.0,
+   "kcal": 402.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Kapusta biała",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.3,
+   "c": 5.8,
+   "f": 0.1,
+   "kcal": 29.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Sałata rzymska",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.2,
+   "c": 3.3,
+   "f": 0.3,
+   "kcal": 21.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Bakłażan",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.0,
+   "c": 5.9,
+   "f": 0.2,
+   "kcal": 29.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Pak choi",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 1.5,
+   "c": 2.2,
+   "f": 0.2,
+   "kcal": 17.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Rzodkiewka",
+   "group": "V",
+   "category": "Warzywa",
+   "p": 0.7,
+   "c": 3.4,
+   "f": 0.1,
+   "kcal": 17.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Groszek zielony (mrożony)",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 5.4,
+   "c": 14.5,
+   "f": 0.4,
+   "kcal": 83.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Mleko 2%",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 3.3,
+   "c": 4.8,
+   "f": 2.0,
+   "kcal": 50.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Pasta curry",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 2.2,
+   "c": 12.0,
+   "f": 6.0,
+   "kcal": 111.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Sos rybny",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 5.0,
+   "c": 3.6,
+   "f": 0.0,
+   "kcal": 34.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Pasta miso",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 11.7,
+   "c": 26.5,
+   "f": 6.0,
+   "kcal": 207.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Sos ostrygowy",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 1.4,
+   "c": 11.0,
+   "f": 0.3,
+   "kcal": 52.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Sriracha",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 1.9,
+   "c": 19.0,
+   "f": 0.9,
+   "kcal": 92.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
+  },
+  {
+   "name": "Sok z cytryny lub limonki",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 0.4,
+   "c": 8.4,
+   "f": 0.1,
+   "kcal": 36.0,
+   "source": "USDA FoodData Central"
+  },
+  {
+   "name": "Sos BBQ",
+   "group": "X",
+   "category": "Dodatki",
+   "p": 0.8,
+   "c": 40.0,
+   "f": 0.6,
+   "kcal": 169.0,
+   "source": "wartość orientacyjna – sprawdź etykietę"
   }
  ]
 }

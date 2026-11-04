@@ -4,10 +4,12 @@ import {
   deletePerson, errText, exportBackup, importBackup, listenPersons, loadVersions, savePerson, saveVersion, type Backup, type StoredVersion,
 } from '../backend/store';
 import { DATA as D } from '../data';
+import { normPrefs, planMenus, prefsSummary } from '../engine/kucharz';
 import { menuDay, planDay, targets } from '../engine/silnik';
 import type { Day, Macro4, Person, PlanVersion, Target } from '../engine/types';
 import { DAY_NAME, GROUP_COLOR, GROUP_NAME, VEG_NOTE, fmt, qtyTxt, serveLabel } from '../format';
 import { downloadPdf, saveFile } from '../pdf';
+import { ChefPanel } from './ChefPanel';
 import { Logo } from './Logo';
 import { BRANDS, BRAND_IDS, isBrandId, type BrandId } from '../brand';
 
@@ -116,6 +118,8 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
   const person = persons?.find(p => p.id === cid) ?? null;
   const v = versions.find(x => x.id === vid) ?? null;
   const ro = !!v && versions[versions.length - 1]?.id !== v.id;
+  // Propozycje kucharza (liczone tylko w zakładce posiłków; zmieniają się z wersją, dniem i preferencjami).
+  const menus = useMemo(() => (v && view === 'menu' ? planMenus(v, day, D) : []), [v, day, view]);
 
   // ── zapis: z opóźnieniem, ten sam dokument nigdy równolegle ──
   const pending = useRef(new Map<string, ReturnType<typeof setTimeout>>());
@@ -232,8 +236,10 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
   const mm = v.mode === 'macro';
   const sp = v.split[day], cp = 100 - sp.p - sp.f, ps = D.template.planSplit[day];
   const plan = view === 'plan' ? planDay(v, day, D) : null;
-  const menus = D.recipes.menus[day], mIdx = Math.min(menuIdx[day], menus.length - 1);
-  const menu = view === 'menu' ? menuDay(v, day, mIdx, D) : null;
+  const mIdx = Math.max(0, Math.min(menuIdx[day], menus.length - 1));
+  const menu = view === 'menu' && menus.length ? menuDay(v, day, menus[mIdx], D) : null;
+  const prefs = normPrefs(v.prefs);
+  const cuisineName = (id: string) => D.chef.cuisines.find(c => c.id === id)?.name ?? id;
   const removed = [...(v.removed[day] ?? [])].sort((a, b) => a - b);
   const tmpl = D.template.days[day];
 
@@ -385,21 +391,30 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
             </section>
           </>)}
 
+          {view === 'menu' && (
+            <ChefPanel prefs={prefs} disabled={ro} onChange={p => { updateVersion(x => { x.prefs = p; }); setMenuIdx({ T: 0, N: 0 }); }} />
+          )}
+          {view === 'menu' && !menus.length && (
+            <div className="empty"><strong className="empty-t">Brak pasujących przepisów</strong>
+              <p className="hint">Wykluczenia odrzuciły wszystkie dania z bazy. Odznacz któreś wykluczenie albo usuń produkt z listy „Nie je”.</p></div>
+          )}
           {menu && (<>
             <Summary T={menu.T} tot={menu.tot} />
             <div className="menu-pick" role="tablist" aria-label="Propozycje dnia">{menus.map((m, i) => (
               <button key={m.id} type="button" role="tab" aria-selected={i === mIdx} onClick={() => setMenuIdx(s => ({ ...s, [day]: i }))}>
-                <span className="mid">Propozycja {m.id}</span><span className="mname">{m.name}</span></button>))}</div>
+                <span className="mid">Propozycja {m.id}<span className="mtime">≈ {m.time} min</span></span><span className="mname">{m.name}</span></button>))}</div>
             <p className="menu-lead">{DAY_NAME[day]}: {menu.meals.length} posiłki. {day === 'T'
               ? 'Posiłki 3 i 4 są okołotreningowe: 2× więcej węglowodanów i minimum tłuszczu.'
-              : 'Bez okna treningowego – węglowodany rozłożone równo, najwięcej tłuszczu w śniadaniu.'}</p>
+              : 'Bez okna treningowego – węglowodany rozłożone równo, najwięcej tłuszczu w śniadaniu.'}
+              {prefsSummary(prefs, D).length > 0 && <> Ustawienia: {prefsSummary(prefs, D).join(' · ')}.</>}</p>
+            {menu.menu.notes.length > 0 && <ul className="chef-notes">{menu.menu.notes.map(n => <li key={n}>{n}</li>)}</ul>}
             <div className="stack">{menu.meals.map(M => {
               const r = M.recipe, tg = M.target.g;
               return (
                 <article className="dish" key={M.slot.id}>
                   <header className="dish-head">
                     <div className="dish-title"><span className="slot">{M.slot.name} · {M.slot.label}</span><h3>{r.name}</h3>
-                      <div className="chips"><span className="chip">{serveLabel(r, D)}</span><span className="chip">{r.time} min</span>
+                      <div className="chips"><span className="chip cuisine-chip">{cuisineName(r.cuisine)}</span><span className="chip">{serveLabel(r, D)}</span><span className="chip">{r.time} min</span>
                         {M.slot.periWorkout && <span className="chip peri">okołotreningowy</span>}</div></div>
                     <div className="dish-mk"><b>{fmt(M.sum[3])} kcal</b><span>B {fmt(M.sum[0])} · W {fmt(M.sum[1])} · T {fmt(M.sum[2])}</span>
                       <span className="cel">cel B {fmt(tg[0])} · W {fmt(tg[1])} · T {fmt(tg[2])}</span></div>
@@ -425,7 +440,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
                   <Logo brand={b} width={BRANDS[b].w * 0.62} />
                 </label>))}
             </fieldset>
-            <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami (3 propozycje na dzień treningowy i 3 na nietreningowy), z logo ${BRANDS[brand].name}.`}</p>
+            <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami od kucharza (3 propozycje na dzień treningowy i 3 na nietreningowy, według ustawień z zakładki posiłków), z logo ${BRANDS[brand].name}.`}</p>
             <button type="button" className="btn primary" disabled={busy} onClick={generate}>{busy ? 'Generowanie…' : 'Generuj'}</button>
           </section>
           {backupBox}

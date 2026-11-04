@@ -1,6 +1,6 @@
 {
  "schema": "kris-trainer/meal-rules@1",
- "note": "Rozkład dziennego makro na posiłki w propozycjach. weights to wagi względne (silnik je normalizuje). Okołotreningowo: węglowodany 2x więcej niż w pozostałych posiłkach, tłuszcz minimalny; najwięcej tłuszczu w śniadaniu.",
+ "note": "Rozkład dziennego makro na posiłki w propozycjach. weights to wagi względne (silnik je normalizuje). Okołotreningowo: węglowodany 2x więcej niż w pozostałych posiłkach, tłuszcz minimalny; najwięcej tłuszczu w śniadaniu. kind – typ posiłku, z którego kucharz wybiera przepisy (S/W/O/K); portable – posiłek do zabrania (bez dań tylko na ciepło).",
  "principles": [
   "Posiłki przed i po treningu mają 2 razy więcej węglowodanów niż pozostałe i minimum tłuszczu – szybciej się trawią i lepiej uzupełniają glikogen.",
   "Najwięcej tłuszczu jest w śniadaniu (ok. 1/3 dziennego tłuszczu w dzień treningowy), które ma być na ciepło i szybkie w przygotowaniu.",
@@ -22,7 +22,9 @@
       "c": 1,
       "f": 6
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "S",
+     "portable": false
     },
     {
      "id": "P2",
@@ -34,7 +36,9 @@
       "c": 1,
       "f": 5
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "W",
+     "portable": true
     },
     {
      "id": "P3",
@@ -46,7 +50,9 @@
       "c": 2,
       "f": 1
      },
-     "periWorkout": true
+     "periWorkout": true,
+     "kind": "O",
+     "portable": true
     },
     {
      "id": "P4",
@@ -58,7 +64,9 @@
       "c": 2,
       "f": 1
      },
-     "periWorkout": true
+     "periWorkout": true,
+     "kind": "O",
+     "portable": false
     },
     {
      "id": "P5",
@@ -70,7 +78,9 @@
       "c": 1,
       "f": 5
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "K",
+     "portable": false
     }
    ]
   },
@@ -87,7 +97,9 @@
       "c": 1,
       "f": 1.5
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "S",
+     "portable": false
     },
     {
      "id": "P2",
@@ -99,7 +111,9 @@
       "c": 1,
       "f": 1
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "W",
+     "portable": true
     },
     {
      "id": "P3",
@@ -111,7 +125,9 @@
       "c": 1,
       "f": 1
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "W",
+     "portable": true
     },
     {
      "id": "P4",
@@ -123,7 +139,9 @@
       "c": 1,
       "f": 1
      },
-     "periWorkout": false
+     "periWorkout": false,
+     "kind": "K",
+     "portable": false
     }
    ]
   }

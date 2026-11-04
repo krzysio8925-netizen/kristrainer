@@ -1,0 +1,191 @@
+{
+ "schema": "kris-trainer/chef@1",
+ "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspresowy (czas przygotowania w minutach) i gotowe grupy wykluczeń (listy produktów).",
+ "expressMaxMin": 10,
+ "cuisines": [
+  {
+   "id": "polska",
+   "name": "Polska"
+  },
+  {
+   "id": "wloska",
+   "name": "Włoska"
+  },
+  {
+   "id": "srodziemnomorska",
+   "name": "Śródziemnomorska"
+  },
+  {
+   "id": "meksykanska",
+   "name": "Meksykańska"
+  },
+  {
+   "id": "amerykanska",
+   "name": "Amerykańska"
+  },
+  {
+   "id": "japonska",
+   "name": "Japońska"
+  },
+  {
+   "id": "chinska",
+   "name": "Chińska"
+  },
+  {
+   "id": "tajska",
+   "name": "Tajska"
+  },
+  {
+   "id": "indyjska",
+   "name": "Indyjska"
+  },
+  {
+   "id": "bliskowschodnia",
+   "name": "Bliskowschodnia"
+  }
+ ],
+ "exclusions": [
+  {
+   "id": "wege",
+   "label": "Mięso i ryby (dieta wege)",
+   "products": [
+    "Pierś z kurczaka",
+    "Pierś z indyka",
+    "Pierś z indyka mielona",
+    "Polędwiczka wieprzowa",
+    "Wołowina chuda",
+    "Wołowina mielona 90%",
+    "Wołowina mielona 95%",
+    "Wołowina mielona 97%",
+    "Wędlina z kurczaka",
+    "Szynka z indyka",
+    "Pierś z kurczaka pieczona (gotowa)",
+    "Udko z kurczaka bez skóry",
+    "Dorsz",
+    "Mintaj",
+    "Łosoś dziki",
+    "Łosoś atlantycki",
+    "Krewetki",
+    "Tuńczyk w wodzie",
+    "Łosoś wędzony",
+    "Sos rybny",
+    "Sos ostrygowy"
+   ]
+  },
+  {
+   "id": "ryby",
+   "label": "Ryby i owoce morza",
+   "products": [
+    "Dorsz",
+    "Mintaj",
+    "Łosoś dziki",
+    "Łosoś atlantycki",
+    "Krewetki",
+    "Tuńczyk w wodzie",
+    "Łosoś wędzony",
+    "Sos rybny",
+    "Sos ostrygowy"
+   ]
+  },
+  {
+   "id": "wieprzowina",
+   "label": "Wieprzowina",
+   "products": [
+    "Polędwiczka wieprzowa"
+   ]
+  },
+  {
+   "id": "wolowina",
+   "label": "Wołowina",
+   "products": [
+    "Wołowina mielona 97%",
+    "Wołowina mielona 90%",
+    "Wołowina chuda",
+    "Wołowina mielona 95%"
+   ]
+  },
+  {
+   "id": "nabial",
+   "label": "Nabiał (laktoza)",
+   "products": [
+    "WPC 80",
+    "Skyr naturalny 0%",
+    "Jogurt grecki 0%",
+    "Twaróg chudy",
+    "Serek wiejski lekki",
+    "Serek wiejski klasyczny",
+    "Parmezan",
+    "Mozzarella light",
+    "Ser feta light",
+    "Jogurt naturalny 0%",
+    "Masło 82%",
+    "Ser cheddar",
+    "Mleko 2%"
+   ]
+  },
+  {
+   "id": "gluten",
+   "label": "Gluten",
+   "products": [
+    "Płatki owsiane",
+    "Kasza manna",
+    "Kasza kuskus",
+    "Kasza bulgur",
+    "Makaron durum",
+    "Makaron pełnoziarnisty",
+    "Pieczywo białe",
+    "Pieczywo pełnoziarniste",
+    "Chleb żytni",
+    "Bułka pełnoziarnista",
+    "Bajgiel",
+    "Tortilla pszenna",
+    "Tortilla pełnoziarnista",
+    "Chleb pita",
+    "Gnocchi ziemniaczane",
+    "Makaron soba",
+    "Sos sojowy",
+    "Sos ostrygowy",
+    "Pasta miso"
+   ]
+  },
+  {
+   "id": "jaja",
+   "label": "Jaja",
+   "products": [
+    "Białka jaj",
+    "Jajo całe"
+   ]
+  },
+  {
+   "id": "orzechy",
+   "label": "Orzechy i orzeszki",
+   "products": [
+    "Masło migdałowe",
+    "Masło orzechowe 100%",
+    "Orzechy włoskie",
+    "Nerkowce",
+    "Orzeszki ziemne",
+    "Pesto bazyliowe"
+   ]
+  },
+  {
+   "id": "soja",
+   "label": "Soja",
+   "products": [
+    "Tofu naturalne",
+    "Sos sojowy",
+    "Edamame",
+    "Pasta miso"
+   ]
+  },
+  {
+   "id": "odzywki",
+   "label": "Odżywki białkowe",
+   "products": [
+    "WPI",
+    "WPC 80",
+    "EAA"
+   ]
+  }
+ ]
+}

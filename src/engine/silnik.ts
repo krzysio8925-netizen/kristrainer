@@ -1,7 +1,7 @@
 // Kris Trainer – silnik obliczeń diety. Czysty TypeScript, bez React i bez bazy:
 // dane (produkty, szablon, zasady, przepisy) + wersja planu osoby → gramatury i makro.
 import type {
-  Data, Day, Macro4, MealRules, MenuResult, PlanResult, PlanTemplate, PlanVersion, Product, Recipes, Role, Row, Slot, Target,
+  ChefData, Data, Day, Macro4, MealRules, Menu, MenuMeal, MenuResult, PlanResult, PlanTemplate, PlanVersion, Product, Recipe, Recipes, Role, Row, Slot, Target,
 } from './types';
 
 const KCAL_PER_G = [4, 4, 9];
@@ -15,13 +15,15 @@ export const MENU_BOUNDS: Bounds = [[0.4, 4], [0.4, 4.5], [0, 3.5]];
 const EXTRA_SCALE: [number, number] = [0.6, 1.3];
 // Tłuszcz dodany poniżej tej ilości (g) pomijamy.
 const MIN_FAT_G = 3;
+// Ile razy kucharz wyrównuje dzień, przenosząc niedobór/nadmiar makro między posiłkami.
+const DAY_FIX_ITER = 6;
 
 const isScaled = (r: Role) => ROLE_INDEX[r] !== undefined;
 
-export function makeData(products: { products: Product[] }, template: PlanTemplate, rules: MealRules, recipes: Recipes): Data {
+export function makeData(products: { products: Product[] }, template: PlanTemplate, rules: MealRules, recipes: Recipes, chef: ChefData): Data {
   const P: Record<string, Product> = {};
   products.products.forEach(p => { P[p.name] = p; });
-  return { products: products.products, P, template, rules, recipes };
+  return { products: products.products, P, template, rules, recipes, chef };
 }
 
 export function macros(prod: Product, g: number): Macro4 {
@@ -184,26 +186,41 @@ export function slotTargets(dayTarget: Target, slots: Slot[]) {
   });
 }
 
-/** Propozycja dnia (menu A/B/C) dopasowana do celu wersji planu. */
-export function menuDay(v: PlanVersion, day: Day, menuIndex: number, data: Data): MenuResult {
-  const P = data.P, T = targets(v, day);
-  const slots = data.rules.days[day].slots, menu = data.recipes.menus[day][menuIndex];
-  const goals = slotTargets(T, slots);
-  const meals = slots.map((slot, i) => {
-    const recipeId = menu.meals[i], recipe = data.recipes.recipes[recipeId];
-    const items: Item[] = recipe.ingredients.map(x => ({ prod: x.p, base: x.g, role: x.r }));
-    const baseKcal = items.reduce((a, it) => a + it.base * P[it.prod].kcal / 100, 0);
-    const xs = Math.min(EXTRA_SCALE[1], Math.max(EXTRA_SCALE[0], goals[i].kcal / (baseKcal || 1)));
-    items.forEach(it => {
-      if (isScaled(it.role)) return;
-      const g = it.base * xs;
-      it.base = P[it.prod].unitG ? it.base : g < 30 ? Math.max(1, Math.round(g)) : Math.round(g / 5) * 5;
-    });
-    const done = finalize(items, solveScales(items, goals[i].g, P, MENU_BOUNDS), goals[i].g, P, MENU_BOUNDS);
-    done.forEach(it => { if (it.role === 'F' && P[it.prod].group === 'F' && it.g < MIN_FAT_G) { it.g = 0; it.m = [0, 0, 0, 0]; } });
-    const rows = done.filter(it => it.g > 0);
-    return { slot, recipeId, recipe, target: goals[i], rows, sum: sum4(rows) };
+/** Przepis dopasowany do celu makro jednego posiłku: gramatury i suma. */
+export function cookMeal(recipe: Recipe, goal: { g: [number, number, number]; kcal: number }, P: Record<string, Product>): { rows: Row[]; sum: Macro4 } {
+  const items: Item[] = recipe.ingredients.map(x => ({ prod: x.p, base: x.g, role: x.r }));
+  const baseKcal = items.reduce((a, it) => a + it.base * P[it.prod].kcal / 100, 0);
+  const xs = Math.min(EXTRA_SCALE[1], Math.max(EXTRA_SCALE[0], goal.kcal / (baseKcal || 1)));
+  items.forEach(it => {
+    if (isScaled(it.role)) return;
+    const g = it.base * xs;
+    it.base = P[it.prod].unitG ? it.base : g < 30 ? Math.max(1, Math.round(g)) : Math.round(g / 5) * 5;
   });
+  const done = finalize(items, solveScales(items, goal.g, P, MENU_BOUNDS), goal.g, P, MENU_BOUNDS);
+  done.forEach(it => { if (it.role === 'F' && P[it.prod].group === 'F' && it.g < MIN_FAT_G) { it.g = 0; it.m = [0, 0, 0, 0]; } });
+  const rows = done.filter(it => it.g > 0);
+  return { rows, sum: sum4(rows) };
+}
+
+/** Propozycja dnia (menu od kucharza) dopasowana do celu wersji planu. */
+export function menuDay(v: PlanVersion, day: Day, menu: Menu, data: Data): MenuResult {
+  const T = targets(v, day), slots = data.rules.days[day].slots, goals = slotTargets(T, slots);
+  const recipes = slots.map((_, i) => data.recipes.recipes[menu.meals[i]]);
+  // Korekta dnia: to, czego jedno danie nie zmieściło (limity skalowania), przechodzi na pozostałe posiłki.
+  const aim = goals.map(g => ({ g: [...g.g] as [number, number, number], kcal: g.kcal }));
+  let cooked = recipes.map((r, i) => cookMeal(r, aim[i], data.P));
+  for (let iter = 0; iter < DAY_FIX_ITER; iter++) {
+    const tot = sum4(cooked.flatMap(c => c.rows));
+    const resid = [0, 1, 2].map(m => T.g[m] - tot[m]);
+    if (resid.every((r, m) => Math.abs(r) * KCAL_PER_G[m] < 12)) break;
+    [0, 1, 2].forEach(m => {
+      const share = goals.reduce((a, g) => a + g.g[m], 0) || 1;
+      aim.forEach((a, i) => { a.g[m] = Math.max(0, a.g[m] + resid[m] * goals[i].g[m] / share); });
+    });
+    aim.forEach(a => { a.kcal = 4 * a.g[0] + 4 * a.g[1] + 9 * a.g[2]; });
+    cooked = recipes.map((r, i) => cookMeal(r, aim[i], data.P));
+  }
+  const meals: MenuMeal[] = slots.map((slot, i) => ({ slot, recipeId: menu.meals[i], recipe: recipes[i], target: goals[i], ...cooked[i] }));
   return { T, menu, meals, tot: sum4(meals.flatMap(m => m.rows)) };
 }
 
@@ -216,9 +233,17 @@ export function validate(data: Data): string[] {
     if (!P[i.p]) errs.push(`przepis ${id}: brak produktu ${i.p}`);
     if (!['P', 'C', 'F', 'X'].includes(i.r)) errs.push(`przepis ${id}: zła rola ${i.r}`);
   }));
-  (Object.entries(data.recipes.menus) as [Day, Recipes['menus'][Day]][]).forEach(([d, menus]) => menus.forEach(m => {
-    if (m.meals.length !== data.rules.days[d].slots.length) errs.push(`menu ${d}/${m.id}: liczba dań ≠ liczba posiłków`);
-    m.meals.forEach(id => { if (!data.recipes.recipes[id]) errs.push(`menu ${d}/${m.id}: brak przepisu ${id}`); });
-  }));
+  const cuisines = new Set(data.chef.cuisines.map(c => c.id));
+  Object.entries(data.recipes.recipes).forEach(([id, r]) => {
+    if (!cuisines.has(r.cuisine)) errs.push(`przepis ${id}: nieznana kuchnia ${r.cuisine}`);
+    if (!r.slots?.length || r.slots.some(k => !'SWOK'.includes(k))) errs.push(`przepis ${id}: złe typy posiłków`);
+    if (!data.recipes.serveLabels[r.serve]) errs.push(`przepis ${id}: nieznany sposób podania ${r.serve}`);
+  });
+  data.chef.exclusions.forEach(e => e.products.forEach(p => { if (!P[p]) errs.push(`wykluczenie ${e.id}: brak produktu ${p}`); }));
+  // Każda kuchnia ma danie na każdy typ posiłku z zasad (także „do zabrania”).
+  data.chef.cuisines.forEach(c => (Object.values(data.rules.days)).forEach(d => d.slots.forEach(s => {
+    const ok = Object.values(data.recipes.recipes).some(r => r.cuisine === c.id && r.slots.includes(s.kind) && (!s.portable || r.serve !== 'hot'));
+    if (!ok) errs.push(`kuchnia ${c.id}: brak dania na ${s.name} (${s.label})`);
+  })));
   return errs;
 }

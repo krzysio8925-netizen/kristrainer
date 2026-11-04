@@ -1,80 +1,11 @@
 {
- "schema": "kris-trainer/recipes@1",
- "note": "Przepisy bazowe na ok. 1 porcję. Rola składnika r: P – źródło białka, C – węglowodanów, F – tłuszczu (te trzy silnik skaluje do makro posiłku), X – dodatek o stałej ilości (warzywa, sosy). Gramatury produktów surowych/suchych.",
+ "schema": "kris-trainer/recipes@2",
+ "note": "Baza przepisów na ok. 1 porcję. cuisine – kuchnia (kuchnie.json). slots – typy posiłków: S śniadanie (na ciepło), W do pracy (na zimno / z mikrofali), O okołotreningowy (mało tłuszczu), K obiad/kolacja. Rola składnika r: P – źródło białka, C – węglowodanów, F – tłuszczu (te trzy silnik skaluje do makro posiłku), X – dodatek o stałej ilości (warzywa, sosy). Gramatury produktów surowych/suchych (produkty „gotowe” – tak jak w opakowaniu). Propozycje dni układa kucharz (engine/kucharz.ts).",
  "serveLabels": {
   "hot": "na ciepło",
   "cold": "na zimno",
   "micro": "do odgrzania w mikrofali",
   "cold_or_micro": "na zimno lub z mikrofali"
- },
- "menus": {
-  "T": [
-   {
-    "id": "A",
-    "name": "Klasyka meal prep",
-    "meals": [
-     "t-owsianka",
-     "t-teriyaki",
-     "t-makaron-tunczyk",
-     "t-bolognese",
-     "t-dorsz"
-    ]
-   },
-   {
-    "id": "B",
-    "name": "Tex-mex i burger",
-    "meals": [
-     "t-jajecznica-awokado",
-     "t-chili",
-     "t-bajgiel",
-     "t-stirfry",
-     "t-burger"
-    ]
-   },
-   {
-    "id": "C",
-    "name": "Śródziemnomorsko",
-    "meals": [
-     "t-placuszki",
-     "t-tabbouleh",
-     "t-makaron-ananas",
-     "t-krewetki",
-     "t-poledwiczka"
-    ]
-   }
-  ],
-  "N": [
-   {
-    "id": "A",
-    "name": "Domowo i sycąco",
-    "meals": [
-     "n-shakshuka",
-     "n-curry",
-     "n-nicejska",
-     "n-gulasz"
-    ]
-   },
-   {
-    "id": "B",
-    "name": "Włoskie smaki",
-    "meals": [
-     "n-zapiekanki",
-     "n-makaron-szpinak",
-     "n-miska-meksykanska",
-     "n-pizza-tortilla"
-    ]
-   },
-   {
-    "id": "C",
-    "name": "Azja i Meksyk",
-    "meals": [
-     "n-burrito",
-     "n-klopsiki",
-     "n-poke",
-     "n-blacha"
-    ]
-   }
-  ]
  },
  "recipes": {
   "t-owsianka": {
@@ -108,7 +39,11 @@
     "Zdejmij z ognia, odczekaj minutę i wmieszaj odżywkę – nie gotuj jej, bo się zważy.",
     "Dodaj pokrojonego banana, masło orzechowe i cynamon."
    ],
-   "tip": "Szczypta soli i cynamon robią z owsianki deser – bez dodatkowych kalorii."
+   "tip": "Szczypta soli i cynamon robią z owsianki deser – bez dodatkowych kalorii.",
+   "cuisine": "polska",
+   "slots": [
+    "S"
+   ]
   },
   "t-teriyaki": {
    "name": "Kurczak teriyaki z ryżem jaśminowym i brokułem",
@@ -152,7 +87,12 @@
     "Dodaj sos sojowy, miód, starty imbir i czosnek; redukuj 1–2 min, aż sos oblepi mięso.",
     "Przełóż do pojemnika. W pracy odgrzewaj 2 min w mikrofali, pod przykrywką."
    ],
-   "tip": "Ugotuj od razu 3 porcje – teriyaki trzyma się w lodówce 3 dni."
+   "tip": "Ugotuj od razu 3 porcje – teriyaki trzyma się w lodówce 3 dni.",
+   "cuisine": "japonska",
+   "slots": [
+    "W",
+    "K"
+   ]
   },
   "t-makaron-tunczyk": {
    "name": "Sałatka makaronowa z tuńczykiem i kukurydzą",
@@ -190,7 +130,12 @@
     "Wymieszaj z odsączonym tuńczykiem, kukurydzą i pokrojoną papryką.",
     "Sos: jogurt + łyżeczka musztardy + sok z cytryny + pieprz. Polej i wymieszaj."
    ],
-   "tip": "Najlepsza schłodzona – zrób wieczorem, w lodówce trzyma się 2 dni."
+   "tip": "Najlepsza schłodzona – zrób wieczorem, w lodówce trzyma się 2 dni.",
+   "cuisine": "polska",
+   "slots": [
+    "O",
+    "W"
+   ]
   },
   "t-bolognese": {
    "name": "Spaghetti bolognese z indykiem",
@@ -223,7 +168,12 @@
     "Wlej passatę, dopraw oregano, bazylią, czosnkiem, solą i szczyptą cukru; duś 10 min.",
     "Wymieszaj z ugotowanym makaronem."
    ],
-   "tip": "Po treningu bez parmezanu i oliwy – tłuszcz trzymamy tu nisko."
+   "tip": "Po treningu bez parmezanu i oliwy – tłuszcz trzymamy tu nisko.",
+   "cuisine": "wloska",
+   "slots": [
+    "O",
+    "K"
+   ]
   },
   "t-dorsz": {
    "name": "Dorsz pieczony z ziemniakami i mizerią",
@@ -261,7 +211,11 @@
     "Dorsza skrop oliwą i cytryną, posól, posyp papryką słodką; piecz 12–15 min w 200°C.",
     "Mizeria: ogórek w plasterkach + jogurt + koperek + sól i pieprz."
    ],
-   "tip": "Ryba jest gotowa, gdy łatwo rozchodzi się na płatki – nie przepiekaj jej."
+   "tip": "Ryba jest gotowa, gdy łatwo rozchodzi się na płatki – nie przepiekaj jej.",
+   "cuisine": "polska",
+   "slots": [
+    "K"
+   ]
   },
   "t-jajecznica-awokado": {
    "name": "Jajecznica na toście z awokado i pomidorkami",
@@ -299,7 +253,11 @@
     "Smaż na małym ogniu, cały czas mieszając; zdejmij, gdy jest jeszcze lekko wilgotna.",
     "Chleb opiecz, posmaruj awokado rozgniecionym z solą i cytryną, połóż jajecznicę; obok pomidorki."
    ],
-   "tip": "Jajecznica dochodzi na talerzu – zdejmij ją chwilę wcześniej, będzie kremowa."
+   "tip": "Jajecznica dochodzi na talerzu – zdejmij ją chwilę wcześniej, będzie kremowa.",
+   "cuisine": "amerykanska",
+   "slots": [
+    "S"
+   ]
   },
   "t-chili": {
    "name": "Chili con carne z ryżem",
@@ -347,7 +305,12 @@
     "Dodaj kumin, wędzoną paprykę, chili i czosnek, potem passatę, fasolę i kukurydzę; duś 15 min.",
     "Podawaj z ryżem."
    ],
-   "tip": "Chili smakuje lepiej na drugi dzień – idealne do pojemnika."
+   "tip": "Chili smakuje lepiej na drugi dzień – idealne do pojemnika.",
+   "cuisine": "meksykanska",
+   "slots": [
+    "W",
+    "K"
+   ]
   },
   "t-bajgiel": {
    "name": "Bajgiel z twarożkiem, miodem i bananem",
@@ -380,7 +343,11 @@
     "Bajgiel przekrój, nałóż twarożek i plasterki banana.",
     "Zawiń w folię lub papier – spokojnie wytrzyma kilka godzin."
    ],
-   "tip": "Zjedz 60–90 min przed treningiem – szybkie węgle, mało tłuszczu, lekki żołądek."
+   "tip": "Zjedz 60–90 min przed treningiem – szybkie węgle, mało tłuszczu, lekki żołądek.",
+   "cuisine": "amerykanska",
+   "slots": [
+    "O"
+   ]
   },
   "t-stirfry": {
    "name": "Stir-fry z kurczakiem i makaronem ryżowym",
@@ -418,7 +385,12 @@
     "Kurczaka w paskach smaż na mocno rozgrzanej patelni z powłoką (bez tłuszczu lub z kroplą oleju w sprayu) 5 min.",
     "Dodaj warzywa na 3–4 min, potem makaron, sos sojowy i słodkie chili; wymieszaj i posyp szczypiorkiem."
    ],
-   "tip": "Patelnia musi być bardzo gorąca – wtedy warzywa są chrupiące, a nie duszone."
+   "tip": "Patelnia musi być bardzo gorąca – wtedy warzywa są chrupiące, a nie duszone.",
+   "cuisine": "chinska",
+   "slots": [
+    "O",
+    "K"
+   ]
   },
   "t-burger": {
    "name": "Burger wołowy z guacamole i sosem jogurtowym",
@@ -461,7 +433,11 @@
     "Smaż na mocno rozgrzanej patelni grillowej 3–4 min z każdej strony.",
     "Bułkę opiecz; posmaruj guacamole (awokado + limonka + sól), dodaj kotlet, pomidor, cebulę i sos jogurtowo-czosnkowy."
    ],
-   "tip": "Zrób kciukiem wgłębienie na środku kotleta – nie napuchnie przy smażeniu."
+   "tip": "Zrób kciukiem wgłębienie na środku kotleta – nie napuchnie przy smażeniu.",
+   "cuisine": "amerykanska",
+   "slots": [
+    "K"
+   ]
   },
   "t-placuszki": {
    "name": "Placuszki owsiane ze skyrem i malinami",
@@ -504,7 +480,11 @@
     "Smaż małe placuszki na suchej patelni z powłoką, ok. 1,5 min z każdej strony.",
     "Podawaj ze skyrem, malinami i masłem orzechowym."
    ],
-   "tip": "Ciasto odstaw na 2 min przed smażeniem – płatki napęcznieją i placki nie będą się rozlewać."
+   "tip": "Ciasto odstaw na 2 min przed smażeniem – płatki napęcznieją i placki nie będą się rozlewać.",
+   "cuisine": "amerykanska",
+   "slots": [
+    "S"
+   ]
   },
   "t-tabbouleh": {
    "name": "Tabbouleh z kurczakiem i fetą",
@@ -547,7 +527,11 @@
     "Kurczaka przypraw papryką, czosnkiem i oregano, upiecz lub usmaż, pokrój.",
     "Wymieszaj z kaszą, ogórkiem, pomidorem, natką, miętą, fetą, oliwą i sokiem z cytryny."
    ],
-   "tip": "Je się na zimno – nic nie trzeba odgrzewać, a dzień później jest jeszcze lepsze."
+   "tip": "Je się na zimno – nic nie trzeba odgrzewać, a dzień później jest jeszcze lepsze.",
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "W"
+   ]
   },
   "t-makaron-ananas": {
    "name": "Sałatka makaronowa z kurczakiem, ananasem i słodkim chili",
@@ -585,7 +569,12 @@
     "Kurczaka ugotuj lub upiecz bez tłuszczu, pokrój w kostkę.",
     "Wymieszaj z ananasem, papryką, dymką, sosem słodkie chili i sokiem z limonki."
    ],
-   "tip": "Słodko-pikantny sos zastępuje majonez – sałatka zostaje lekka przed treningiem."
+   "tip": "Słodko-pikantny sos zastępuje majonez – sałatka zostaje lekka przed treningiem.",
+   "cuisine": "tajska",
+   "slots": [
+    "O",
+    "W"
+   ]
   },
   "t-krewetki": {
    "name": "Krewetki czosnkowe ze spaghetti i pomidorkami",
@@ -618,7 +607,12 @@
     "Na patelnię wrzuć czosnek i chili z 2–3 łyżkami wody z makaronu, dodaj krewetki – po 2 min z każdej strony.",
     "Dodaj przekrojone pomidorki, makaron i natkę; wymieszaj i dopraw cytryną."
    ],
-   "tip": "Skrobia z wody po makaronie robi kremowy sos bez kropli tłuszczu."
+   "tip": "Skrobia z wody po makaronie robi kremowy sos bez kropli tłuszczu.",
+   "cuisine": "wloska",
+   "slots": [
+    "O",
+    "K"
+   ]
   },
   "t-poledwiczka": {
    "name": "Polędwiczka wieprzowa z pieczonymi ziemniakami i surówką z marchewki",
@@ -656,7 +650,11 @@
     "Polędwiczkę natrzyj musztardą, czosnkiem i tymiankiem; obsmaż i dopiecz 12–15 min razem z ziemniakami.",
     "Surówka: starta marchew + jabłko + sok z cytryny + reszta oliwy."
    ],
-   "tip": "Po upieczeniu odstaw mięso na 5 min przed krojeniem – zostanie soczyste."
+   "tip": "Po upieczeniu odstaw mięso na 5 min przed krojeniem – zostanie soczyste.",
+   "cuisine": "polska",
+   "slots": [
+    "K"
+   ]
   },
   "n-shakshuka": {
    "name": "Szybka shakshuka z chlebem żytnim",
@@ -704,7 +702,12 @@
     "Zrób dołki, wlej białka, a na nie wbij jajka; przykryj i gotuj 5–6 min na małym ogniu.",
     "Posyp natką, podawaj z pieczywem do maczania."
    ],
-   "tip": "Przykrywka to klucz – białko się zetnie, a żółtko zostanie płynne."
+   "tip": "Przykrywka to klucz – białko się zetnie, a żółtko zostanie płynne.",
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "S",
+    "K"
+   ]
   },
   "n-curry": {
    "name": "Kurczak curry z ryżem basmati i szpinakiem",
@@ -747,7 +750,12 @@
     "Wlej mleczko kokosowe i passatę, duś 10 min; na koniec wmieszaj szpinak.",
     "Podawaj z ryżem."
    ],
-   "tip": "Curry świetnie znosi mikrofalę – 2 min i smakuje jak świeże."
+   "tip": "Curry świetnie znosi mikrofalę – 2 min i smakuje jak świeże.",
+   "cuisine": "indyjska",
+   "slots": [
+    "W",
+    "K"
+   ]
   },
   "n-nicejska": {
    "name": "Sałatka nicejska z tuńczykiem",
@@ -795,7 +803,11 @@
     "Wymieszaj z tuńczykiem, pomidorem i oliwkami.",
     "Sos: oliwa + musztarda dijon + ocet winny + sól i pieprz."
    ],
-   "tip": "Sos trzymaj w osobnym słoiczku i polej tuż przed jedzeniem."
+   "tip": "Sos trzymaj w osobnym słoiczku i polej tuż przed jedzeniem.",
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "W"
+   ]
   },
   "n-gulasz": {
    "name": "Gulasz wołowy z kaszą gryczaną i ogórkiem kiszonym",
@@ -838,7 +850,11 @@
     "Podlej wodą i duś pod przykryciem 50–60 min (w szybkowarze 20 min).",
     "Podawaj z kaszą i ogórkiem kiszonym."
    ],
-   "tip": "Gulasz ugotuj od razu na 3 dni – każdego dnia jest lepszy."
+   "tip": "Gulasz ugotuj od razu na 3 dni – każdego dnia jest lepszy.",
+   "cuisine": "polska",
+   "slots": [
+    "K"
+   ]
   },
   "n-zapiekanki": {
    "name": "Gorące kanapki z szynką z indyka i mozzarellą",
@@ -886,7 +902,11 @@
     "Zapiekaj 5–6 min w piekarniku 220°C albo w opiekaczu.",
     "Na wierzch rukola, plasterki awokado i kilka kropli octu balsamicznego; skyr zjedz obok, np. z cynamonem."
    ],
-   "tip": "Opiekacz albo frytkownica beztłuszczowa zrobią to w 4 minuty."
+   "tip": "Opiekacz albo frytkownica beztłuszczowa zrobią to w 4 minuty.",
+   "cuisine": "polska",
+   "slots": [
+    "S"
+   ]
   },
   "n-makaron-szpinak": {
    "name": "Makaron pełnoziarnisty z kurczakiem w sosie szpinakowo-jogurtowym",
@@ -934,7 +954,12 @@
     "Zdejmij z ognia, wmieszaj jogurt i parmezan, dopraw gałką muszkatołową.",
     "Wymieszaj z ugotowanym makaronem."
    ],
-   "tip": "Jogurt dodany poza ogniem się nie zważy. Przy odgrzewaniu dodaj łyżkę wody."
+   "tip": "Jogurt dodany poza ogniem się nie zważy. Przy odgrzewaniu dodaj łyżkę wody.",
+   "cuisine": "wloska",
+   "slots": [
+    "W",
+    "K"
+   ]
   },
   "n-miska-meksykanska": {
    "name": "Meksykańska miska z indykiem, ryżem i fasolą",
@@ -977,7 +1002,11 @@
     "Ułóż w pojemniku ryż, indyka, fasolę, kukurydzę i salsę.",
     "Awokado dodaj tuż przed jedzeniem i skrop limonką."
    ],
-   "tip": "Jeśli odgrzewasz, wyjmij najpierw awokado i salsę – dodaj je na zimno."
+   "tip": "Jeśli odgrzewasz, wyjmij najpierw awokado i salsę – dodaj je na zimno.",
+   "cuisine": "meksykanska",
+   "slots": [
+    "W"
+   ]
   },
   "n-pizza-tortilla": {
    "name": "Pizza na tortilli z kurczakiem i pieczarkami",
@@ -1025,7 +1054,11 @@
     "Tortillę posmaruj passatą z czosnkiem i oregano, ułóż kurczaka, pieczarki i mozzarellę.",
     "Piecz 8–10 min w 220°C na rozgrzanej blasze; na wierzch rukola skropiona oliwą."
    ],
-   "tip": "Rozgrzej blachę razem z piekarnikiem – spód będzie chrupiący jak w pizzerii."
+   "tip": "Rozgrzej blachę razem z piekarnikiem – spód będzie chrupiący jak w pizzerii.",
+   "cuisine": "wloska",
+   "slots": [
+    "K"
+   ]
   },
   "n-burrito": {
    "name": "Burrito śniadaniowe z jajecznicą i fasolą",
@@ -1068,7 +1101,11 @@
     "Tortillę podgrzej 20 s na suchej patelni.",
     "Nałóż jajecznicę, fasolę, salsę i plasterki awokado; zawiń i przekrój na pół."
    ],
-   "tip": "Zawinięte burrito obsmaż 30 s na patelni złączeniem do dołu – nie rozwinie się."
+   "tip": "Zawinięte burrito obsmaż 30 s na patelni złączeniem do dołu – nie rozwinie się.",
+   "cuisine": "meksykanska",
+   "slots": [
+    "S"
+   ]
   },
   "n-klopsiki": {
    "name": "Klopsiki z indyka w sosie pomidorowym z kaszą bulgur",
@@ -1106,7 +1143,12 @@
     "Obsmaż na oliwie, wlej passatę z bazylią i duś pod przykryciem 12 min.",
     "Podawaj z bulgurem."
    ],
-   "tip": "Mokre dłonie = gładkie klopsiki, które się nie kleją."
+   "tip": "Mokre dłonie = gładkie klopsiki, które się nie kleją.",
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "W",
+    "K"
+   ]
   },
   "n-poke": {
    "name": "Poke bowl z krewetkami, mango i edamame",
@@ -1154,7 +1196,11 @@
     "Ułóż w misce ryż, krewetki, edamame, ogórek i mango.",
     "Polej sosem: sos sojowy + olej sezamowy + limonka; posyp sezamem i dymką."
    ],
-   "tip": "Ocet ryżowy w ryżu daje smak sushi i sprawia, że ryż dobrze trzyma się na zimno."
+   "tip": "Ocet ryżowy w ryżu daje smak sushi i sprawia, że ryż dobrze trzyma się na zimno.",
+   "cuisine": "japonska",
+   "slots": [
+    "W"
+   ]
   },
   "n-blacha": {
    "name": "Kurczak z batatami i warzywami z jednej blachy",
@@ -1192,7 +1238,4526 @@
     "Dołóż kurczaka w kawałkach i warzywa wymieszane z resztą oliwy, czosnkiem i ziołami.",
     "Piecz jeszcze 15–18 min, aż kurczak się zrumieni."
    ],
-   "tip": "Rozłóż wszystko w jednej warstwie – wtedy się piecze, a nie dusi."
+   "tip": "Rozłóż wszystko w jednej warstwie – wtedy się piecze, a nie dusi.",
+   "cuisine": "amerykanska",
+   "slots": [
+    "K"
+   ]
+  },
+  "pl-jajecznica": {
+   "name": "Jajecznica na maśle z pomidorem i chlebem żytnim",
+   "serve": "hot",
+   "time": 8,
+   "cuisine": "polska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Chleb żytni",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 120,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Roztop masło na małym ogniu, wlej roztrzepane jajka z białkami i szczyptą soli.",
+    "Mieszaj szpatułką powoli, zdejmij z ognia, gdy jajecznica jest jeszcze lekko wilgotna.",
+    "Podaj ze szczypiorkiem, pokrojonym pomidorem i chlebem żytnim."
+   ],
+   "tip": "Mały ogień i zdjęcie z palnika chwilę za wcześnie – jajecznica dojdzie sama i zostanie kremowa."
+  },
+  "pl-kasza-manna": {
+   "name": "Kasza manna na mleku z odżywką, malinami i orzechami",
+   "serve": "hot",
+   "time": 7,
+   "cuisine": "polska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Kasza manna",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Mleko 2%",
+     "g": 250,
+     "r": "X"
+    },
+    {
+     "p": "WPI",
+     "g": 30,
+     "r": "P"
+    },
+    {
+     "p": "Maliny",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Orzechy włoskie",
+     "g": 12,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Zagotuj mleko z odrobiną wody, wsyp kaszę cienkim strumieniem, ciągle mieszając.",
+    "Gotuj 2–3 min, zdejmij z ognia i po minucie wmieszaj odżywkę.",
+    "Na wierzch maliny i posiekane orzechy."
+   ],
+   "tip": "Mrożone maliny wrzucone na gorącą kaszę zrobią się z nich sos."
+  },
+  "pl-twarozek": {
+   "name": "Twarożek z rzodkiewką i ogórkiem na chlebie żytnim z masłem",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "polska",
+   "slots": [
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Twaróg chudy",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Chleb żytni",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Rzodkiewka",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Twaróg rozgnieć widelcem z jogurtem, solą, pieprzem i szczypiorkiem.",
+    "Wmieszaj pokrojoną rzodkiewkę i część ogórka.",
+    "Chleb posmaruj cienko masłem, twarożek zapakuj osobno – kanapki złóż tuż przed jedzeniem."
+   ]
+  },
+  "pl-kotlet-indyk": {
+   "name": "Kotlet z indyka z kaszą gryczaną i surówką z kapusty",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z indyka",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Kasza gryczana",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj kaszę. Indyka rozbij na cienkie kotlety, dopraw solą, pieprzem i majerankiem.",
+    "Smaż na oliwie po 3 min z każdej strony.",
+    "Kapustę i marchew zetrzyj, wymieszaj z jogurtem, solą i odrobiną soku z cytryny."
+   ],
+   "tip": "Cienko rozbity kotlet smaży się szybko i zostaje soczysty."
+  },
+  "pl-golabki": {
+   "name": "Leniwe gołąbki z indyka w sosie pomidorowym",
+   "serve": "micro",
+   "time": 35,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z indyka mielona",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż biały",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Cebulę zeszklij na oliwie, dodaj mięso i smaż, aż się zetnie.",
+    "Dodaj poszatkowaną kapustę, podlej odrobiną wody i duś pod przykryciem 15 min.",
+    "Wmieszaj ryż i passatę, dopraw majerankiem, solą i pieprzem; duś jeszcze 5 min."
+   ],
+   "tip": "Smakują jeszcze lepiej na drugi dzień – idealne do pudełka."
+  },
+  "pl-kanapki-szynka": {
+   "name": "Kanapki z szynką z indyka, pomidorem i ogórkiem kiszonym",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "polska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Pieczywo pełnoziarniste",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Szynka z indyka",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek kiszony",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Na pieczywo połóż szynkę, plastry pomidora i ogórka kiszonego.",
+    "Dopraw pieprzem i szczypiorkiem.",
+    "Zapakuj ciasno w papier śniadaniowy, żeby się nie rozpadły."
+   ]
+  },
+  "pl-ryz-jablka": {
+   "name": "Ryż z jabłkami, cynamonem i skyrem",
+   "serve": "cold_or_micro",
+   "time": 20,
+   "cuisine": "polska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż biały",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Jabłko",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Miód",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Jabłko zetrzyj lub pokrój i podduś 3 min z cynamonem i łyżką wody.",
+    "Wymieszaj ryż z jabłkami.",
+    "Podaj ze skyrem wymieszanym z miodem."
+   ],
+   "tip": "Na zimno smakuje jak deser – świetny przed treningiem."
+  },
+  "pl-twarog-owoce": {
+   "name": "Twaróg z miodem, truskawkami i waflami ryżowymi",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "polska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Twaróg chudy",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Truskawki",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Wafle ryżowe",
+     "g": 30,
+     "r": "C"
+    },
+    {
+     "p": "Miód",
+     "g": 15,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Twaróg rozgnieć z miodem i odrobiną wody na gładką masę.",
+    "Dodaj pokrojone truskawki.",
+    "Jedz z waflami ryżowymi – nabieraj twarożek jak na łyżkę."
+   ]
+  },
+  "pl-mintaj": {
+   "name": "Mintaj w chrupiącej panierce z ziemniakami i surówką z marchewki",
+   "serve": "hot",
+   "time": 25,
+   "cuisine": "polska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Mintaj",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Płatki owsiane",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jabłko",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj w osolonej wodzie (ok. 20 min).",
+    "Rybę osusz, dopraw, obtocz w zmielonych płatkach owsianych i smaż na oliwie po 3 min z każdej strony.",
+    "Marchew i jabłko zetrzyj, skrop cytryną."
+   ],
+   "tip": "Osuszona ryba = chrupiąca panierka, która nie odpada."
+  },
+  "pl-kurczak-ziemniaki": {
+   "name": "Ekspresowy obiad: pieczony kurczak, ziemniaki z mikrofali i mizeria",
+   "serve": "micro",
+   "time": 10,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 130,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki umyj, ponakłuwaj widelcem i piecz w mikrofali 7–8 min na pełnej mocy.",
+    "Ogórek pokrój w plasterki, wymieszaj z jogurtem, solą, pieprzem i koperkiem.",
+    "Ziemniaki przekrój, dodaj masło; obok pokrojony kurczak."
+   ],
+   "tip": "Gotowy pieczony kurczak + ziemniaki z mikrofali = obiad w 10 minut."
+  },
+  "it-frittata": {
+   "name": "Frittata z cukinią, pomidorkami i parmezanem z grzanką",
+   "serve": "hot",
+   "time": 12,
+   "cuisine": "wloska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Pieczywo pełnoziarniste",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Cukinia",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Parmezan",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cukinię pokrój w półplasterki i podsmaż na oliwie 3 min.",
+    "Zalej roztrzepanymi jajkami z białkami, dodaj pomidorki i posyp parmezanem.",
+    "Smaż pod przykryciem na małym ogniu 5–6 min, aż wierzch się zetnie. Podaj z grzanką."
+   ],
+   "tip": "Pokrywka zastępuje piekarnik – frittata zetnie się od góry bez przewracania."
+  },
+  "it-tiramisu": {
+   "name": "Owsianka tiramisu z espresso, skyrem i gorzką czekoladą",
+   "serve": "hot",
+   "time": 7,
+   "cuisine": "wloska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Płatki owsiane",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "WPI",
+     "g": 25,
+     "r": "P"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Czekolada gorzka 85%",
+     "g": 15,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Płatki ugotuj w 150 ml wody i 50 ml espresso (3 min).",
+    "Zdejmij z ognia, wmieszaj odżywkę.",
+    "Na wierzch skyr, posyp kakao i startą czekoladą."
+   ],
+   "tip": "Espresso w owsiance to kofeina na start dnia i smak deseru."
+  },
+  "it-gnocchi": {
+   "name": "Gnocchi z kurczakiem w sosie pomidorowym z bazylią",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "wloska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Gnocchi ziemniaczane",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Parmezan",
+     "g": 8,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka w kostce obsmaż na oliwie z czosnkiem 5 min.",
+    "Wlej passatę, dopraw solą i oregano, gotuj 2 min.",
+    "Gnocchi wrzuć do wrzątku, wyłów, gdy wypłyną (2 min), i wymieszaj z sosem. Posyp parmezanem i bazylią."
+   ],
+   "tip": "Gnocchi z paczki gotują się 2 minuty – najszybszy włoski obiad."
+  },
+  "it-pesto-pasta": {
+   "name": "Makaron z pesto, kurczakiem, pomidorkami i rukolą",
+   "serve": "cold_or_micro",
+   "time": 15,
+   "cuisine": "wloska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Makaron durum",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Pesto bazyliowe",
+     "g": 20,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Rukola",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj makaron al dente. Kurczaka pokrój i usmaż na suchej patelni 6 min.",
+    "Wymieszaj makaron z pesto i łyżką wody z gotowania.",
+    "Dodaj kurczaka, pomidorki i rukolę."
+   ],
+   "tip": "Łyżka wody z makaronu robi z pesto kremowy sos, który nie spływa."
+  },
+  "it-risotto": {
+   "name": "Risotto z krewetkami i cukinią",
+   "serve": "hot",
+   "time": 30,
+   "cuisine": "wloska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż biały",
+     "g": 75,
+     "r": "C"
+    },
+    {
+     "p": "Krewetki",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Cukinia",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Parmezan",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę zeszklij na oliwie, dodaj ryż i smaż minutę.",
+    "Dolewaj gorący bulion po chochli, mieszając, przez ok. 18 min.",
+    "Na ostatnie 4 min dodaj startą cukinię i krewetki. Zdejmij z ognia, wmieszaj parmezan."
+   ],
+   "tip": "Ryż do risotto (arborio) daje kremowość bez śmietany."
+  },
+  "it-panini": {
+   "name": "Panini z szynką z indyka, pomidorem i rukolą",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "wloska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Pieczywo białe",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Szynka z indyka",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Rukola",
+     "g": 20,
+     "r": "X"
+    },
+    {
+     "p": "Mozzarella light",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bułkę (ciabattę) przekrój, połóż szynkę, pomidor, plasterek mozzarelli i rukolę.",
+    "Dopraw oregano i pieprzem.",
+    "Jeśli masz opiekacz – 3 min na ciepło; na zimno też jest świetne."
+   ]
+  },
+  "it-puttanesca": {
+   "name": "Makaron puttanesca z tuńczykiem i oliwkami",
+   "serve": "micro",
+   "time": 15,
+   "cuisine": "wloska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Makaron durum",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Tuńczyk w wodzie",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Oliwki zielone",
+     "g": 25,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj makaron. Na oliwie podsmaż czosnek i płatki chili.",
+    "Dodaj passatę i pokrojone oliwki, gotuj 5 min.",
+    "Wmieszaj odsączonego tuńczyka i makaron, posyp natką."
+   ],
+   "tip": "Klasyk ze spiżarni – wszystko z puszek i słoików."
+  },
+  "it-poledwiczka": {
+   "name": "Polędwiczka po włosku z rozmarynem, pieczonymi ziemniakami i szpinakiem",
+   "serve": "hot",
+   "time": 25,
+   "cuisine": "wloska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Polędwiczka wieprzowa",
+     "g": 170,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 280,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Szpinak",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki w ćwiartkach wymieszaj z połową oliwy, solą i rozmarynem; piecz 20 min w 220°C.",
+    "Polędwiczkę obsmaż z każdej strony 2 min, dopiecz z ziemniakami 8–10 min.",
+    "Szpinak wrzuć na patelnię z czosnkiem i resztą oliwy na minutę."
+   ],
+   "tip": "Mięso odstaw na 3 min przed krojeniem – soki zostaną w środku."
+  },
+  "md-omlet-feta": {
+   "name": "Omlet grecki ze szpinakiem, fetą i pomidorami z pitą",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Chleb pita",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Ser feta light",
+     "g": 30,
+     "r": "F"
+    },
+    {
+     "p": "Szpinak",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Szpinak wrzuć na rozgrzaną patelnię na 30 s, aż zwiędnie.",
+    "Zalej roztrzepanymi jajkami, pokrusz fetę, dodaj pomidory.",
+    "Smaż pod przykryciem 3–4 min, złóż na pół. Podaj z ciepłą pitą."
+   ]
+  },
+  "md-kuskus-slodki": {
+   "name": "Kuskus na słodko z jogurtem greckim, pomarańczą, miodem i orzechami",
+   "serve": "hot",
+   "time": 7,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Kasza kuskus",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Pomarańcza",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Orzechy włoskie",
+     "g": 15,
+     "r": "F"
+    },
+    {
+     "p": "Miód",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kuskus zalej wrzątkiem 1:1,5, przykryj na 5 min, spulchnij widelcem z cynamonem.",
+    "Wyłóż jogurt, na wierzch kuskus i cząstki pomarańczy.",
+    "Polej miodem, posyp orzechami."
+   ]
+  },
+  "md-souvlaki": {
+   "name": "Souvlaki z kurczaka z ryżem, tzatziki i sałatką grecką",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 3,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka w kostce wymieszaj z połową oliwy, cytryną, oregano i solą; smaż lub grilluj 7 min.",
+    "Ugotuj ryż. Do tzatziki zetrzyj część ogórka, odciśnij i wymieszaj z jogurtem i czosnkiem.",
+    "Resztę ogórka i pomidora pokrój w kostkę, skrop resztą oliwy."
+   ]
+  },
+  "md-quinoa": {
+   "name": "Sałatka z komosą, kurczakiem, ciecierzycą i fetą",
+   "serve": "cold",
+   "time": 20,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Komosa ryżowa (quinoa)",
+     "g": 50,
+     "r": "C"
+    },
+    {
+     "p": "Ciecierzyca (puszka)",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Ser feta light",
+     "g": 30,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Komosę wypłucz i ugotuj (12–15 min), wystudź.",
+    "Dodaj odsączoną ciecierzycę, ogórek, pomidor i kurczaka w kostce.",
+    "Pokrusz fetę, skrop cytryną, dopraw oregano i pieprzem."
+   ],
+   "tip": "Płukanie komosy usuwa gorzki posmak."
+  },
+  "md-losos": {
+   "name": "Łosoś pieczony z cytryną, ziemniakami i fasolką szparagową",
+   "serve": "hot",
+   "time": 25,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Łosoś atlantycki",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 280,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Fasolka szparagowa",
+     "g": 150,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki pokrój w plastry, skrop oliwą, posól i piecz 15 min w 210°C.",
+    "Dołóż łososia z plastrami cytryny i koperkiem oraz fasolkę; piecz jeszcze 10–12 min.",
+    "Podawaj od razu."
+   ],
+   "tip": "Łosoś jest gotowy, gdy w środku dopiero przestaje być szklisty."
+  },
+  "md-paella": {
+   "name": "Paella z kurczakiem i krewetkami",
+   "serve": "hot",
+   "time": 30,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż biały",
+     "g": 75,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 90,
+     "r": "P"
+    },
+    {
+     "p": "Krewetki",
+     "g": 80,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Groszek zielony (mrożony)",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Na oliwie obsmaż kurczaka i paprykę, dodaj ryż, passatę, słodką paprykę i szczyptę kurkumy.",
+    "Zalej bulionem (2,5× objętość ryżu) i gotuj bez mieszania 15 min.",
+    "Na wierzch krewetki i groszek, przykryj i gotuj jeszcze 5 min. Skrop cytryną."
+   ]
+  },
+  "md-pita-tunczyk": {
+   "name": "Pita z tuńczykiem, ogórkiem i tzatziki",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Chleb pita",
+     "g": 90,
+     "r": "C"
+    },
+    {
+     "p": "Tuńczyk w wodzie",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jogurt wymieszaj ze startym ogórkiem, czosnkiem i koperkiem.",
+    "Pitę przekrój, nałóż sałatę, tuńczyka i tzatziki.",
+    "Owiń w folię – przetrwa w torbie do treningu."
+   ]
+  },
+  "md-gyros": {
+   "name": "Gyros z indyka w picie z kapustą i sosem jogurtowym",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z indyka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Chleb pita",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 30,
+     "r": "X"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Indyka pokrój w paski, wymieszaj z przyprawą gyros i oliwą, smaż 6–7 min.",
+    "Kapustę poszatkuj cienko, pomidor i cebulę pokrój.",
+    "Nadziej ciepłą pitę mięsem, warzywami i sosem jogurtowo-czosnkowym."
+   ]
+  },
+  "md-jogurt-pomarancza": {
+   "name": "Jogurt grecki z pomarańczą, płatkami owsianymi i miodem",
+   "serve": "cold",
+   "time": 3,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 250,
+     "r": "P"
+    },
+    {
+     "p": "Pomarańcza",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Płatki owsiane",
+     "g": 40,
+     "r": "C"
+    },
+    {
+     "p": "Miód",
+     "g": 15,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Pomarańczę obierz i pokrój w plastry.",
+    "Do pojemnika nałóż jogurt, płatki i pomarańczę.",
+    "Polej miodem – płatki zmiękną do treningu."
+   ]
+  },
+  "mx-huevos": {
+   "name": "Huevos rancheros – jajka w salsie na tortilli z awokado",
+   "serve": "hot",
+   "time": 12,
+   "cuisine": "meksykanska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Tortilla kukurydziana",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Salsę z fasolą podgrzej na patelni, zrób w niej wgłębienia.",
+    "Wbij jajka i wlej białka, gotuj pod przykryciem 4–5 min.",
+    "Podaj na ciepłej tortilli z plastrami awokado i kolendrą."
+   ]
+  },
+  "mx-quesadilla": {
+   "name": "Quesadilla z kurczakiem, papryką i cheddarem",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "meksykanska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Tortilla pszenna",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Ser cheddar",
+     "g": 20,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Na połowę tortilli połóż starty ser, kurczaka i paprykę w paskach.",
+    "Złóż na pół i opiekaj na suchej patelni po 2 min z każdej strony.",
+    "Pokrój w trójkąty, podaj z salsą."
+   ],
+   "tip": "Ser na spód i na wierzch farszu – skleja quesadillę, nic nie wypada."
+  },
+  "mx-tacos-dorsz": {
+   "name": "Tacos z dorszem, kapustą i limonkowym jogurtem",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "meksykanska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Dorsz",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Tortilla kukurydziana",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Dorsza dopraw kuminem, papryką i solą; smaż 3 min z każdej strony.",
+    "Kapustę poszatkuj, jogurt wymieszaj z limonką.",
+    "Tortille podgrzej, nałóż rybę, kapustę, awokado i sos."
+   ]
+  },
+  "mx-fajitas": {
+   "name": "Fajitas z kurczakiem i papryką z ryżem limonkowym",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "meksykanska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż, wymieszaj z limonką i kolendrą.",
+    "Kurczaka, paprykę i cebulę w paskach smaż na mocnym ogniu z przyprawą fajitas 7–8 min.",
+    "Przełóż na ryż."
+   ],
+   "tip": "Mocny ogień i nie za dużo naraz na patelni – warzywa mają się przypiec, nie dusić."
+  },
+  "mx-bowl-ekspres": {
+   "name": "Ekspresowa burrito bowl z kurczakiem, fasolą i salsą",
+   "serve": "cold_or_micro",
+   "time": 8,
+   "cuisine": "meksykanska",
+   "slots": [
+    "W",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 200,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Awokado",
+     "g": 30,
+     "r": "F"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ryż z saszetki podgrzej 2 min w mikrofali.",
+    "Ułóż w pudełku ryż, kurczaka, odsączoną fasolę i kukurydzę.",
+    "Polej salsą, dodaj awokado i limonkę."
+   ]
+  },
+  "mx-wrap": {
+   "name": "Wrap z indykiem, salsą i chrupiącą sałatą",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "meksykanska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Tortilla pszenna",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Szynka z indyka",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Tortillę posmaruj salsą.",
+    "Ułóż sałatę, szynkę i kukurydzę.",
+    "Zawiń ciasno i przekrój na pół."
+   ]
+  },
+  "mx-wolowina-bataty": {
+   "name": "Wołowina po meksykańsku z pieczonymi batatami",
+   "serve": "micro",
+   "time": 30,
+   "cuisine": "meksykanska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Wołowina mielona 95%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Batat",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bataty w kostce skrop oliwą, posól i piecz 20 min w 220°C.",
+    "Mięso podsmaż z kuminem, papryką wędzoną i chili, dodaj paprykę, fasolę i salsę; duś 5 min.",
+    "Wymieszaj z batatami lub podaj obok."
+   ]
+  },
+  "us-wrap-cezar": {
+   "name": "Wrap Cezar z kurczakiem i parmezanem",
+   "serve": "cold",
+   "time": 10,
+   "cuisine": "amerykanska",
+   "slots": [
+    "W",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Tortilla pełnoziarnista",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Parmezan",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jogurt wymieszaj z musztardą, czosnkiem, sokiem z cytryny i połową parmezanu.",
+    "Na tortillę nałóż sałatę, kurczaka i sos, posyp resztą parmezanu.",
+    "Zawiń ciasno."
+   ]
+  },
+  "us-bbq": {
+   "name": "Kurczak BBQ z batatami i colesławem",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "amerykanska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Batat",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Sos BBQ",
+     "g": 25,
+     "r": "X"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bataty w kostce piecz 20 min w 220°C z połową oliwy.",
+    "Kurczaka usmaż na reszcie oliwy, na końcu wmieszaj sos BBQ.",
+    "Kapustę i marchew zetrzyj, wymieszaj z jogurtem i octem jabłkowym."
+   ]
+  },
+  "us-cobb": {
+   "name": "Sałatka Cobb z kurczakiem, jajkiem i awokado",
+   "serve": "cold",
+   "time": 12,
+   "cuisine": "amerykanska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Pieczywo pełnoziarniste",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Awokado",
+     "g": 50,
+     "r": "F"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jajko ugotuj na twardo (9 min), pieczywo opiecz i pokrój w grzanki.",
+    "Na sałacie ułóż rzędami kurczaka, jajko, pomidor, kukurydzę i awokado.",
+    "Polej sosem z musztardy, octu i odrobiny wody."
+   ]
+  },
+  "us-stek": {
+   "name": "Stek wołowy z ziemniakami z piekarnika i szparagami",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "amerykanska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Wołowina chuda",
+     "g": 170,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Szparagi",
+     "g": 150,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki w łódkach piecz 20 min w 220°C.",
+    "Stek osusz, posól i smaż na bardzo gorącej patelni 2–3 min z każdej strony; na koniec dodaj masło i polewaj nim mięso.",
+    "Szparagi usmaż na tej samej patelni 3 min."
+   ],
+   "tip": "Odstaw stek na 5 min – będzie równo różowy w środku."
+  },
+  "us-shake": {
+   "name": "Shake bananowo-truskawkowy z owsianką",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "amerykanska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "WPI",
+     "g": 30,
+     "r": "P"
+    },
+    {
+     "p": "Banan",
+     "g": 120,
+     "r": "C"
+    },
+    {
+     "p": "Truskawki",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Płatki owsiane",
+     "g": 30,
+     "r": "C"
+    }
+   ],
+   "steps": [
+    "Wszystko wrzuć do blendera z 250 ml wody i kilkoma kostkami lodu.",
+    "Miksuj 30–40 s.",
+    "Pij od razu albo zabierz w shakerze."
+   ]
+  },
+  "us-wafle-dzem": {
+   "name": "Wafle ryżowe z dżemem i skyrem waniliowym",
+   "serve": "cold",
+   "time": 3,
+   "cuisine": "amerykanska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Wafle ryżowe",
+     "g": 40,
+     "r": "C"
+    },
+    {
+     "p": "Dżem owocowy niskosłodzony",
+     "g": 30,
+     "r": "C"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    }
+   ],
+   "steps": [
+    "Skyr wymieszaj z kilkoma kroplami wanilii.",
+    "Wafle posmaruj dżemem.",
+    "Jedz wafle ze skyrem na zmianę – lekko i szybko przed treningiem."
+   ]
+  },
+  "us-hash": {
+   "name": "Hash z batatów z jajkiem sadzonym i indykiem",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "amerykanska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Batat",
+     "g": 180,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Szynka z indyka",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Batata pokrój w drobną kostkę i podgotuj 3 min w mikrofali.",
+    "Usmaż na oliwie z cebulą, papryką i szynką, aż się zrumieni (6–7 min).",
+    "Zrób wgłębienia, wbij jajka i smaż pod przykryciem 3 min."
+   ]
+  },
+  "us-french-toast": {
+   "name": "Tosty francuskie z borówkami i masłem orzechowym",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "amerykanska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Pieczywo pełnoziarniste",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Borówki",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Masło orzechowe 100%",
+     "g": 15,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Białka i jajko roztrzep z cynamonem i odrobiną słodzika.",
+    "Pieczywo namocz z obu stron i smaż na patelni z powłoką po 2 min.",
+    "Podaj z borówkami i masłem orzechowym."
+   ]
+  },
+  "jp-tamagoyaki": {
+   "name": "Japońskie śniadanie: omlet tamagoyaki, ryż i zupa miso",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "japonska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Pasta miso",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Szpinak",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jajka roztrzep z odrobiną sosu sojowego, smaż cienkimi warstwami na oleju, zwijając w rulon.",
+    "Miso rozpuść w 250 ml gorącej (nie wrzącej) wody, dodaj szpinak.",
+    "Podaj z ryżem podgrzanym w mikrofali."
+   ],
+   "tip": "Miso nie gotuj – wrzątek zabija jego smak."
+  },
+  "jp-losos-teriyaki": {
+   "name": "Łosoś teriyaki z ryżem i edamame",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "japonska",
+   "slots": [
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Łosoś atlantycki",
+     "g": 130,
+     "r": "P"
+    },
+    {
+     "p": "Ryż biały",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Edamame",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 8,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Edamame zagotuj 3 min.",
+    "Łososia smaż skórą do dołu 4 min, przewróć na 2 min.",
+    "Wlej sos sojowy z miodem i imbirem, redukuj, polewając rybę. Podaj z ryżem, edamame i ogórkiem."
+   ]
+  },
+  "jp-soba": {
+   "name": "Zimny makaron soba z kurczakiem, ogórkiem i sezamowym dressingiem",
+   "serve": "cold",
+   "time": 15,
+   "cuisine": "japonska",
+   "slots": [
+    "W",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Makaron soba",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Makaron ugotuj (4–5 min) i przepłucz zimną wodą.",
+    "Ogórek i marchew pokrój w zapałki, kurczaka w paski.",
+    "Wymieszaj z sosem z sosu sojowego, oleju sezamowego i limonki; posyp sezamem."
+   ]
+  },
+  "jp-oyakodon": {
+   "name": "Oyakodon – kurczak z jajkiem na ryżu",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "japonska",
+   "slots": [
+    "O",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 140,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 80,
+     "r": "P"
+    },
+    {
+     "p": "Ryż biały",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Cebula",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Cebulę w piórkach gotuj 3 min w 100 ml wody z sosem sojowym i miodem.",
+    "Dodaj kurczaka w cienkich plastrach, gotuj 5 min.",
+    "Wlej roztrzepane białka, przykryj na minutę i zsuń na ryż."
+   ]
+  },
+  "jp-tofu-miso": {
+   "name": "Glazurowane tofu miso z ryżem i pak choi",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "japonska",
+   "slots": [
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Tofu naturalne",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Ryż biały",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Pak choi",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Pasta miso",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Tofu osusz i pokrój w kostkę, smaż na oleju na złoto (8 min).",
+    "Miso wymieszaj z miodem i łyżką wody, wlej na patelnię i obtocz tofu.",
+    "Pak choi przekrój wzdłuż i podsmaż 2 min."
+   ],
+   "tip": "Dobrze osuszone tofu się zrumieni, mokre będzie się dusić."
+  },
+  "jp-onigiri": {
+   "name": "Onigiri z tuńczykiem i ogórkiem",
+   "serve": "cold",
+   "time": 10,
+   "cuisine": "japonska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Tuńczyk w wodzie",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Ogórek",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ryż podgrzej, przestudź i lekko posól.",
+    "Tuńczyka wymieszaj z sosem sojowym.",
+    "Mokrymi dłońmi formuj trójkąty z nadzieniem w środku. Ogórek obok."
+   ]
+  },
+  "jp-katsu": {
+   "name": "Kurczak katsu z piekarnika z ryżem i kapustą",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "japonska",
+   "slots": [
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż biały",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Pieczywo białe",
+     "g": 20,
+     "r": "X"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Pieczywo zmiel na bułkę tartą i podpraż na suchej patelni.",
+    "Kurczaka rozbij, posmaruj oliwą, obtocz w panierce i piecz 15 min w 220°C.",
+    "Podaj z ryżem i cienko poszatkowaną kapustą skropioną sosem sojowym."
+   ]
+  },
+  "jp-krem-matcha": {
+   "name": "Krem ryżowy matcha ze skyrem",
+   "serve": "cold_or_micro",
+   "time": 5,
+   "cuisine": "japonska",
+   "slots": [
+    "O",
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Cream of rice",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Miód",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cream of rice ugotuj w 250 ml wody (2–3 min), wmieszaj łyżeczkę matchy.",
+    "Przestudź chwilę i wymieszaj ze skyrem.",
+    "Polej miodem. Jedz na ciepło albo zabierz w słoiku."
+   ]
+  },
+  "cn-congee": {
+   "name": "Congee – kleik ryżowy z kurczakiem, jajkiem i imbirem",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "chinska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 180,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 80,
+     "r": "P"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Szpinak",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ryż zalej 300 ml bulionu, gotuj 6–7 min, rozgniatając, aż zgęstnieje.",
+    "Dodaj kurczaka w paskach, starty imbir i szpinak.",
+    "Podaj z jajkiem na miękko, sosem sojowym i olejem sezamowym."
+   ]
+  },
+  "cn-jajecznica-pomidory": {
+   "name": "Chińska jajecznica z pomidorami na ryżu",
+   "serve": "hot",
+   "time": 8,
+   "cuisine": "chinska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jajka z białkami usmaż na połowie oleju na miękko i zdejmij.",
+    "Pomidory w cząstkach smaż 2 min na reszcie oleju z sosem sojowym i szczyptą cukru.",
+    "Wróć jajka, wymieszaj i wyłóż na podgrzany ryż."
+   ]
+  },
+  "cn-kung-pao": {
+   "name": "Kurczak kung pao z orzeszkami i ryżem",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "chinska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Orzeszki ziemne",
+     "g": 15,
+     "r": "F"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Cukinia",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Kurczaka w kostce smaż na mocnym ogniu 5 min.",
+    "Dodaj paprykę, cukinię, suszone chili i czosnek, smaż 2 min.",
+    "Wlej sos sojowy z miodem i octem, dorzuć orzeszki."
+   ]
+  },
+  "cn-wolowina-brokul": {
+   "name": "Wołowina z brokułem w sosie ostrygowym z ryżem",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "chinska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Wołowina chuda",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Brokuł",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Sos ostrygowy",
+     "g": 20,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Wołowinę pokrój w cienkie paski w poprzek włókien.",
+    "Smaż na bardzo gorącym oleju 2 min, zdejmij.",
+    "Brokuł smaż 3 min z czosnkiem i łyżką wody, wróć mięso, wlej sos ostrygowy."
+   ],
+   "tip": "Krojenie w poprzek włókien = miękka wołowina nawet z chudego kawałka."
+  },
+  "cn-slodko-kwasny": {
+   "name": "Kurczak słodko-kwaśny z ananasem i ryżem",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "chinska",
+   "slots": [
+    "O",
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż biały",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Ananas",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 30,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 8,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Kurczaka smaż na patelni z powłoką 5 min.",
+    "Dodaj paprykę i ananasa, smaż 2 min.",
+    "Wlej sos z passaty, sosu sojowego, miodu i octu ryżowego; gotuj minutę."
+   ]
+  },
+  "cn-makaron-krewetki": {
+   "name": "Zimny makaron ryżowy z krewetkami i ogórkiem",
+   "serve": "cold",
+   "time": 15,
+   "cuisine": "chinska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Makaron ryżowy",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Krewetki",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 4,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Makaron zalej wrzątkiem na 5 min, przepłucz zimną wodą.",
+    "Krewetki usmaż 2–3 min z czosnkiem.",
+    "Wymieszaj z warzywami w zapałki i sosem z sosu sojowego, limonki i oleju."
+   ]
+  },
+  "cn-dorsz-imbir": {
+   "name": "Dorsz na parze z imbirem, dymką i pak choi",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "chinska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Dorsz",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Pak choi",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Dorsza połóż na talerzu z imbirem w paskach.",
+    "Gotuj na parze 8 min razem z pak choi.",
+    "Polej sosem sojowym i gorącym olejem z dymką."
+   ]
+  },
+  "cn-pudelko": {
+   "name": "Ekspresowe pudełko: ryż, kurczak, edamame i sos sojowo-miodowy",
+   "serve": "cold_or_micro",
+   "time": 6,
+   "cuisine": "chinska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 220,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Edamame",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 8,
+     "r": "X"
+    },
+    {
+     "p": "Sriracha",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ryż podgrzej 2 min, edamame rozmroź pod gorącą wodą.",
+    "Sos sojowy wymieszaj z miodem i srirachą.",
+    "Ułóż wszystko w pudełku i polej sosem."
+   ]
+  },
+  "th-omlet": {
+   "name": "Tajski omlet z ryżem jaśminowym i srirachą",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "tajska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Sos rybny",
+     "g": 5,
+     "r": "X"
+    },
+    {
+     "p": "Sriracha",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jajka roztrzep z sosem rybnym.",
+    "Wlej na bardzo gorący olej – omlet ma napuchnąć i mieć chrupiące brzegi (2 min z każdej strony).",
+    "Podaj na ryżu z ogórkiem i srirachą."
+   ]
+  },
+  "th-owsianka-kokos": {
+   "name": "Kremowy ryż kokosowy z mango i odżywką",
+   "serve": "hot",
+   "time": 8,
+   "cuisine": "tajska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Cream of rice",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "WPI",
+     "g": 30,
+     "r": "P"
+    },
+    {
+     "p": "Mango",
+     "g": 100,
+     "r": "C"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 80,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Cream of rice ugotuj w mleczku kokosowym z 150 ml wody (3 min).",
+    "Zdejmij z ognia, wmieszaj odżywkę.",
+    "Na wierzch mango w kostce i odrobina limonki."
+   ]
+  },
+  "th-pad-thai": {
+   "name": "Pad thai z krewetkami",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "tajska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Makaron ryżowy",
+     "g": 75,
+     "r": "C"
+    },
+    {
+     "p": "Krewetki",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Orzeszki ziemne",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Sos rybny",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Miód",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Makaron namocz w ciepłej wodzie 8 min.",
+    "Krewetki smaż 2 min, przesuń na bok, wlej białka i rozbij je łopatką.",
+    "Dodaj makaron, warzywa i sos z sosu rybnego, limonki i miodu; smaż 2 min. Posyp orzeszkami."
+   ]
+  },
+  "th-curry": {
+   "name": "Czerwone curry z kurczakiem, cukinią i ryżem jaśminowym",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "tajska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 100,
+     "r": "F"
+    },
+    {
+     "p": "Pasta curry",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Cukinia",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos rybny",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Pastę curry podsmaż minutę z odrobiną mleczka.",
+    "Dodaj kurczaka i warzywa, smaż 3 min.",
+    "Wlej resztę mleczka, gotuj 8 min. Dopraw sosem rybnym i limonką."
+   ]
+  },
+  "th-larb": {
+   "name": "Larb z indyka – sałatka z limonką, miętą i ryżem",
+   "serve": "cold_or_micro",
+   "time": 15,
+   "cuisine": "tajska",
+   "slots": [
+    "W",
+    "O",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z indyka mielona",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 30,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Sos rybny",
+     "g": 8,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Mięso usmaż na oleju, rozbijając, 6 min.",
+    "Zdejmij z ognia, dodaj limonkę, sos rybny, chili, cebulę, miętę i kolendrę.",
+    "Podaj w liściach sałaty z ryżem i ogórkiem."
+   ]
+  },
+  "th-bazylia": {
+   "name": "Kurczak z bazylią po tajsku z ryżem i jajkiem sadzonym",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "tajska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 60,
+     "r": "P"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Fasolka szparagowa",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos ostrygowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Sos rybny",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Kurczaka posiekaj drobno i smaż z czosnkiem i chili 5 min.",
+    "Dodaj fasolkę i paprykę, smaż 2 min, wlej sosy i wrzuć bazylię.",
+    "Usmaż jajko sadzone z chrupiącym brzegiem i połóż na wierzchu."
+   ]
+  },
+  "th-mango-ryz": {
+   "name": "Ryż z mango po tajsku z jogurtem kokosowym",
+   "serve": "cold",
+   "time": 10,
+   "cuisine": "tajska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 180,
+     "r": "C"
+    },
+    {
+     "p": "Mango",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ryż podgrzej i wymieszaj z mleczkiem kokosowym i szczyptą soli.",
+    "Jogurt wymieszaj z odrobiną słodzika.",
+    "Ułóż ryż, mango i jogurt; posyp sezamem."
+   ]
+  },
+  "th-tom-yum": {
+   "name": "Zupa tom yum z krewetkami i makaronem ryżowym",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "tajska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Krewetki",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Makaron ryżowy",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 60,
+     "r": "F"
+    },
+    {
+     "p": "Pieczarki",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Pasta curry",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Sos rybny",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "W 500 ml wody zagotuj pastę curry, trawę cytrynową i imbir.",
+    "Dodaj pieczarki i pomidory, gotuj 5 min, potem krewetki na 3 min.",
+    "Wmieszaj mleczko, sos rybny i limonkę. Makaron namocz i wyłóż do miski, zalej zupą."
+   ]
+  },
+  "th-satay": {
+   "name": "Kurczak satay z sosem orzechowym, ryżem i ogórkiem",
+   "serve": "cold_or_micro",
+   "time": 20,
+   "cuisine": "tajska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Masło orzechowe 100%",
+     "g": 15,
+     "r": "F"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Kurczaka w paskach dopraw curry i smaż 6 min.",
+    "Masło orzechowe rozprowadź z sosem sojowym, limonką i 2 łyżkami gorącej wody.",
+    "Podaj z ryżem i ogórkiem, polej sosem."
+   ]
+  },
+  "th-wrap": {
+   "name": "Wrap z kurczakiem po tajsku z mango i słodkim chili",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "tajska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Tortilla pszenna",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Mango",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Sos słodkie chili",
+     "g": 20,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Tortillę posmaruj sosem chili.",
+    "Ułóż sałatę, kurczaka i mango w paskach, dodaj miętę lub kolendrę.",
+    "Zawiń ciasno."
+   ]
+  },
+  "in-masala-omlet": {
+   "name": "Masala omlet z cebulą, pomidorem i szpinakiem",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "indyjska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Tortilla pełnoziarnista",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Masło klarowane (ghee)",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Szpinak",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę, pomidor i szpinak posiekaj, wymieszaj z jajkami, kurkumą, chili i solą.",
+    "Smaż na ghee 3 min, przewróć na minutę.",
+    "Podaj z podgrzaną tortillą zamiast chlebka."
+   ]
+  },
+  "in-owsianka-chai": {
+   "name": "Owsianka masala chai z bananem i nerkowcami",
+   "serve": "hot",
+   "time": 8,
+   "cuisine": "indyjska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Płatki owsiane",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "WPI",
+     "g": 25,
+     "r": "P"
+    },
+    {
+     "p": "Mleko 2%",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Banan",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Nerkowce",
+     "g": 15,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Płatki gotuj w mleku i 100 ml wody z cynamonem, kardamonem, imbirem i goździkiem (3 min).",
+    "Zdejmij z ognia, wmieszaj odżywkę.",
+    "Na wierzch banan i nerkowce."
+   ]
+  },
+  "in-dal": {
+   "name": "Dal z czerwonej soczewicy z kurczakiem i ryżem",
+   "serve": "micro",
+   "time": 30,
+   "cuisine": "indyjska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Soczewica czerwona",
+     "g": 50,
+     "r": "C"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 40,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Masło klarowane (ghee)",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Szpinak",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Na ghee podsmaż cebulę, czosnek, imbir, kumin i kurkumę.",
+    "Dodaj soczewicę, passatę i 300 ml wody, gotuj 15 min.",
+    "Wmieszaj kurczaka w kostce i szpinak na 7 min. Podaj z ryżem."
+   ]
+  },
+  "in-tandoori": {
+   "name": "Kurczak tandoori z ryżem basmati i raitą ogórkową",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "indyjska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 160,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Masło klarowane (ghee)",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka natrzyj połową jogurtu z przyprawą tandoori i odstaw na 10 min.",
+    "Piecz 15 min w 230°C lub smaż na ghee. Ugotuj ryż.",
+    "Raita: starty ogórek z resztą jogurtu, kuminem i miętą."
+   ]
+  },
+  "in-tikka": {
+   "name": "Tikka masala z indyka z ryżem",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "indyjska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z indyka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 50,
+     "r": "F"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Indyka obsmaż z garam masalą.",
+    "Dodaj cebulę, czosnek, imbir i passatę, gotuj 8 min.",
+    "Wmieszaj mleczko i jogurt (poza ogniem, żeby się nie zważył)."
+   ]
+  },
+  "in-biryani": {
+   "name": "Biryani z kurczakiem i groszkiem",
+   "serve": "micro",
+   "time": 30,
+   "cuisine": "indyjska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 75,
+     "r": "C"
+    },
+    {
+     "p": "Masło klarowane (ghee)",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Groszek zielony (mrożony)",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę zrumień na ghee, dodaj kurczaka i przyprawę biryani, smaż 4 min.",
+    "Dodaj wypłukany ryż i 1,5× tyle wody, gotuj pod przykryciem 12 min.",
+    "Wmieszaj groszek, odstaw na 5 min. Podaj z jogurtem."
+   ]
+  },
+  "in-lassi": {
+   "name": "Mango lassi proteinowe z płatkami",
+   "serve": "cold",
+   "time": 5,
+   "cuisine": "indyjska",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Mango",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Płatki owsiane",
+     "g": 30,
+     "r": "C"
+    },
+    {
+     "p": "Miód",
+     "g": 8,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Wszystko zmiksuj ze 150 ml zimnej wody i szczyptą kardamonu.",
+    "Przelej do butelki.",
+    "Wstrząśnij przed piciem."
+   ]
+  },
+  "in-kati-roll": {
+   "name": "Kati roll – wrap z kurczakiem tikka i sałatką",
+   "serve": "cold",
+   "time": 6,
+   "cuisine": "indyjska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Tortilla pszenna",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 20,
+     "r": "X"
+    },
+    {
+     "p": "Sałata rzymska",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka wymieszaj z łyżeczką garam masali i połową jogurtu.",
+    "Na tortillę nałóż sałatę, kurczaka i czerwoną cebulę, skrop limonką.",
+    "Polej resztą jogurtu z miętą i zawiń."
+   ]
+  },
+  "in-palak-tofu": {
+   "name": "Palak tofu – szpinak z przyprawami i ryżem",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "indyjska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Tofu naturalne",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Masło klarowane (ghee)",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Szpinak",
+     "g": 200,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Tofu w kostce zrumień na ghee.",
+    "Szpinak podduś z czosnkiem, imbirem i garam masalą, zmiksuj z jogurtem.",
+    "Wróć tofu do sosu na 2 min."
+   ]
+  },
+  "me-cilbir": {
+   "name": "Çılbır – jajka na jogurcie z masłem paprykowym i pitą",
+   "serve": "hot",
+   "time": 10,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Chleb pita",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Jogurt wymieszaj z czosnkiem i solą, rozsmaruj na talerzu.",
+    "Jajka ugotuj w koszulkach (3 min w lekko wrzącej wodzie z octem).",
+    "Połóż na jogurcie, polej oliwą podgrzaną ze słodką papryką i chili. Podaj z pitą."
+   ]
+  },
+  "me-owsianka-tahini": {
+   "name": "Owsianka z tahini, daktylami i odżywką",
+   "serve": "hot",
+   "time": 7,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Płatki owsiane",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "WPI",
+     "g": 30,
+     "r": "P"
+    },
+    {
+     "p": "Daktyle suszone",
+     "g": 20,
+     "r": "C"
+    },
+    {
+     "p": "Tahini",
+     "g": 12,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Płatki ugotuj w 200 ml wody ze szczyptą soli (3 min).",
+    "Zdejmij z ognia, wmieszaj odżywkę.",
+    "Na wierzch posiekane daktyle i tahini."
+   ],
+   "tip": "Tahini + daktyle smakują jak chałwa."
+  },
+  "me-kuskus-kurczak": {
+   "name": "Kuskus z kurczakiem, ciecierzycą i miętą",
+   "serve": "cold",
+   "time": 10,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "W",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Kasza kuskus",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Ciecierzyca (puszka)",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kuskus zalej wrzątkiem 1:1,5, przykryj na 5 min.",
+    "Spulchnij widelcem, dodaj ciecierzycę, warzywa w kostce i kurczaka.",
+    "Skrop oliwą i cytryną, dodaj miętę i kumin."
+   ]
+  },
+  "me-shawarma": {
+   "name": "Shawarma z kurczaka z ryżem, hummusem i sałatką",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Pierś z kurczaka",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Hummus",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Kurczaka w paskach wymieszaj z przyprawą shawarma, czosnkiem i cytryną; smaż 7 min.",
+    "Ugotuj ryż z kurkumą.",
+    "Ułóż ryż, kurczaka, hummus i sałatkę, polej jogurtem."
+   ]
+  },
+  "me-kofta": {
+   "name": "Kofta wołowe z bulgurem i sosem tahini",
+   "serve": "hot",
+   "time": 25,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Wołowina mielona 95%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Kasza bulgur",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Tahini",
+     "g": 12,
+     "r": "F"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Mięso wyrób z drobno startą cebulą, kuminem, cynamonem i natką; uformuj wałeczki.",
+    "Piecz 12 min w 220°C lub grilluj. Bulgur gotuj 10 min.",
+    "Tahini rozprowadź z cytryną i wodą na gładki sos. Podaj z pomidorem i ogórkiem."
+   ]
+  },
+  "me-pita-fattoush": {
+   "name": "Pita z kurczakiem i sałatką fattoush",
+   "serve": "cold",
+   "time": 8,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Chleb pita",
+     "g": 90,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka pieczona (gotowa)",
+     "g": 110,
+     "r": "P"
+    },
+    {
+     "p": "Pomidor",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Rzodkiewka",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Sok z cytryny lub limonki",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Warzywa pokrój w kostkę, dopraw cytryną, sumakiem i miętą.",
+    "Pitę przekrój i napełnij kurczakiem i sałatką.",
+    "Zawiń w folię."
+   ]
+  },
+  "me-skyr-daktyle": {
+   "name": "Skyr z daktylami, cynamonem i waflami ryżowymi",
+   "serve": "cold",
+   "time": 3,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Daktyle suszone",
+     "g": 40,
+     "r": "C"
+    },
+    {
+     "p": "Wafle ryżowe",
+     "g": 25,
+     "r": "C"
+    }
+   ],
+   "steps": [
+    "Daktyle posiekaj.",
+    "Wymieszaj ze skyrem i cynamonem.",
+    "Jedz z waflami ryżowymi."
+   ],
+   "tip": "Daktyle to klasyczne, szybko trawione paliwo przed wysiłkiem."
+  },
+  "me-mujaddara": {
+   "name": "Mujaddara – ryż z soczewicą i karmelizowaną cebulą, z kurczakiem",
+   "serve": "micro",
+   "time": 30,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "K",
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż basmati",
+     "g": 50,
+     "r": "C"
+    },
+    {
+     "p": "Soczewica czerwona",
+     "g": 40,
+     "r": "C"
+    },
+    {
+     "p": "Pierś z kurczaka",
+     "g": 130,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Cebula",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę w piórkach smaż powoli na oliwie 12 min, aż się zkarmelizuje.",
+    "Ryż z soczewicą i kuminem gotuj w 2,5× tyle wody 15 min. Kurczaka usmaż w międzyczasie.",
+    "Wymieszaj z połową cebuli, resztę połóż na wierzch. Podaj z jogurtem."
+   ]
+  },
+  "me-dorsz-harissa": {
+   "name": "Dorsz z harissą, kuskusem i pieczonymi warzywami",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Dorsz",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Kasza kuskus",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Cukinia",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Warzywa w kostce piecz z połową oliwy 12 min w 220°C.",
+    "Dorsza posmaruj passatą z harissą (lub chili i kuminem) i piecz z warzywami 8 min.",
+    "Kuskus zalej wrzątkiem na 5 min, wymieszaj z resztą oliwy."
+   ]
+  },
+  "pl-jaglanka": {
+   "name": "Jaglanka na mleku z borówkami, odżywką i masłem orzechowym",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Kasza jaglana",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Mleko 2%",
+     "g": 200,
+     "r": "X"
+    },
+    {
+     "p": "WPI",
+     "g": 30,
+     "r": "P"
+    },
+    {
+     "p": "Borówki",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Masło orzechowe 100%",
+     "g": 12,
+     "r": "F"
+    }
+   ],
+   "steps": [
+    "Kaszę przepłucz wrzątkiem (usuwa goryczkę) i gotuj w mleku z 100 ml wody 12 min.",
+    "Zdejmij z ognia, wmieszaj odżywkę.",
+    "Na wierzch borówki i masło orzechowe."
+   ],
+   "tip": "Ugotuj podwójną porcję kaszy – druga połowa czeka w lodówce na jutro."
+  },
+  "pl-jajka-ziemniaki": {
+   "name": "Jajka sadzone z ziemniakami i mizerią",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj lub upiecz w mikrofali (8 min).",
+    "Jajka i białka usmaż na maśle pod przykryciem, żółtka mają zostać płynne.",
+    "Ogórek w plasterkach wymieszaj z jogurtem, solą i koperkiem."
+   ]
+  },
+  "pl-twarog-ziemniaki": {
+   "name": "Ziemniaki z twarożkiem, szczypiorkiem i rzodkiewką",
+   "serve": "cold_or_micro",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Rzodkiewka",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj w mundurkach (15 min) albo upiecz w mikrofali.",
+    "Twaróg wymieszaj z jogurtem, solą, pieprzem, szczypiorkiem i rzodkiewką.",
+    "Ziemniaki polej roztopionym masłem, twarożek obok."
+   ],
+   "tip": "Klasyk z polskiego lata: tani, sycący i pełen białka."
+  },
+  "it-caprese-quinoa": {
+   "name": "Sałatka caprese z komosą, mozzarellą i pesto",
+   "serve": "cold",
+   "time": 15,
+   "cuisine": "wloska",
+   "slots": [
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Komosa ryżowa (quinoa)",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Mozzarella light",
+     "g": 125,
+     "r": "P"
+    },
+    {
+     "p": "Pesto bazyliowe",
+     "g": 12,
+     "r": "F"
+    },
+    {
+     "p": "Pomidor",
+     "g": 150,
+     "r": "X"
+    },
+    {
+     "p": "Rukola",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Komosę wypłucz i ugotuj (12 min), wystudź.",
+    "Pomidory i mozzarellę pokrój w kostkę.",
+    "Wymieszaj z komosą, rukolą i pesto rozrzedzonym łyżką wody."
+   ]
+  },
+  "md-salatka-grecka": {
+   "name": "Sałatka grecka z jajkami, ciecierzycą i fetą",
+   "serve": "cold",
+   "time": 12,
+   "cuisine": "srodziemnomorska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Ciecierzyca (puszka)",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Ser feta light",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Oliwki zielone",
+     "g": 20,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Jajka ugotuj na twardo (9 min) i pokrój w ćwiartki.",
+    "Ogórek, pomidor i odsączoną ciecierzycę wymieszaj z oliwkami i pokruszoną fetą.",
+    "Dressing: jogurt z cytryną, oregano i czosnkiem. Na wierzch jajka."
+   ]
+  },
+  "mx-bowl-wege": {
+   "name": "Wegetariańska burrito bowl z jajkiem, fasolą i awokado",
+   "serve": "cold_or_micro",
+   "time": 10,
+   "cuisine": "meksykanska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 200,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Fasola czerwona (puszka)",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Kukurydza (puszka)",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Salsa pomidorowa",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ryż podgrzej 2 min. Jajka usmaż lub ugotuj na twardo.",
+    "Ułóż ryż, fasolę, kukurydzę i jajka.",
+    "Dodaj salsę, awokado i jogurt zamiast kwaśnej śmietany; skrop limonką."
+   ]
+  },
+  "jp-poke-tofu": {
+   "name": "Poke z tofu, edamame, mango i ryżem",
+   "serve": "cold",
+   "time": 15,
+   "cuisine": "japonska",
+   "slots": [
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Tofu naturalne",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Ryż gotowy (saszetka)",
+     "g": 180,
+     "r": "C"
+    },
+    {
+     "p": "Mango",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Edamame",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Ogórek",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 10,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Tofu pokrój w kostkę i zamarynuj w sosie sojowym z imbirem (5 min).",
+    "Ryż podgrzej i przestudź.",
+    "Ułóż w misce ryż, tofu, edamame, mango i ogórek; skrop olejem sezamowym, posyp sezamem."
+   ]
+  },
+  "cn-mapo-tofu": {
+   "name": "Wegetariańskie mapo tofu z ryżem i brokułem",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "chinska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Tofu naturalne",
+     "g": 220,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Olej sezamowy",
+     "g": 5,
+     "r": "F"
+    },
+    {
+     "p": "Brokuł",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Sos sojowy",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Sriracha",
+     "g": 10,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Na oleju podsmaż czosnek, imbir i pieprz syczuański.",
+    "Dodaj sos sojowy, srirachę i 100 ml wody, włóż tofu w kostce i gotuj 5 min.",
+    "Brokuł ugotuj na parze 4 min i podaj obok."
+   ]
+  },
+  "th-curry-tofu": {
+   "name": "Zielone curry z tofu, bakłażanem i ryżem jaśminowym",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "tajska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Tofu naturalne",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 70,
+     "r": "C"
+    },
+    {
+     "p": "Mleczko kokosowe light",
+     "g": 100,
+     "r": "F"
+    },
+    {
+     "p": "Pasta curry",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Bakłażan",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Papryka czerwona",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż. Pastę curry (wege, bez krewetek) podsmaż z odrobiną mleczka.",
+    "Dodaj bakłażana i paprykę, smaż 4 min, wlej resztę mleczka.",
+    "Włóż tofu w kostce i gotuj 5 min. Dopraw limonką i bazylią."
+   ]
+  },
+  "in-chana": {
+   "name": "Chana masala z ciecierzycą, jajkiem i raitą",
+   "serve": "micro",
+   "time": 20,
+   "cuisine": "indyjska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ciecierzyca (puszka)",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Ryż basmati",
+     "g": 40,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Masło klarowane (ghee)",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Przecier pomidorowy (passata)",
+     "g": 120,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotuj ryż i jajka na twardo. Na ghee podsmaż cebulę, czosnek, imbir i garam masalę.",
+    "Dodaj ciecierzycę i passatę, gotuj 10 min.",
+    "Podaj z ryżem, jajkami w połówkach i jogurtem z miętą."
+   ]
+  },
+  "me-hummus-bowl": {
+   "name": "Miska z hummusem, komosą, jajkiem i warzywami",
+   "serve": "cold",
+   "time": 15,
+   "cuisine": "bliskowschodnia",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Komosa ryżowa (quinoa)",
+     "g": 60,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Jogurt grecki 0%",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Hummus",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Komosę ugotuj (12 min), jajka na twardo (9 min).",
+    "Ułóż w misce komosę, hummus, warzywa w kostce i jajka.",
+    "Polej jogurtem z sumakiem i cytryną."
+   ]
+  },
+  "us-bataty-jajka": {
+   "name": "Pieczone bataty z jajkami w koszulkach i awokado",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "amerykanska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Batat",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Jajo całe",
+     "g": 120,
+     "r": "P"
+    },
+    {
+     "p": "Białka jaj",
+     "g": 100,
+     "r": "P"
+    },
+    {
+     "p": "Awokado",
+     "g": 40,
+     "r": "F"
+    },
+    {
+     "p": "Szpinak",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bataty przekrój i upiecz w mikrofali (8 min) lub w piekarniku.",
+    "Jajka ugotuj w koszulkach, białka zetnij na patelni ze szpinakiem.",
+    "Na bataty połóż szpinak z białkami, jajka i awokado; dopraw chili."
+   ]
+  },
+  "us-tofucznica": {
+   "name": "Tofucznica z kurkumą, szpinakiem i ziemniakami",
+   "serve": "hot",
+   "time": 12,
+   "cuisine": "amerykanska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Tofu naturalne",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Szpinak",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Pomidor",
+     "g": 80,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki pokrój w kostkę i upiecz w mikrofali (6 min), potem zrumień na połowie oliwy.",
+    "Tofu rozgnieć widelcem, smaż na reszcie oliwy z kurkumą, czarną solą i pieprzem 4 min.",
+    "Dorzuć szpinak i pomidory na minutę."
+   ],
+   "tip": "Czarna sól (kala namak) daje tofu smak jajek."
   }
  }
 }

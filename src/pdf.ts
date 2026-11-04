@@ -1,4 +1,5 @@
 // Generowanie PDF planu (pdfmake ładowany dopiero przy pierwszym kliknięciu „Generuj”).
+import { normPrefs, planMenus, prefsSummary } from './engine/kucharz';
 import { menuDay, planDay } from './engine/silnik';
 import type { Data, Day, Macro4, Person, PlanVersion, Row } from './engine/types';
 import { DAY_NAME, VEG_NOTE, fmt, qtyTxt, serveLabel } from './format';
@@ -78,14 +79,18 @@ function menuSection(v: PlanVersion, D: Data) {
     { text: 'Gotowe dania dopasowane do Twojego makro. Każda propozycja to cały dzień – wybierz jedną i trzymaj się gramatur.', fontSize: 9, color: C.grey, margin: [0, 0, 0, 6] },
     { ul: D.rules.principles, fontSize: 8.5, color: C.grey, margin: [0, 0, 0, 4] },
   ];
-  (['T', 'N'] as Day[]).forEach(day => D.recipes.menus[day].forEach((menu, mi) => {
-    const R = menuDay(v, day, mi, D), first = day === 'T' && mi === 0;
-    out.push({ text: `${DAY_NAME[day]} · Propozycja ${menu.id}`, fontSize: 9, bold: true, color: C.amber, characterSpacing: .5, margin: [0, first ? 12 : 0, 0, 0], ...(first ? {} : { pageBreak: 'before' }) });
+  const ps = prefsSummary(normPrefs(v.prefs), D);
+  if (ps.length) out.push({ text: [{ text: 'Ustawienia kucharza: ', bold: true }, ps.join(' · ')], fontSize: 8.5, color: C.grey, margin: [0, 2, 0, 0] });
+  let first = true;
+  (['T', 'N'] as Day[]).forEach(day => planMenus(v, day, D).forEach(menu => {
+    const R = menuDay(v, day, menu, D);
+    out.push({ text: `${DAY_NAME[day]} · Propozycja ${menu.id} · ok. ${menu.time} min`, fontSize: 9, bold: true, color: C.amber, characterSpacing: .5, margin: [0, first ? 12 : 0, 0, 0], ...(first ? {} : { pageBreak: 'before' }) });
+    first = false;
     out.push({ text: menu.name, bold: true, fontSize: 14, margin: [0, 0, 0, 2] });
     out.push({ text: `Suma dnia: ${fmt(R.tot[3])} kcal · B ${fmt(R.tot[0])} g · W ${fmt(R.tot[1])} g · T ${fmt(R.tot[2])} g   (cel: ${fmt(R.T.kcal)} kcal · B ${fmt(R.T.g[0])} · W ${fmt(R.T.g[1])} · T ${fmt(R.T.g[2])})`, fontSize: 8.5, color: C.grey, margin: [0, 0, 0, 8] });
     R.meals.forEach(M => {
       const r = M.recipe;
-      const tags = [serveLabel(r, D), `${r.time} min`].concat(M.slot.periWorkout ? ['okołotreningowy'] : []).join(' · ');
+      const tags = [D.chef.cuisines.find(c => c.id === r.cuisine)?.name ?? '', serveLabel(r, D), `${r.time} min`].filter(Boolean).concat(M.slot.periWorkout ? ['okołotreningowy'] : []).join(' · ');
       const ingr = { table: { headerRows: 1, widths: ['*', 40, 27, 27, 27, 28], body: [head(), ...M.rows.map(x => [{ text: x.prod }, { text: qtyTxt(x, D), bold: true, alignment: 'right' }, ...cells(x.m)]),
         [{ text: 'Razem', bold: true }, {}, ...cells(M.sum, true)]] }, fontSize: 8, layout };
       out.push({ unbreakable: true, margin: [0, 0, 0, 10], stack: [

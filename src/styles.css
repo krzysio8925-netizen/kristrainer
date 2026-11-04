@@ -272,4 +272,45 @@ select.swapped{border-color:color-mix(in srgb,var(--accent) 50%,transparent);bac
 
 :root[data-theme="dark"] .generate{border-color:rgba(255,255,255,.1);background:#17181c}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .generate{border-color:rgba(255,255,255,.1);background:linear-gradient(180deg,#1a1b20,#131418)}}
+/* ---------- kucharz: preferencje propozycji ---------- */
+.chef{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px 24px;display:grid;gap:20px;box-shadow:var(--shadow)}
+.chef-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 20px;flex-wrap:wrap}
+.chef-head h2{font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.1;margin:0 0 4px;letter-spacing:-.01em}
+.chef-head .hint{max-width:56ch}
+.chef-actions{display:flex;gap:14px;align-items:center}
+.chef-actions .btn{display:inline-flex;align-items:center;gap:7px}
+.label em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:400;color:var(--faint);margin-left:8px}
+.cuisines{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.cuisine{font:inherit;font-size:.88rem;font-weight:500;text-align:left;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink-2);cursor:pointer;
+  transition:all .2s;position:relative}
+.cuisine:hover:not(:disabled){border-color:var(--line-strong);color:var(--ink)}
+.cuisine[aria-pressed="true"]{background:var(--cta);border-color:var(--cta);color:var(--on-cta);font-weight:600}
+.cuisine[aria-pressed="true"]::after{content:"";position:absolute;top:9px;right:10px;width:6px;height:6px;border-radius:50%;background:var(--gold-1)}
+.cuisine.express{grid-column:span 2;display:flex;align-items:center;gap:10px;color:var(--accent-ink);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.cuisine.express span{display:grid;line-height:1.25}
+.cuisine.express small{font-size:.72rem;font-weight:400;opacity:.8}
+.cuisine.express[aria-pressed="true"]{color:#1a1408;background:linear-gradient(180deg,var(--gold-1),var(--gold-2));border-color:transparent;box-shadow:0 8px 20px -10px rgba(227,181,90,.8)}
+.cuisine.express[aria-pressed="true"]::after{display:none}
+@media (max-width:420px){.cuisines{grid-template-columns:1fr 1fr}.cuisine.express{grid-column:1 / -1}}
+.exclusions{display:flex;flex-wrap:wrap;gap:6px}
+.xchip{font:inherit;font-size:.82rem;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.xchip:hover:not(:disabled){border-color:var(--line-strong);color:var(--ink)}
+.xchip[aria-pressed="true"]{border-color:color-mix(in srgb,var(--warn) 50%,transparent);background:var(--warn-soft);color:var(--warn);font-weight:600}
+.xchip[aria-pressed="true"]::before{content:"✕ ";font-size:.7rem}
+.chef-lists{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:700px){.chef-lists{grid-template-columns:1fr}}
+.picker{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);min-height:46px;transition:border-color .2s,box-shadow .2s}
+.picker:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);background:var(--surface)}
+.picker input{font:inherit;font-size:.88rem;flex:1 1 120px;min-width:0;border:0;background:transparent;color:var(--ink);padding:6px 8px;outline:none}
+.pchip{font:inherit;font-size:.8rem;display:inline-flex;align-items:center;gap:6px;padding:5px 8px 5px 11px;border-radius:999px;border:1px solid transparent;cursor:pointer}
+.pchip span{font-size:.95rem;line-height:1;opacity:.6}
+.pchip:hover span{opacity:1}
+.picker.avoid .pchip{background:var(--warn-soft);color:var(--warn);border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+.picker.like .pchip{background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.mid{display:flex;justify-content:space-between;gap:8px}
+.mtime{font-family:var(--mono);letter-spacing:0;text-transform:none;color:var(--faint);font-weight:500}
+.chip.cuisine-chip{color:var(--ink-2);border-color:var(--line-strong);font-weight:500}
+.chef-notes{margin:0;padding:10px 14px 10px 30px;font-size:.82rem;color:var(--muted);background:var(--surface-2);border:1px dashed var(--line-strong);border-radius:12px;display:grid;gap:4px}
+.empty-t{font-family:var(--display);font-weight:400;font-size:1.4rem}
+
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}

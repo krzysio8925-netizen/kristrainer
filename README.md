@@ -1,6 +1,6 @@
 # Kris Trainer — kalkulator doboru diety
 
-Aplikacja webowa trenera (React + Vite + TypeScript) do układania planów żywieniowych: osoby, wersje planów, zapotrzebowanie w kcal lub makro, plan z arkusza z zamiennikami, przykładowe posiłki (3 propozycje na dzień treningowy i 3 na nietreningowy) i PDF z logo do wyboru: Kris Trainer albo GabiTrainer.
+Aplikacja webowa trenera (React + Vite + TypeScript) do układania planów żywieniowych: osoby, wersje planów, zapotrzebowanie w kcal lub makro, plan z arkusza z zamiennikami, przykładowe posiłki układane przez „kucharza” (3 propozycje na dzień treningowy i 3 na nietreningowy – według wybranych kuchni, trybu ekspres, wykluczeń i ulubionych produktów) i PDF z logo do wyboru: Kris Trainer albo GabiTrainer.
 
 Adres po publikacji: `https://krzysio8925-netizen.github.io/<repozytorium>/`. Dostęp ma tylko jedno konto (`src/backend/config.ts` i `isKris()` w `firebase/firestore.rules`).
 
@@ -25,8 +25,8 @@ npm run build   # wersja do publikacji w dist/
 
 | Folder / plik | Co zawiera |
 | --- | --- |
-| `src/data/*.json` | Produkty, plan bazowy z arkusza, zasady rozkładu makro na posiłki, przepisy i propozycje dni |
-| `src/engine/` | Silnik obliczeń (czysty TypeScript, bez React i bazy) + testy |
+| `src/data/*.json` | Produkty, plan bazowy z arkusza, zasady rozkładu makro na posiłki, baza przepisów (10 kuchni) i słownik kucharza (`kuchnie.json`: kuchnie, tryb ekspres, grupy wykluczeń) |
+| `src/engine/` | Silnik obliczeń i kucharz układający propozycje (`kucharz.ts`) – czysty TypeScript, bez React i bazy, + testy |
 | `src/backend/` | Firebase: logowanie, zapis osób i wersji, kopia danych |
 | `src/views/` | Ekrany: logowanie, kalkulator |
 | `src/pdf.ts` | PDF (biblioteka pdfmake ładowana dopiero po kliknięciu „Generuj”) |
@@ -36,4 +36,21 @@ Dane w bazie: `kris_clients/{id}` (osoba) i `kris_clients/{id}/versions/{vN}` (w
 
 ## Dodanie przepisu
 
-Dopisz przepis w `src/data/przepisy.json` (składniki z `produkty.json`, rola P/C/F/X) i wstaw jego id do propozycji w `menus`. `npm test` sprawdzi spójność danych.
+Dopisz przepis w `src/data/przepisy.json`:
+
+- `cuisine` – id kuchni z `src/data/kuchnie.json`,
+- `slots` – typy posiłków: `S` śniadanie (na ciepło), `W` do pracy (na zimno / z mikrofali), `O` okołotreningowy (mało tłuszczu), `K` obiad / kolacja,
+- `serve`, `time` (minuty – do 10 min danie liczy się do trybu ekspres),
+- składniki z `produkty.json` z rolą P/C/F/X (P, C, F są skalowane do makro posiłku, X to stały dodatek).
+
+Kucharz sam włączy przepis do propozycji. `npm test` sprawdzi spójność danych, to, że każda kuchnia ma danie na każdy posiłek, oraz trafienie propozycji w makro.
+
+## Jak kucharz układa propozycje
+
+1. Odrzuca przepisy z wykluczonymi produktami (grupy wykluczeń i lista „Nie je”).
+2. Na każdy posiłek bierze dania pasujące do jego typu (śniadanie na ciepło, posiłki do pracy bez dań tylko na ciepło).
+3. Wybrane kuchnie i tryb ekspres traktuje jako warunek – odstępuje od nich tylko, gdy nie ma żadnego pasującego dania, i zapisuje o tym notatkę.
+4. Spośród reszty wybiera dania najlepiej trafiające w makro posiłku po przeskalowaniu, z premią za lubiane produkty i karą za powtórki (to samo danie, białko lub węglowodan).
+5. Na koniec wyrównuje cały dzień: to, czego jedno danie nie zmieściło, przechodzi na pozostałe posiłki.
+
+Preferencje zapisują się w wersji planu (pole `prefs`), więc PDF zawiera te same propozycje co ekran. „Wymieszaj” daje inne propozycje przy tych samych ustawieniach.
