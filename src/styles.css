@@ -119,6 +119,12 @@ select.swapped{border-color:var(--accent);background-color:var(--accent-soft)}
 .notes ul{margin:0;padding-left:1.1em;display:grid;gap:4px;color:var(--muted);font-size:.9rem;max-width:80ch}
 .generate{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px;display:flex;gap:12px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .generate p{margin:0;color:var(--muted);font-size:.9rem;max-width:60ch}
+.brand-pick{border:0;margin:0;padding:0;display:flex;gap:10px;flex-wrap:wrap;flex-basis:100%}
+.brand-pick legend{font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:6px;padding:0}
+.brand-pick label{display:flex;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer}
+.brand-pick label.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.brand-pick label:focus-within{outline:2px solid var(--ink);outline-offset:2px}
+.brand-pick input{position:absolute;opacity:0;pointer-events:none}
 .generate .btn.primary{font-size:1rem;padding:10px 26px}
 .stack{display:grid;gap:14px}
 .viewtabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px}

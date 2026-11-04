@@ -9,6 +9,7 @@ import type { Day, Macro4, Person, PlanVersion, Target } from '../engine/types';
 import { DAY_NAME, GROUP_COLOR, GROUP_NAME, VEG_NOTE, fmt, qtyTxt, serveLabel } from '../format';
 import { downloadPdf, saveFile } from '../pdf';
 import { Logo } from './Logo';
+import { BRANDS, BRAND_IDS, isBrandId, type BrandId } from '../brand';
 
 const LS = 'kris-kalkulator';
 const lsGet = (k: string) => { try { return localStorage.getItem(`${LS}-${k}`); } catch { return null; } };
@@ -84,6 +85,8 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
   const [status, setStatus] = useState('Ładowanie…');
   const [genInfo, setGenInfo] = useState('');
   const [busy, setBusy] = useState(false);
+  const [brand, setBrandState] = useState<BrandId>(() => { const b = lsGet('brand'); return isBrandId(b) ? b : 'kris'; });
+  const setBrand = (b: BrandId) => { setBrandState(b); lsSet('brand', b); setGenInfo(''); };
   const fileRef = useRef<HTMLInputElement>(null);
 
   // ── osoby (na żywo z bazy) ──
@@ -167,7 +170,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
   const generate = async () => {
     if (!person || !v) return;
     setBusy(true); setGenInfo('');
-    try { setGenInfo(`Zapisano ${await downloadPdf(person, v, D)}.`); }
+    try { setGenInfo(`Zapisano ${await downloadPdf(person, v, D, brand)}.`); }
     catch (e) { setGenInfo('Nie udało się utworzyć PDF: ' + errText(e)); }
     finally { setBusy(false); }
   };
@@ -413,7 +416,15 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
           </>)}
 
           <section className="generate">
-            <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami (3 propozycje na dzień treningowy i 3 na nietreningowy), z logo Kris Trainer.`}</p>
+            <fieldset className="brand-pick">
+              <legend>Logo i nazwa w PDF</legend>
+              {BRAND_IDS.map(b => (
+                <label key={b} className={b === brand ? 'on' : ''}>
+                  <input type="radio" name="pdf-brand" value={b} checked={b === brand} onChange={() => setBrand(b)} />
+                  <Logo brand={b} width={BRANDS[b].w * 0.62} />
+                </label>))}
+            </fieldset>
+            <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami (3 propozycje na dzień treningowy i 3 na nietreningowy), z logo ${BRANDS[brand].name}.`}</p>
             <button type="button" className="btn primary" disabled={busy} onClick={generate}>{busy ? 'Generowanie…' : 'Generuj'}</button>
           </section>
           {backupBox}
