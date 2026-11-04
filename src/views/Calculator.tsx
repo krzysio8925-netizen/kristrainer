@@ -66,6 +66,7 @@ function Summary({ T, tot }: { T: Target; tot: Macro4 }) {
             <span className="k">{g && <span className="dot" style={{ background: GROUP_COLOR[g] }} />}{n}</span>
             <span className="v">{fmt(plan[i])}<span style={{ fontSize: '.8rem', color: 'var(--muted)' }}> {i ? 'g' : 'kcal'}</span></span>
             <span className="t">cel {fmt(tg[i])}{i ? ` · ${fmt(T.pct[i - 1], 1)}%` : ''} · <span className={Math.abs(diff) <= tol ? 'ok' : 'off'}>{diff >= 0 ? '+' : '−'}{fmt(Math.abs(diff))}</span></span>
+            <span className="meter" aria-hidden="true"><i style={{ width: `${Math.min(100, tg[i] ? (plan[i] / tg[i]) * 100 : 0)}%`, ...(g ? { background: GROUP_COLOR[g] } : {}) }} /></span>
           </div>
         );
       })}
