@@ -1,23 +1,13 @@
-import { useId } from 'react';
-import { BRANDS, GABI, type BrandId } from '../brand';
+import { BRANDS, GABI_LOGO, type BrandId } from '../brand';
 
-/** Logo Kris Trainer (to samo co w planie treningowym) albo GabiTrainer. */
-export function Logo({ width = 168, brand = 'kris' }: { width?: number; brand?: BrandId }) {
-  const clip = useId();
-  if (brand === 'gabi') return (
-    <svg className="logo" viewBox={`0 0 ${BRANDS.gabi.w} 52`} role="img" aria-label="GabiTrainer" style={{ width, height: 'auto' }}>
-      <clipPath id={clip}><rect x="0" y="0" width="52" height="52" rx="12" /></clipPath>
-      <g clipPath={`url(#${clip})`}>
-        <rect x="0" y="0" width="52" height="52" fill={GABI.bg} />
-        <circle cx="43" cy="6.5" r="16" fill={GABI.blob} />
-        <circle cx="10" cy="41" r="4" fill={GABI.dot} />
-      </g>
-      <text x="26" y="37" textAnchor="middle" fontFamily="Caprasimo, Georgia, serif" fontSize="31" fill={GABI.cream}>G</text>
-      <text x="62" y="35" fontFamily="Caprasimo, Georgia, serif" fontSize="25" fill="var(--logo-ink)">Gabi<tspan fill={GABI.accent}>Trainer</tspan></text>
-    </svg>
-  );
+/** Logo Kris Trainer (to samo co w planie treningowym) albo GabiTrainer. tone="light" – wersja na ciemne tło. */
+export function Logo({ width, height, brand = 'kris', tone = 'dark' }: { width?: number; height?: number; brand?: BrandId; tone?: 'dark' | 'light' }) {
+  if (brand === 'gabi') {
+    const w = width ?? (height ? height * BRANDS.gabi.ratio : 168);
+    return <img className="logo" src={tone === 'light' ? GABI_LOGO.blush : GABI_LOGO.plum} alt="GabiTrainer" style={{ width: w, height: 'auto' }} />;
+  }
   return (
-    <svg className="logo" viewBox="0 0 210 52" role="img" aria-label="Kris Trainer" style={{ width, height: 'auto' }}>
+    <svg className="logo" viewBox="0 0 210 52" role="img" aria-label="Kris Trainer" style={{ width: width ?? (height ? height * BRANDS.kris.ratio : 168), height: 'auto' }}>
       <rect x="0" y="0" width="52" height="52" rx="12" fill="#111827" />
       <rect x="8" y="23" width="36" height="6" rx="1.5" fill="#f59e0b" />
       <rect x="5" y="15" width="6" height="22" rx="2" fill="#f59e0b" /><rect x="41" y="15" width="6" height="22" rx="2" fill="#f59e0b" />

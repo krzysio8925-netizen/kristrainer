@@ -3,7 +3,7 @@ import { normPrefs, planMenus, prefsSummary } from './engine/kucharz';
 import { menuDay, planDay } from './engine/silnik';
 import type { Data, Day, Macro4, Person, PlanVersion, Row } from './engine/types';
 import { DAY_NAME, VEG_NOTE, fmt, qtyTxt, serveLabel } from './format';
-import { BRANDS, GABI, type BrandId } from './brand';
+import { BRANDS, GABI_LOGO, type BrandId } from './brand';
 
 type PdfMake = { createPdf: (doc: unknown) => { getBlob: (cb: (b: Blob) => void) => void } };
 declare global { interface Window { pdfMake?: PdfMake } }
@@ -20,31 +20,33 @@ async function pdfMake(): Promise<PdfMake> {
   return window.pdfMake!;
 }
 
-/** Logo wybranej marki narysowane na canvasie → PNG (te same kształty co w views/Logo.tsx). */
+/** Plik SVG → PNG (canvas) w wysokiej rozdzielczości. */
+function svgPng(url: string, ratio: number, h = 360) {
+  return new Promise<string>((res, rej) => {
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement('canvas'); cv.width = Math.round(h * ratio); cv.height = h;
+      cv.getContext('2d')!.drawImage(img, 0, 0, cv.width, cv.height);
+      res(cv.toDataURL('image/png'));
+    };
+    img.onerror = () => rej(new Error('Nie wczytało się logo.'));
+    img.src = url;
+  });
+}
+
+/** Logo wybranej marki → PNG: Kris Trainer rysowany na canvasie (jak w views/Logo.tsx), GabiTrainer z logo-plum.svg. */
 async function logoPng(brand: BrandId) {
-  const fonts = brand === 'gabi' ? ['31px Caprasimo', '25px Caprasimo'] : ['900 25px Inter', '600 11.5px Inter'];
-  try { await Promise.all(fonts.map(f => document.fonts.load(f))); } catch { /* font zapasowy */ }
-  const SC = 6, cv = document.createElement('canvas'); cv.width = BRANDS[brand].w * SC; cv.height = 52 * SC;
+  if (brand === 'gabi') return svgPng(GABI_LOGO.plum, BRANDS.gabi.ratio);
+  try { await Promise.all(['900 25px Inter', '600 11.5px Inter'].map(f => document.fonts.load(f))); } catch { /* font zapasowy */ }
+  const SC = 6, cv = document.createElement('canvas'); cv.width = 210 * SC; cv.height = 52 * SC;
   const x = cv.getContext('2d')!; x.scale(SC, SC);
   const rr = (X: number, Y: number, W: number, H: number, R: number, f: string) => { x.beginPath(); x.roundRect(X, Y, W, H, R); x.fillStyle = f; x.fill(); };
   const spaced = (t: string, X: number, Y: number, ls: number) => { let cx = X; for (const ch of t) { x.fillText(ch, cx, Y); cx += x.measureText(ch).width + ls; } };
-  if (brand === 'gabi') {
-    const serif = 'Caprasimo, Georgia, serif';
-    x.save(); x.beginPath(); x.roundRect(0, 0, 52, 52, 12); x.clip();
-    x.fillStyle = GABI.bg; x.fillRect(0, 0, 52, 52);
-    x.fillStyle = GABI.blob; x.beginPath(); x.arc(43, 6.5, 16, 0, Math.PI * 2); x.fill();
-    x.fillStyle = GABI.dot; x.beginPath(); x.arc(10, 41, 4, 0, Math.PI * 2); x.fill();
-    x.restore();
-    x.font = `31px ${serif}`; x.fillStyle = GABI.cream; x.textAlign = 'center'; x.fillText('G', 26, 37); x.textAlign = 'left';
-    x.font = `25px ${serif}`; x.fillStyle = GABI.ink; x.fillText('Gabi', 62, 35);
-    const gw = x.measureText('Gabi').width; x.fillStyle = GABI.accent; x.fillText('Trainer', 62 + gw, 35);
-  } else {
-    rr(0, 0, 52, 52, 12, '#111827'); rr(8, 23, 36, 6, 1.5, '#f59e0b'); rr(5, 15, 6, 22, 2, '#f59e0b'); rr(41, 15, 6, 22, 2, '#f59e0b');
-    x.strokeStyle = '#ffffff'; x.lineWidth = 6.5; x.lineCap = 'round'; x.lineJoin = 'round';
-    x.stroke(new Path2D('M17 10 v32 M17 26 L35 10 M22 22 L35 42'));
-    x.font = '900 25px Inter, Arial, sans-serif'; x.fillStyle = '#111827'; spaced('KRIS', 62, 28, -0.5);
-    x.font = '600 11.5px Inter, Arial, sans-serif'; x.fillStyle = '#f59e0b'; spaced('TRAINER', 63, 45, 4.6);
-  }
+  rr(0, 0, 52, 52, 12, '#111827'); rr(8, 23, 36, 6, 1.5, '#f59e0b'); rr(5, 15, 6, 22, 2, '#f59e0b'); rr(41, 15, 6, 22, 2, '#f59e0b');
+  x.strokeStyle = '#ffffff'; x.lineWidth = 6.5; x.lineCap = 'round'; x.lineJoin = 'round';
+  x.stroke(new Path2D('M17 10 v32 M17 26 L35 10 M22 22 L35 42'));
+  x.font = '900 25px Inter, Arial, sans-serif'; x.fillStyle = '#111827'; spaced('KRIS', 62, 28, -0.5);
+  x.font = '600 11.5px Inter, Arial, sans-serif'; x.fillStyle = '#f59e0b'; spaced('TRAINER', 63, 45, 4.6);
   return cv.toDataURL('image/png');
 }
 
@@ -110,7 +112,7 @@ export async function downloadPdf(person: Person, v: PlanVersion, D: Data, brand
   const B = BRANDS[brand];
   const [pm, logo] = await Promise.all([pdfMake(), logoPng(brand)]);
   const content: unknown[] = [
-    { columns: [{ stack: [{ image: logo, width: 150 * B.w / 210 }, { text: 'Plan żywieniowy', fontSize: 10, color: C.grey, margin: [0, 4, 0, 0] }], width: 'auto' },
+    { columns: [{ stack: [{ image: logo, ...B.pdf }, { text: 'Plan żywieniowy', fontSize: 10, color: C.grey, margin: [0, 4, 0, 0] }], width: 'auto' },
       { stack: [{ text: person.name || 'Bez nazwy', bold: true, fontSize: 13, alignment: 'right' },
         { text: `${person.sex === 'K' ? 'Kobieta' : 'Mężczyzna'} · wersja v${v.n} · ${new Date(v.createdAt).toLocaleDateString('pl-PL')}`, fontSize: 9, color: C.grey, alignment: 'right' }] }], margin: [0, 0, 0, 6] },
     { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1.5, lineColor: C.green }], margin: [0, 0, 0, 10] },

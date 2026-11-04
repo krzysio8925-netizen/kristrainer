@@ -441,7 +441,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
               {BRAND_IDS.map(b => (
                 <label key={b} className={b === brand ? 'on' : ''}>
                   <input type="radio" name="pdf-brand" value={b} checked={b === brand} onChange={() => setBrand(b)} />
-                  <Logo brand={b} width={BRANDS[b].w * 0.62} />
+                  <Logo brand={b} height={BRANDS[b].pickerHeight} tone="light" />
                 </label>))}
             </fieldset>
             <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami od kucharza (3 propozycje na dzień treningowy i 3 na nietreningowy, według ustawień z zakładki posiłków), z logo ${BRANDS[brand].name}.`}</p>
