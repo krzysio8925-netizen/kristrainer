@@ -88,6 +88,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
   const [status, setStatus] = useState('Ładowanie…');
   const [genInfo, setGenInfo] = useState('');
   const [busy, setBusy] = useState(false);
+  const [flash, setFlash] = useState(false);
   const [brand, setBrandState] = useState<BrandId>(() => { const b = lsGet('brand'); return isBrandId(b) ? b : 'kris'; });
   const setBrand = (b: BrandId) => { setBrandState(b); lsSet('brand', b); setGenInfo(''); };
   const fileRef = useRef<HTMLInputElement>(null);
@@ -392,7 +393,10 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
           </>)}
 
           {view === 'menu' && (
-            <ChefPanel prefs={prefs} disabled={ro} onChange={p => { updateVersion(x => { x.prefs = p; }); setMenuIdx({ T: 0, N: 0 }); }} />
+            <ChefPanel prefs={prefs} menus={menus} dayName={DAY_NAME[day]} disabled={ro} onApply={p => {
+              updateVersion(x => { x.prefs = p; }); setMenuIdx({ T: 0, N: 0 }); setFlash(true);
+              requestAnimationFrame(() => document.getElementById('propozycje')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+            }} />
           )}
           {view === 'menu' && !menus.length && (
             <div className="empty"><strong className="empty-t">Brak pasujących przepisów</strong>
@@ -400,7 +404,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
           )}
           {menu && (<>
             <Summary T={menu.T} tot={menu.tot} />
-            <div className="menu-pick" role="tablist" aria-label="Propozycje dnia">{menus.map((m, i) => (
+            <div id="propozycje" className={`menu-pick${flash ? ' flash' : ''}`} role="tablist" aria-label="Propozycje dnia" onAnimationEnd={() => setFlash(false)}>{menus.map((m, i) => (
               <button key={m.id} type="button" role="tab" aria-selected={i === mIdx} onClick={() => setMenuIdx(s => ({ ...s, [day]: i }))}>
                 <span className="mid">Propozycja {m.id}<span className="mtime">≈ {m.time} min</span></span><span className="mname">{m.name}</span></button>))}</div>
             <p className="menu-lead">{DAY_NAME[day]}: {menu.meals.length} posiłki. {day === 'T'

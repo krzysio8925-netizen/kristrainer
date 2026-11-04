@@ -5,7 +5,9 @@
 //   2) trafienie w makro – przepis jest skalowany do celu posiłku (tak jak w widoku), liczy się błąd kcal i makro;
 //   3) kuchnia – każda propozycja ma swoją kuchnię przewodnią, inne wybrane kuchnie są dopuszczalne, niewybrane tylko awaryjnie;
 //   4) ekspres – dania do `expressMaxMin` minut mają pierwszeństwo, dłuższe tylko gdy nie ma innych;
-//   5) gust i różnorodność – premia za lubiane produkty, kara za powtórzone danie, to samo główne białko lub węglowodan.
+//   5) gust i różnorodność – premia za lubiane produkty/dania (każda propozycja ma swój „ulubiony” na pierwszym planie),
+//      kara za powtórzone danie, to samo główne białko lub węglowodan.
+// „Lubi” i „Nie je” to dowolny tekst (produkt, danie, grupa: „łosoś”, „curry”, „owoce”), dopasowywany do nazw dań i składników.
 // Wynik jest powtarzalny: te same dane i preferencje = te same propozycje („Wymieszaj” zmienia ziarno losowania).
 import { cookMeal, slotTargets, targets } from './silnik.ts';
 import type { Data, Day, Macro4, Menu, MenuPrefs, PlanVersion, Recipe, Slot } from './types.ts';
@@ -24,15 +26,36 @@ export const hasPrefs = (p: MenuPrefs) => !!(p.cuisines.length || p.express || p
 
 /** Produkty, których nie wolno użyć (grupy wykluczeń + pojedyncze produkty). */
 export function bannedProducts(p: MenuPrefs, data: Data): Set<string> {
-  const out = new Set(p.avoid);
+  const out = new Set(p.avoid.filter(x => data.P[x]));
   data.chef.exclusions.forEach(e => { if (p.exclude.includes(e.id)) e.products.forEach(x => out.add(x)); });
   return out;
 }
 
+// ── dopasowanie tekstu („łosoś”, „curry”, „jajka”) do dań ──
+const plain = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l');
+const words = (s: string) => plain(s).split(/[^a-z0-9]+/).filter(Boolean);
+// Odmiany, których nie złapie wspólny początek słowa.
+const SYN: Record<string, string[]> = {
+  jajka: ['jaj'], jajko: ['jaj'], jaja: ['jaj'], jajecznica: ['jajecz'], grzyby: ['pieczark'], grzybki: ['pieczark'],
+  ryba: ['ryb', 'dorsz', 'mintaj', 'losos', 'tuncz'], ryby: ['ryb', 'dorsz', 'mintaj', 'losos', 'tuncz'],
+  owoce: ['owoc'], warzywa: ['warzyw'], mieso: ['mies'], drob: ['kurcz', 'indyk'], kasza: ['kasz'], ser: ['ser', 'parmez', 'mozzar', 'feta', 'cheddar'],
+  makaron: ['makar', 'spaghetti', 'gnocchi'], ziemniaki: ['ziemniak'], kartofle: ['ziemniak'], owsianka: ['owsian', 'platki'],
+};
+const stem = (w: string) => (w.length <= 4 ? w : w.slice(0, Math.max(4, Math.min(5, w.length - 2))));
+/** Funkcja sprawdzająca, czy danie pasuje do wpisanego tekstu (wszystkie słowa muszą się znaleźć). */
+export function matcher(term: string, data: Data) {
+  const parts = words(term).filter(w => w.length >= 3 || /^\d/.test(w)).map(w => SYN[w] ?? [stem(w)]);
+  return (r: Recipe) => {
+    if (!parts.length) return false;
+    const hay = words([r.name, ...r.ingredients.map(i => `${i.p} ${data.P[i.p]?.category ?? ''}`)].join(' '));
+    return parts.every(alts => alts.some(a => hay.some(h => h.startsWith(a))));
+  };
+}
+
 /** Przepisy dozwolone przy tych preferencjach. */
 export function allowedRecipes(p: MenuPrefs, data: Data): [string, Recipe][] {
-  const ban = bannedProducts(p, data);
-  return Object.entries(data.recipes.recipes).filter(([, r]) => !r.ingredients.some(i => ban.has(i.p)));
+  const ban = bannedProducts(p, data), avoid = p.avoid.map(t => matcher(t, data));
+  return Object.entries(data.recipes.recipes).filter(([, r]) => !r.ingredients.some(i => ban.has(i.p)) && !avoid.some(m => m(r)));
 }
 
 /** Czy przepis nadaje się na dany posiłek. */
@@ -82,7 +105,7 @@ export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu
   const goals = slotTargets(targets(v, day), slots);
   const maxT = data.chef.expressMaxMin;
   const sel = prefs.cuisines.filter(c => data.chef.cuisines.some(x => x.id === c));
-  const like = new Set(prefs.like);
+  const likes = prefs.like.map(t => matcher(t, data));
 
   // Kandydaci na każdy posiłek + ich dopasowanie do makro (liczone raz dla wszystkich propozycji).
   const cands = slots.map((s, i) => {
@@ -90,7 +113,7 @@ export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu
     if (!list.length) list = pool.filter(([, r]) => !s.portable || r.serve !== 'hot');
     if (!list.length) list = pool;
     return list.map(([id, r]) => ({ id, r, err: fitError(cookMeal(r, goals[i], data.P).sum, goals[i]),
-      likes: r.ingredients.filter(x => like.has(x.p)).length, P: mainOf(r, 'P'), C: mainOf(r, 'C') }));
+      likes: likes.map(m => m(r)), P: mainOf(r, 'P'), C: mainOf(r, 'C') }));
   });
 
   // Kuchnie przewodnie: wybrane po kolei; bez wyboru – losowe różne kuchnie.
@@ -107,6 +130,8 @@ export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu
   const menus: Menu[] = [];
   themes.forEach((theme, mi) => {
     const chosen: string[] = [], notes: string[] = [], proteins = new Set<string>(), carbs = new Set<string>();
+    const star = likes.length ? (mi + prefs.seed) % likes.length : -1;
+    let starHit = false;
     slots.forEach((s, i) => {
       let best: (typeof cands)[number][number] | null = null, bestScore = -Infinity;
       // Ostatni posiłek nie może zamienić propozycji w kopię wcześniejszej.
@@ -123,20 +148,25 @@ export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu
         else if (sel.length) sc += sel.includes(c.r.cuisine) ? 12 : -140;
         if (prefs.express) sc += c.r.time <= maxT ? 18 - c.r.time * 0.3 : -2.5 * (c.r.time - maxT);
         else if (s.kind === 'S' && c.r.time > 15) sc -= c.r.time - 15;
-        sc += 8 * c.likes;
+        // Lubiane: premia za każde trafienie, a „gwiazda” tej propozycji (kolejny ulubiony) dostaje dużo więcej.
+        c.likes.forEach((hit, li) => { if (hit) sc += li === star ? 220 : 40; });
         sc -= 30 * (usedAll.get(c.id) ?? 0);
         if (proteins.has(c.P)) sc -= 10;
         if (carbs.has(c.C)) sc -= 6;
         sc += rand() * 6;
+        if (star >= 0 && starHit && c.likes[star]) sc -= 180; // gwiazda raz na propozycję – reszta dla różnorodności
         if (sc > bestScore) { bestScore = sc; best = c; }
       });
       const b = best ?? cands[i][0];
       chosen.push(b.id); proteins.add(b.P); carbs.add(b.C);
+      if (star >= 0 && b.likes[star]) starHit = true;
       usedAll.set(b.id, (usedAll.get(b.id) ?? 0) + 1);
       const label = `${s.name} (${s.label.toLowerCase()})`;
       if (!fitsSlot(b.r, s)) notes.push(`${label}: wykluczenia nie zostawiły typowego dania – wybrano najbliższe.`);
       else if (sel.length && !sel.includes(b.r.cuisine))
         notes.push(`${label}: brak pasującego dania z wybranych kuchni – dobrano z kuchni ${cuisineName(data, b.r.cuisine).toLowerCase()}.`);
+      if (b.likes.some(Boolean) && b.err > 0.2)
+        notes.push(`${label}: ulubione danie odbiega od makro tego posiłku – kucharz wyrównał resztę dnia, sprawdź podsumowanie.`);
       if (prefs.express && b.r.time > maxT) notes.push(`${label}: brak dania do ${maxT} min spełniającego pozostałe warunki – to zajmie ok. ${b.r.time} min.`);
     });
     const recs = chosen.map(id => data.recipes.recipes[id]);
@@ -147,6 +177,18 @@ export function planMenus(v: PlanVersion, day: Day, data: Data, count = 3): Menu
       time: recs.reduce((a, r) => a + r.time, 0), notes });
   });
   return menus;
+}
+
+/** Gdzie trafiły pozycje z listy „Lubi”/„Nie je”: liczba dań w bazie i propozycje, w których są. */
+export function termReport(terms: string[], menus: Menu[], data: Data, prefs?: MenuPrefs) {
+  const allowed = prefs ? allowedRecipes(prefs, data).map(e => e[1]) : Object.values(data.recipes.recipes);
+  return terms.map(term => {
+    const m = matcher(term, data);
+    const inBase = Object.values(data.recipes.recipes).filter(m).length;
+    const inAllowed = allowed.filter(m).length;
+    const inMenus = menus.filter(x => x.meals.some(id => m(data.recipes.recipes[id]))).map(x => x.id);
+    return { term, inBase, inAllowed, inMenus };
+  });
 }
 
 /** Krótki opis preferencji (do PDF i podpowiedzi). */

@@ -1,6 +1,6 @@
 {
  "schema": "kris-trainer/chef@1",
- "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspresowy (czas przygotowania w minutach) i gotowe grupy wykluczeń (listy produktów).",
+ "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspres (czas przygotowania w minutach), gotowe grupy wykluczeń (listy produktów); diets – wykluczenia pokazywane jako wybór diety.",
  "expressMaxMin": 10,
  "cuisines": [
   {
@@ -44,10 +44,14 @@
    "name": "Bliskowschodnia"
   }
  ],
+ "diets": [
+  "wege",
+  "mieso"
+ ],
  "exclusions": [
   {
    "id": "wege",
-   "label": "Mięso i ryby (dieta wege)",
+   "label": "Wege (bez mięsa i ryb)",
    "products": [
     "Pierś z kurczaka",
     "Pierś z indyka",
@@ -70,6 +74,24 @@
     "Łosoś wędzony",
     "Sos rybny",
     "Sos ostrygowy"
+   ]
+  },
+  {
+   "id": "mieso",
+   "label": "Pescetariańska (bez mięsa, z rybami)",
+   "products": [
+    "Pierś z kurczaka",
+    "Pierś z indyka",
+    "Pierś z indyka mielona",
+    "Polędwiczka wieprzowa",
+    "Wołowina chuda",
+    "Wołowina mielona 90%",
+    "Wołowina mielona 95%",
+    "Wołowina mielona 97%",
+    "Wędlina z kurczaka",
+    "Szynka z indyka",
+    "Pierś z kurczaka pieczona (gotowa)",
+    "Udko z kurczaka bez skóry"
    ]
   },
   {

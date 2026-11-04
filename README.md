@@ -47,10 +47,10 @@ Kucharz sam włączy przepis do propozycji. `npm test` sprawdzi spójność dany
 
 ## Jak kucharz układa propozycje
 
-1. Odrzuca przepisy z wykluczonymi produktami (grupy wykluczeń i lista „Nie je”).
+1. Odrzuca przepisy niezgodne z dietą (wege, pescetariańska), grupami wykluczeń i listą „Nie je”. „Lubi” i „Nie je” to dowolny tekst (produkt, danie albo grupa, np. „łosoś”, „curry”, „grzyby”) dopasowywany do nazw dań i składników.
 2. Na każdy posiłek bierze dania pasujące do jego typu (śniadanie na ciepło, posiłki do pracy bez dań tylko na ciepło).
 3. Wybrane kuchnie i tryb ekspres traktuje jako warunek – odstępuje od nich tylko, gdy nie ma żadnego pasującego dania, i zapisuje o tym notatkę.
-4. Spośród reszty wybiera dania najlepiej trafiające w makro posiłku po przeskalowaniu, z premią za lubiane produkty i karą za powtórki (to samo danie, białko lub węglowodan).
+4. Spośród reszty wybiera dania najlepiej trafiające w makro posiłku po przeskalowaniu, z karą za powtórki (to samo danie, białko lub węglowodan). Każda propozycja ma swoją „gwiazdę” z listy „Lubi” (A – pierwsza pozycja, B – druga…), która trafia do niej nawet kosztem dokładności posiłku; wtedy kucharz zostawia notatkę.
 5. Na koniec wyrównuje cały dzień: to, czego jedno danie nie zmieściło, przechodzi na pozostałe posiłki.
 
-Preferencje zapisują się w wersji planu (pole `prefs`), więc PDF zawiera te same propozycje co ekran. „Wymieszaj” daje inne propozycje przy tych samych ustawieniach.
+Preferencje zapisują się w wersji planu (pole `prefs`), więc PDF zawiera te same propozycje co ekran. Zmiany w panelu kucharza są szkicem – stosuje je przycisk „Przelicz propozycje”; przy każdej pozycji „Lubi” / „Nie je” widać, czy została uwzględniona. „Wymieszaj” daje inne propozycje przy tych samych ustawieniach.

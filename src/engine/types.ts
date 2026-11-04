@@ -39,7 +39,7 @@ export interface Recipes { serveLabels: Record<string, string>; recipes: Record<
 
 export interface Cuisine { id: string; name: string }
 export interface Exclusion { id: string; label: string; products: string[] }
-export interface ChefData { expressMaxMin: number; cuisines: Cuisine[]; exclusions: Exclusion[] }
+export interface ChefData { expressMaxMin: number; cuisines: Cuisine[]; diets: string[]; exclusions: Exclusion[] }
 
 /** Preferencje do propozycji posiłków (zapisywane w wersji planu). */
 export interface MenuPrefs {

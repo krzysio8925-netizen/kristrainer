@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
-import { bannedProducts, fitsSlot, normPrefs, planMenus } from './kucharz.ts';
+import { allowedRecipes, bannedProducts, fitsSlot, matcher, normPrefs, planMenus, termReport } from './kucharz.ts';
 import { makeData, menuDay, planDay, validate } from './silnik.ts';
 import type { MenuPrefs, PlanVersion } from './types.ts';
 
@@ -30,6 +30,7 @@ const variants: Record<string, Partial<MenuPrefs>> = {
   bez_nabialu_jaj: { exclude: ['nabial', 'jaja'], like: ['Krewetki'] },
   ...Object.fromEntries(D.chef.cuisines.map(c => [c.id, { cuisines: [c.id] }])),
   azja_ekspres: { cuisines: ['japonska', 'chinska', 'tajska'], express: true, avoid: ['Tuńczyk w wodzie'] },
+  pesce_gusta: { exclude: ['mieso'], like: ['łosoś', 'curry', 'jajka'], avoid: ['grzyby'] },
 };
 let checked = 0;
 for (const [name, v0] of Object.entries(people)) for (const [vn, pr] of Object.entries(variants)) for (const day of ['T', 'N'] as const) {
@@ -47,11 +48,22 @@ for (const [name, v0] of Object.entries(people)) for (const [vn, pr] of Object.e
     });
     if (pr.cuisines?.length === 1 && !pr.express) assert.ok(m.meals.every(id => D.recipes.recipes[id].cuisine === pr.cuisines![0]), `${tag}/${m.id}: tylko wybrana kuchnia`);
     if (pr.express && !pr.cuisines) assert.ok(m.time <= slots.length * 12, `${tag}/${m.id}: ekspres ${m.time} min`);
-    assert.ok(Math.abs(R.tot[3] - R.T.kcal) <= Math.max(120, R.T.kcal * 0.07), `${tag}/${m.id}: kcal ${R.tot[3]} vs ${R.T.kcal}`);
+    assert.ok(Math.abs(R.tot[3] - R.T.kcal) <= Math.max(120, R.T.kcal * (pr.like?.length ? 0.1 : 0.07)), `${tag}/${m.id}: kcal ${R.tot[3]} vs ${R.T.kcal}`);
     assert.ok(Math.abs(R.tot[0] - R.T.g[0]) <= Math.max(10, R.T.g[0] * 0.07), `${tag}/${m.id}: białko ${R.tot[0]} vs ${R.T.g[0]}`);
     assert.ok(Math.abs(R.tot[1] - R.T.g[1]) <= Math.max(20, R.T.g[1] * 0.07), `${tag}/${m.id}: węgle ${R.tot[1]} vs ${R.T.g[1]}`);
     checked++;
   });
 }
 console.log(`kucharz: sprawdzono ${checked} propozycji`);
+
+// „Lubi” / „Nie je” jako dowolny tekst.
+const R = D.recipes.recipes;
+assert.ok(matcher('łosoś', D)(R['md-losos']) && matcher('jajka', D)(R['pl-jajecznica']) && matcher('grzyby', D)(R['n-pizza-tortilla']));
+assert.ok(!matcher('pierogi', D)(R['t-owsianka']));
+const pesce = normPrefs(variants.pesce_gusta);
+assert.ok(allowedRecipes(pesce, D).every(([, r]) => !r.ingredients.some(i => D.P[i.p].category === 'Mięso' || i.p === 'Pieczarki')), 'pescetariańska bez mięsa i grzybów');
+for (const day of ['T', 'N'] as const) {
+  const menus = planMenus({ ...people.kobieta, prefs: pesce }, day, D);
+  termReport(pesce.like, menus, D).forEach(t => assert.ok(t.inMenus.length > 0, `${day}: „${t.term}” nie trafiło do propozycji`));
+}
 console.log('silnik: wszystkie testy OK');
