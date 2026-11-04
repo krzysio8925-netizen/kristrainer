@@ -444,7 +444,7 @@ export function Calculator({ email, onLogout }: { email: string; onLogout: () =>
                   <Logo brand={b} height={BRANDS[b].pickerHeight} tone="light" />
                 </label>))}
             </fieldset>
-            <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami od kucharza (3 propozycje na dzień treningowy i 3 na nietreningowy, według ustawień z zakładki posiłków), z logo ${BRANDS[brand].name}.`}</p>
+            <p>{genInfo || `PDF: ${person.name || 'Bez nazwy'}, wersja v${v.n}. Plan na oba dni oraz osobny dział z przykładowymi posiłkami od kucharza (3 propozycje na dzień treningowy i 3 na nietreningowy, według ustawień z zakładki posiłków, każda z listą zakupów na cały dzień), z logo ${BRANDS[brand].name}.`}</p>
             <button type="button" className="btn primary" disabled={busy} onClick={generate}>{busy ? 'Generowanie…' : 'Generuj'}</button>
           </section>
           {backupBox}

@@ -1,6 +1,7 @@
 // Generowanie PDF planu (pdfmake ładowany dopiero przy pierwszym kliknięciu „Generuj”).
 import { normPrefs, planMenus, prefsSummary } from './engine/kucharz';
 import { menuDay, planDay } from './engine/silnik';
+import { shoppingList, type ShopItem } from './engine/zakupy';
 import type { Data, Day, Macro4, Person, PlanVersion, Row } from './engine/types';
 import { DAY_NAME, VEG_NOTE, fmt, qtyTxt, serveLabel } from './format';
 import { BRANDS, GABI_LOGO, type BrandId } from './brand';
@@ -103,8 +104,36 @@ function menuSection(v: PlanVersion, D: Data) {
           { width: '*', stack: [{ ol: r.steps, fontSize: 8.5, margin: [0, 0, 0, 3] }, ...(r.tip ? [{ text: [{ text: 'Wskazówka: ', bold: true }, r.tip], fontSize: 8, color: C.grey }] : [])] }], columnGap: 12 },
       ] });
     });
+    out.push(shoppingBlock(R.meals.flatMap(M => M.rows), menu.id, D));
   }));
   return out;
+}
+
+const shopQty = (it: ShopItem) => {
+  const g = it.g >= 1000 ? `${fmt(it.g / 1000, 2)} kg` : `${fmt(it.g)} g`;
+  return it.units != null ? `${fmt(it.units)} ${it.unitName} (${g})` : g;
+};
+
+/** Lista zakupów na cały dzień propozycji: działy sklepu w 3 kolumnach, kwadraty do odhaczania. */
+function shoppingBlock(rows: Row[], menuId: string, D: Data) {
+  const sections = shoppingList(rows, D);
+  const cols: { stack: unknown[]; n: number }[] = [{ stack: [], n: 0 }, { stack: [], n: 0 }, { stack: [], n: 0 }];
+  sections.forEach(s => {
+    const col = cols.reduce((a, b) => (b.n < a.n ? b : a));
+    col.n += s.items.length + 2;
+    col.stack.push({ text: s.name.toUpperCase(), fontSize: 7, bold: true, color: C.green, characterSpacing: .4, margin: [0, col.stack.length ? 6 : 0, 0, 2] });
+    s.items.forEach(it => col.stack.push({ columns: [
+      { width: 9, canvas: [{ type: 'rect', x: 0, y: 1.5, w: 6.5, h: 6.5, r: 1, lineWidth: .6, lineColor: C.grey }] },
+      { width: '*', text: it.prod, fontSize: 8.5 },
+      { width: 'auto', text: shopQty(it), fontSize: 8.5, bold: true, alignment: 'right' },
+    ], columnGap: 3, margin: [0, 1, 0, 1] }));
+  });
+  return { unbreakable: true, margin: [0, 4, 0, 0], stack: [
+    { canvas: [{ type: 'rect', x: 0, y: 0, w: 515, h: 0.8, color: C.line }] },
+    { columns: [{ text: 'LISTA ZAKUPÓW · CAŁY DZIEŃ', fontSize: 9, bold: true, color: C.amber, characterSpacing: .5 },
+      { text: `Propozycja ${menuId} · produkty ważone na surowo, ilości na 1 dzień`, fontSize: 7.5, color: C.grey, alignment: 'right' }], margin: [0, 8, 0, 6] },
+    { columns: cols.map(c => ({ width: '*', stack: c.stack })), columnGap: 18 },
+  ] };
 }
 
 /** Tworzy PDF planu osoby i pobiera go na dysk. */

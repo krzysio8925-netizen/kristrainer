@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 
 import { LOS, MIX, allowedRecipes, bannedProducts, fitsSlot, matcher, menuThemes, normPrefs, planMenus, termReport } from './kucharz.ts';
 import { makeData, menuDay, planDay, validate } from './silnik.ts';
+import { shoppingList } from './zakupy.ts';
 import type { MenuPrefs, PlanVersion } from './types.ts';
 
 const load = (f: string) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
@@ -58,6 +59,11 @@ for (const [name, v0] of Object.entries(people)) for (const [vn, pr] of Object.e
     assert.ok(Math.abs(R.tot[3] - R.T.kcal) <= Math.max(120, R.T.kcal * (pr.like?.length || pr.express ? 0.1 : 0.07)), `${tag}/${m.id}: kcal ${R.tot[3]} vs ${R.T.kcal}`);
     assert.ok(Math.abs(R.tot[0] - R.T.g[0]) <= Math.max(10, R.T.g[0] * 0.07), `${tag}/${m.id}: białko ${R.tot[0]} vs ${R.T.g[0]}`);
     assert.ok(Math.abs(R.tot[1] - R.T.g[1]) <= Math.max(20, R.T.g[1] * 0.07), `${tag}/${m.id}: węgle ${R.tot[1]} vs ${R.T.g[1]}`);
+    // Lista zakupów: każdy produkt raz, suma gramów jak w posiłkach.
+    const rows = R.meals.flatMap(M => M.rows), shop = shoppingList(rows, D), items = shop.flatMap(x => x.items);
+    assert.equal(new Set(items.map(i => i.prod)).size, items.length, `${tag}/${m.id}: produkt dwa razy na liście`);
+    assert.equal(new Set(items.map(i => i.prod)).size, new Set(rows.map(r => r.prod)).size, `${tag}/${m.id}: lista zakupów gubi produkty`);
+    assert.ok(Math.abs(items.reduce((a, i) => a + i.g, 0) - rows.reduce((a, r) => a + r.g, 0)) < 1e-6, `${tag}/${m.id}: suma gramów listy zakupów`);
     checked++;
   });
 }

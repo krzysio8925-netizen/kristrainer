@@ -1,6 +1,6 @@
 # Kris Trainer — kalkulator doboru diety
 
-Aplikacja webowa trenera (React + Vite + TypeScript) do układania planów żywieniowych: osoby, wersje planów, zapotrzebowanie w kcal lub makro, plan z arkusza z zamiennikami, przykładowe posiłki układane przez „kucharza” (3 propozycje na dzień treningowy i 3 na nietreningowy – kuchnia osobno dla każdej propozycji: wybrana, losowa z „Losuj” albo miks; tryb ekspres, dieta, wykluczenia, ulubione i szejki zamiast wybranych posiłków; baza ok. 300 przepisów) i PDF z logo do wyboru: Kris Trainer albo GabiTrainer.
+Aplikacja webowa trenera (React + Vite + TypeScript) do układania planów żywieniowych: osoby, wersje planów, zapotrzebowanie w kcal lub makro, plan z arkusza z zamiennikami, przykładowe posiłki układane przez „kucharza” (3 propozycje na dzień treningowy i 3 na nietreningowy – kuchnia osobno dla każdej propozycji: wybrana, losowa z „Losuj” albo miks; tryb ekspres, dieta, wykluczenia, ulubione i szejki zamiast wybranych posiłków; baza ok. 300 przepisów) i PDF z logo do wyboru: Kris Trainer albo GabiTrainer; przy każdej propozycji w PDF jest lista zakupów na cały dzień (produkty zsumowane i pogrupowane według działów sklepu).
 
 Adres po publikacji: `https://krzysio8925-netizen.github.io/<repozytorium>/`. Dostęp ma tylko jedno konto (`src/backend/config.ts` i `isKris()` w `firebase/firestore.rules`).
 
@@ -26,7 +26,7 @@ npm run build   # wersja do publikacji w dist/
 | Folder / plik | Co zawiera |
 | --- | --- |
 | `src/data/*.json` | Produkty, plan bazowy z arkusza, zasady rozkładu makro na posiłki, baza przepisów (10 kuchni) i słownik kucharza (`kuchnie.json`: kuchnie, tryb ekspres, grupy wykluczeń) |
-| `src/engine/` | Silnik obliczeń i kucharz układający propozycje (`kucharz.ts`) – czysty TypeScript, bez React i bazy, + testy |
+| `src/engine/` | Silnik obliczeń, kucharz układający propozycje (`kucharz.ts`) i lista zakupów (`zakupy.ts`) – czysty TypeScript, bez React i bazy, + testy |
 | `src/backend/` | Firebase: logowanie, zapis osób i wersji, kopia danych |
 | `src/views/` | Ekrany: logowanie, kalkulator |
 | `src/pdf.ts` | PDF (biblioteka pdfmake ładowana dopiero po kliknięciu „Generuj”) |
