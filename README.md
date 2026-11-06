@@ -47,9 +47,9 @@ Kucharz sam włączy przepis do propozycji. `npm test` sprawdzi spójność dany
 
 ## Jak kucharz układa propozycje
 
-1. Odrzuca przepisy niezgodne z dietą (wege, pescetariańska; przy diecie ziemniaczano-twarogowej bierze tylko przepisy oznaczone `"programs": ["ziemniak-twarog"]`, a kuchnie propozycji nie obowiązują), grupami wykluczeń i listą „Nie je”. „Lubi” i „Nie je” to dowolny tekst (produkt, danie albo grupa, np. „łosoś”, „curry”, „grzyby”) dopasowywany do nazw dań i składników.
+1. Odrzuca przepisy niezgodne z dietą (wege, pescetariańska), grupami wykluczeń i listą „Nie je”. „Lubi” i „Nie je” to dowolny tekst (produkt, danie albo grupa, np. „łosoś”, „curry”, „grzyby”) dopasowywany do nazw dań i składników.
 2. Na każdy posiłek bierze dania pasujące do jego typu (śniadanie na ciepło, posiłki do pracy bez dań tylko na ciepło).
-3. Każda propozycja (A, B, C) ma swoją kuchnię: wybraną, wylosowaną (różną od pozostałych; „Losuj” losuje od nowa tylko tę propozycję, ta sama kuchnia w obu dniach) albo miks. Kuchnię i tryb ekspres traktuje jako warunek – odstępuje od nich tylko, gdy nie ma żadnego pasującego dania, i zapisuje o tym notatkę (przy kuchni wylosowanej ekspres ma pierwszeństwo). Na posiłki wybrane w „Szejk zamiast posiłku” (maks. 2 na dzień) wstawia szejk – w każdej propozycji inny.
+3. Każda propozycja (A, B, C) ma swoją kuchnię: wybraną, dietę z listy (np. ziemniaczano-twarogową – tylko przepisy oznaczone `"programs": ["ziemniak-twarog"]`), wylosowaną (różną od pozostałych; „Losuj” losuje od nowa tylko tę propozycję, ta sama kuchnia w obu dniach) albo miks. Kuchnię i tryb ekspres traktuje jako warunek – odstępuje od nich tylko, gdy nie ma żadnego pasującego dania, i zapisuje o tym notatkę (przy kuchni wylosowanej ekspres ma pierwszeństwo). Na posiłki wybrane w „Szejk zamiast posiłku” (maks. 2 na dzień) wstawia szejk – w każdej propozycji inny.
 4. Spośród reszty wybiera dania najlepiej trafiające w makro posiłku po przeskalowaniu, z karą za powtórki (to samo danie, białko lub węglowodan). Każda propozycja ma swoją „gwiazdę” z listy „Lubi” (A – pierwsza pozycja, B – druga…), która trafia do niej nawet kosztem dokładności posiłku; wtedy kucharz zostawia notatkę.
 5. Na koniec wyrównuje cały dzień: to, czego jedno danie nie zmieściło, przechodzi na pozostałe posiłki.
 

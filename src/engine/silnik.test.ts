@@ -33,8 +33,8 @@ const variants: Record<string, Partial<MenuPrefs>> = {
   azja_ekspres: { menuCuisines: ['japonska', 'chinska', 'tajska'], express: true, avoid: ['Tuńczyk w wodzie'] },
   miks_szejki: { menuCuisines: [MIX, LOS, 'wloska'], shakes: { T: ['P1', 'P3'], N: ['P2'] } },
   szejki_bez_odzywek: { exclude: ['odzywki', 'nabial'], shakes: { T: ['P5'], N: ['P1', 'P4'] } },
-  ziemniaczano_twarogowa: { program: 'ziemniak-twarog' },
-  ziemniaczano_twarogowa_szejk: { program: 'ziemniak-twarog', shakes: { T: ['P3'], N: ['P2'] }, like: ['pierogi'] },
+  ziemniaczano_twarogowa: { menuCuisines: ['ziemniak-twarog', 'ziemniak-twarog', 'ziemniak-twarog'] },
+  ziemniaczano_twarogowa_szejk: { menuCuisines: ['ziemniak-twarog', 'wloska', LOS], shakes: { T: ['P3'], N: ['P2'] }, like: ['pierogi'] },
   pesce_gusta: { exclude: ['mieso'], like: ['łosoś', 'curry', 'jajka'], avoid: ['grzyby'] },
 };
 let checked = 0;
@@ -55,8 +55,9 @@ for (const [name, v0] of Object.entries(people)) for (const [vn, pr] of Object.e
     R.meals.forEach(M => {
       if (shakeIds.includes(M.slot.id)) assert.ok(M.recipe.shake || m.notes.some(n => n.includes('szejku')), `${tag}/${m.id}: ${M.slot.id} miał być szejk`);
       else assert.ok(!M.recipe.shake, `${tag}/${m.id}: szejk na ${M.slot.id}`);
-      if (pick !== LOS && pick !== MIX && !pr.express && !M.recipe.shake && !pr.program) assert.equal(M.recipe.cuisine, pick, `${tag}/${m.id}: tylko kuchnia ${pick}`);
-      if (pr.program) assert.ok(M.recipe.programs?.includes(pr.program), `${tag}/${m.id}: ${M.recipeId} spoza diety`);
+      const isProgram = D.chef.programs.some(x => x.id === pick);
+      if (pick !== LOS && pick !== MIX && !pr.express && !M.recipe.shake && !isProgram) assert.equal(M.recipe.cuisine, pick, `${tag}/${m.id}: tylko kuchnia ${pick}`);
+      if (isProgram) assert.ok(M.recipe.programs?.includes(pick), `${tag}/${m.id}: ${M.recipeId} spoza diety`);
     });
     if (pr.express && !pr.menuCuisines) assert.ok(m.time <= slots.length * 12, `${tag}/${m.id}: ekspres ${m.time} min`);
     assert.ok(Math.abs(R.tot[3] - R.T.kcal) <= Math.max(120, R.T.kcal * (pr.like?.length || pr.express ? 0.1 : 0.07)), `${tag}/${m.id}: kcal ${R.tot[3]} vs ${R.T.kcal}`);
@@ -83,6 +84,7 @@ console.log(`kucharz: sprawdzono ${checked} propozycji`);
   for (let k = 1; k <= 5 && !changed; k++) { const t1 = menuThemes({ ...p0, rolls: [k, 0, 0] }, D); changed = t1[0].theme !== t0[0].theme; assert.equal(t1[1].theme, 'tajska'); }
   assert.ok(changed, '„Losuj” zmienia kuchnię propozycji');
   assert.deepEqual(normPrefs({ cuisines: ['wloska', 'polska'] }).menuCuisines, ['wloska', 'polska', 'wloska'], 'stary zapis kuchni');
+  assert.deepEqual(normPrefs({ program: 'ziemniak-twarog' }).menuCuisines, ['ziemniak-twarog', 'ziemniak-twarog', 'ziemniak-twarog'], 'stary zapis diety');
 }
 
 // „Lubi” / „Nie je” jako dowolny tekst.

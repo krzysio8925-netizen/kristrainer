@@ -306,9 +306,8 @@ select.swapped{border-color:color-mix(in srgb,var(--accent) 50%,transparent);bac
 .chef-notes{margin:0;padding:10px 14px 10px 30px;font-size:.82rem;color:var(--muted);background:var(--surface-2);border:1px dashed var(--line-strong);border-radius:12px;display:grid;gap:4px}
 .empty-t{font-family:var(--display);font-weight:400;font-size:1.4rem}
 
-.seg.diet{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width:900px){.seg.diet{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:480px){.seg.diet{grid-template-columns:1fr}}
+.seg.diet{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:600px){.seg.diet{grid-template-columns:1fr}}
 .term-add{display:flex;gap:8px}
 .term-add input{font:inherit;font-size:.9rem;flex:1;min-width:0;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);transition:all .2s}
 .term-add input:focus{outline:none;background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}

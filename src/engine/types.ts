@@ -49,7 +49,7 @@ export interface ChefData { expressMaxMin: number; cuisines: Cuisine[]; diets: s
 
 /** Preferencje do propozycji posiłków (zapisywane w wersji planu). */
 export interface MenuPrefs {
-  menuCuisines: string[];   // kuchnia propozycji A, B, C: id kuchni, „los” (losowa) albo „mix”
+  menuCuisines: string[];   // propozycja A, B, C: id kuchni, id diety (np. ziemniak-twarog), „los” (losowa) albo „mix”
   rolls: number[];          // licznik „Losuj” każdej propozycji
   express: boolean;         // maksymalna oszczędność czasu
   exclude: string[];        // id grup wykluczeń (w tym diety)
@@ -57,7 +57,7 @@ export interface MenuPrefs {
   like: string[];           // „Lubi” – dowolny tekst
   seed: number;             // „Wymieszaj” – inne propozycje przy tych samych ustawieniach
   shakes: Record<Day, string[]>; // id posiłków dnia zastąpionych szejkiem (maks. 2)
-  program: string;          // dieta z własną pulą przepisów (id) albo ''
+  program?: string;         // stary zapis diety dla wszystkich propozycji – zamieniany na menuCuisines
   cuisines?: string[];      // stary zapis (lista kuchni) – zamieniany na menuCuisines
 }
 
