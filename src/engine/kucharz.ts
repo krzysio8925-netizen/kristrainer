@@ -19,7 +19,7 @@ export const LOS = 'los', MIX = 'mix';
 export const MENU_COUNT = 3, MAX_SHAKES = 2;
 
 export const EMPTY_PREFS: MenuPrefs = {
-  menuCuisines: [LOS, LOS, LOS], rolls: [0, 0, 0], express: false, exclude: [], avoid: [], like: [], seed: 0, shakes: { T: [], N: [] },
+  menuCuisines: [LOS, LOS, LOS], rolls: [0, 0, 0], express: false, exclude: [], avoid: [], like: [], seed: 0, shakes: { T: [], N: [] }, program: '',
 };
 
 /** Uzupełnia brakujące pola (starsze wersje planu nie mają preferencji albo mają stare „cuisines”). */
@@ -30,11 +30,12 @@ export function normPrefs(p?: Partial<MenuPrefs> | null): MenuPrefs {
     menuCuisines: mc, rolls: Array.from({ length: MENU_COUNT }, (_, i) => p?.rolls?.[i] ?? 0),
     express: !!p?.express, exclude: [...(p?.exclude ?? [])], avoid: [...(p?.avoid ?? [])], like: [...(p?.like ?? [])],
     seed: p?.seed ?? 0, shakes: { T: [...(p?.shakes?.T ?? [])].slice(0, MAX_SHAKES), N: [...(p?.shakes?.N ?? [])].slice(0, MAX_SHAKES) },
+    program: p?.program ?? '',
   };
 }
 
 export const hasPrefs = (p: MenuPrefs) => !!(p.menuCuisines.some(c => c !== LOS) || p.express || p.exclude.length || p.avoid.length
-  || p.like.length || p.shakes.T.length || p.shakes.N.length);
+  || p.like.length || p.shakes.T.length || p.shakes.N.length || p.program);
 
 /**
  * Kuchnia każdej propozycji. „Losowa” dostaje kuchnię spoza wybranych w innych propozycjach i różną od pozostałych
@@ -133,7 +134,9 @@ function menuName(cuisines: string[], data: Data, express: boolean) {
  */
 export function planMenus(v: PlanVersion, day: Day, data: Data): Menu[] {
   const prefs = normPrefs(v.prefs), slots = data.rules.days[day].slots;
-  const allowed = allowedRecipes(prefs, data);
+  // Dieta z własną pulą (np. ziemniaczano-twarogowa): tylko jej przepisy, bez kuchni propozycji.
+  const program = data.chef.programs.find(x => x.id === prefs.program);
+  const allowed = allowedRecipes(prefs, data).filter(([, r]) => !program || r.programs?.includes(program.id));
   const pool = allowed.filter(([, r]) => !r.shake), shakes = allowed.filter(([, r]) => r.shake);
   if (!pool.length) return [];
   const goals = slotTargets(targets(v, day), slots);
@@ -156,7 +159,8 @@ export function planMenus(v: PlanVersion, day: Day, data: Data): Menu[] {
   const rand = rng(prefs.seed * 7919 + (day === 'T' ? 17 : 29));
   const usedAll = new Map<string, number>();
   const menus: Menu[] = [];
-  menuThemes(prefs, data).forEach(({ pick, theme }, mi) => {
+  const themes = program ? prefs.menuCuisines.map(() => ({ pick: MIX, theme: null as string | null })) : menuThemes(prefs, data);
+  themes.forEach(({ pick, theme }, mi) => {
     const chosen: string[] = [], notes: string[] = [], proteins = new Set<string>(), carbs = new Set<string>();
     const star = likes.length ? (mi + prefs.seed) % likes.length : -1;
     let starHit = false;
@@ -207,7 +211,7 @@ export function planMenus(v: PlanVersion, day: Day, data: Data): Menu[] {
     recs.forEach(r => freq.set(r.cuisine, (freq.get(r.cuisine) ?? 0) + 1));
     const cuisines = [...freq.entries()].sort((a, b) => b[1] - a[1] || (a[0] === theme ? -1 : b[0] === theme ? 1 : 0)).map(e => e[0]);
     const all = chosen.map(id => data.recipes.recipes[id]);
-    menus.push({ id: 'ABCDEFGH'[mi], name: (pick === MIX ? 'Miks · ' : '') + menuName(cuisines.length ? cuisines : [theme ?? 'szejk'], data, prefs.express), meals: chosen, cuisines,
+    menus.push({ id: 'ABCDEFGH'[mi], name: program ? `${prefs.express ? 'Ekspres · ' : ''}Dieta ${program.label.toLowerCase()}` : (pick === MIX ? 'Miks · ' : '') + menuName(cuisines.length ? cuisines : [theme ?? 'szejk'], data, prefs.express), meals: chosen, cuisines,
       time: all.reduce((a, r) => a + r.time, 0), notes, pick, theme });
   });
   return menus;
@@ -229,7 +233,9 @@ export function termReport(terms: string[], menus: Menu[], data: Data, prefs?: M
 export function prefsSummary(p: MenuPrefs, data: Data, day?: Day): string[] {
   const out: string[] = [];
   const th = menuThemes(p, data);
-  if (p.menuCuisines.some(c => c !== LOS)) out.push('Kuchnie: ' + th.map((t, i) => `${'ABC'[i]} ${t.pick === MIX ? 'miks' : t.pick === LOS ? `losowa (${cuisineName(data, t.theme!).toLowerCase()})` : cuisineName(data, t.pick).toLowerCase()}`).join(', '));
+  const prog = data.chef.programs.find(x => x.id === p.program);
+  if (prog) out.push(`Dieta: ${prog.label.toLowerCase()}`);
+  else if (p.menuCuisines.some(c => c !== LOS)) out.push('Kuchnie: ' + th.map((t, i) => `${'ABC'[i]} ${t.pick === MIX ? 'miks' : t.pick === LOS ? `losowa (${cuisineName(data, t.theme!).toLowerCase()})` : cuisineName(data, t.pick).toLowerCase()}`).join(', '));
   if (p.express) out.push(`Ekspres: dania do ${data.chef.expressMaxMin} min`);
   const ex = data.chef.exclusions.filter(e => p.exclude.includes(e.id)).map(e => e.label.toLowerCase());
   if (ex.length || p.avoid.length) out.push('Bez: ' + [...ex, ...p.avoid.map(x => x.toLowerCase())].join(', '));

@@ -6228,7 +6228,10 @@
    "steps": [
     "Wszystko zmiksuj w blenderze na gładko (30–40 s), dodaj kilka kostek lodu."
    ],
-   "shake": true
+   "shake": true,
+   "programs": [
+    "ziemniak-twarog"
+   ]
   },
   "sh-tofu-kakao": {
    "name": "Roślinny szejk kakaowy z tofu",
@@ -6624,7 +6627,10 @@
     "Dodaj 100 ml wody i kilka kropli wanilii.",
     "Wszystko zmiksuj w blenderze na gładko (30–40 s), dodaj kilka kostek lodu."
    ],
-   "shake": true
+   "shake": true,
+   "programs": [
+    "ziemniak-twarog"
+   ]
   },
   "sh-bez-laktozy": {
    "name": "Szejk bananowo-cynamonowy na napoju migdałowym",
@@ -13769,6 +13775,812 @@
     "Cukinię podsmaż, dodaj szpinak i czosnek.",
     "Zrób wgłębienia, wbij jajka, wlej białka, gotuj pod przykryciem 5 min.",
     "Pokrusz fetę, podaj z pitą."
+   ]
+  },
+  "pzt-ziemniaki-patelnia": {
+   "name": "Ziemniaki z patelni z twarożkiem ze szczypiorkiem",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "S"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Rzodkiewka",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotowane ziemniaki (np. z wczoraj) pokrój w plastry i zrumień na maśle.",
+    "Twaróg rozgnieć z jogurtem, solą, pieprzem i szczypiorkiem.",
+    "Podaj gorące ziemniaki z twarożkiem i rzodkiewką."
+   ],
+   "tip": "Ziemniaki ugotowane dzień wcześniej najlepiej się rumienią.",
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-placki": {
+   "name": "Placki ziemniaczane z twarożkiem i koperkiem",
+   "serve": "hot",
+   "time": 25,
+   "cuisine": "polska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Mąka ziemniaczana",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Cebula",
+     "g": 30,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki i cebulę zetrzyj drobno, odciśnij, wymieszaj z mąką ziemniaczaną i solą.",
+    "Smaż cienkie placki na oliwie po 3 min z każdej strony.",
+    "Podaj z twarożkiem wymieszanym z jogurtem i koperkiem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-puree-kiszony": {
+   "name": "Puree ziemniaczane z twarogiem, masłem i ogórkiem kiszonym",
+   "serve": "hot",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 280,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek kiszony",
+     "g": 80,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj i utłucz z masłem i odrobiną wody z gotowania.",
+    "Twaróg pokrusz na wierzch albo wmieszaj w puree.",
+    "Podaj z ogórkiem kiszonym i koperkiem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-placki-batat": {
+   "name": "Placki z batatów z twarożkiem czosnkowym",
+   "serve": "hot",
+   "time": 20,
+   "cuisine": "polska",
+   "slots": [
+    "S",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Batat",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Mąka ziemniaczana",
+     "g": 15,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 3,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Batata zetrzyj, wymieszaj z mąką ziemniaczaną, solą i papryką.",
+    "Smaż placki na oliwie po 3 min z każdej strony.",
+    "Twaróg wymieszaj z czosnkiem i ziołami, podaj do placków."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-batat-skyr": {
+   "name": "Puree z batatów ze skyrem i cynamonem (na słodko)",
+   "serve": "cold_or_micro",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "S",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Batat",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Miód",
+     "g": 8,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bataty upiecz w mikrofali (8 min) i rozgnieć.",
+    "Wymieszaj ze skyrem, cynamonem i miodem.",
+    "Jedz na ciepło albo zabierz w słoiku."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-salatka": {
+   "name": "Sałatka ziemniaczana z twarogiem, ogórkiem kiszonym i rzodkiewką",
+   "serve": "cold",
+   "time": 20,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek kiszony",
+     "g": 80,
+     "r": "X"
+    },
+    {
+     "p": "Rzodkiewka",
+     "g": 50,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 50,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj w mundurkach, ostudź i pokrój w kostkę.",
+    "Dodaj ogórek, rzodkiewkę i pokruszony twaróg.",
+    "Wymieszaj z jogurtem, oliwą, musztardą i koperkiem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-mundurki": {
+   "name": "Ziemniaki w mundurkach z twarożkiem i surówką z kapusty",
+   "serve": "cold_or_micro",
+   "time": 25,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "O",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Kapusta biała",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj w mundurkach.",
+    "Kapustę i marchew zetrzyj, skrop oliwą i octem.",
+    "Twaróg dopraw solą, pieprzem i szczypiorkiem; spakuj osobno."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-zapiekanka-szpinak": {
+   "name": "Zapiekanka ziemniaczana z twarogiem i szpinakiem",
+   "serve": "micro",
+   "time": 40,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Szpinak",
+     "g": 100,
+     "r": "X"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki pokrój w cienkie plastry i podgotuj 5 min.",
+    "Twaróg wymieszaj z jogurtem, szpinakiem, czosnkiem i gałką muszkatołową.",
+    "Układaj warstwami w naczyniu posmarowanym masłem; piecz 25 min w 190°C."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-serek-wiejski": {
+   "name": "Pieczone ziemniaki z serkiem wiejskim i ogórkiem",
+   "serve": "cold_or_micro",
+   "time": 30,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Serek wiejski lekki",
+     "g": 250,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Ogórek",
+     "g": 100,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki w ćwiartkach skrop oliwą, posól i piecz 25 min w 220°C.",
+    "Serek wymieszaj ze szczypiorkiem.",
+    "Podaj z ogórkiem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-batat-czosnek": {
+   "name": "Bataty z twarożkiem czosnkowym",
+   "serve": "micro",
+   "time": 25,
+   "cuisine": "polska",
+   "slots": [
+    "W",
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Batat",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Oliwa z oliwek",
+     "g": 6,
+     "r": "F"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Czosnek",
+     "g": 5,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Bataty w kostce skrop oliwą i piecz 20 min w 220°C.",
+    "Twaróg wymieszaj z jogurtem, czosnkiem i natką.",
+    "Podaj razem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-ziemniaki-skyr": {
+   "name": "Ziemniaki z mikrofali ze skyrem i koperkiem",
+   "serve": "cold_or_micro",
+   "time": 10,
+   "cuisine": "polska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 350,
+     "r": "C"
+    },
+    {
+     "p": "Skyr naturalny 0%",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Ogórek",
+     "g": 80,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ponakłuwaj i piecz w mikrofali 8 min.",
+    "Skyr wymieszaj z koperkiem, solą i pieprzem.",
+    "Podaj z ogórkiem."
+   ],
+   "tip": "Najszybszy posiłek tej diety – 10 minut.",
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-twarog-zimno": {
+   "name": "Twaróg z ogórkiem kiszonym i rzodkiewką, ziemniaki na zimno",
+   "serve": "cold",
+   "time": 15,
+   "cuisine": "polska",
+   "slots": [
+    "O",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 350,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Ogórek kiszony",
+     "g": 60,
+     "r": "X"
+    },
+    {
+     "p": "Rzodkiewka",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj i ostudź.",
+    "Twaróg wymieszaj z pokrojonym ogórkiem, rzodkiewką i szczypiorkiem.",
+    "Zapakuj razem do pudełka."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-kefir": {
+   "name": "Młode ziemniaki z kefirem i twarożkiem",
+   "serve": "cold_or_micro",
+   "time": 20,
+   "cuisine": "polska",
+   "slots": [
+    "O",
+    "W",
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 350,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Kefir 2%",
+     "g": 250,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj, posyp koperkiem.",
+    "Twaróg dopraw solą i szczypiorkiem.",
+    "Podaj z zimnym kefirem – klasyk polskiego lata."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-pyzy": {
+   "name": "Kluski ziemniaczane z twarogiem i masłem",
+   "serve": "hot",
+   "time": 30,
+   "cuisine": "polska",
+   "slots": [
+    "K",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 250,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Mąka ziemniaczana",
+     "g": 30,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotowane ziemniaki przeciśnij, wymieszaj z mąką ziemniaczaną i szczyptą soli.",
+    "Uformuj kluski, gotuj 3 min od wypłynięcia.",
+    "Podaj z pokruszonym twarogiem i odrobiną masła."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-krem": {
+   "name": "Krem ziemniaczany z twarogiem i koperkiem",
+   "serve": "micro",
+   "time": 30,
+   "cuisine": "polska",
+   "slots": [
+    "K",
+    "W",
+    "O"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    },
+    {
+     "p": "Marchew",
+     "g": 60,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Cebulę zeszklij na maśle, dodaj ziemniaki, marchew i 500 ml bulionu; gotuj 20 min.",
+    "Zmiksuj na krem.",
+    "Podaj z twarogiem pokruszonym na wierzch i koperkiem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-gratin": {
+   "name": "Ziemniaki zapiekane z twarogiem i ziołami (gratin)",
+   "serve": "micro",
+   "time": 45,
+   "cuisine": "polska",
+   "slots": [
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 320,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Mleko 2%",
+     "g": 100,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki pokrój w cienkie plastry.",
+    "Twaróg zmiksuj z mlekiem, czosnkiem, tymiankiem i solą.",
+    "Przełóż warstwami, piecz 35 min w 190°C."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-kopytka": {
+   "name": "Kopytka z twarogiem i masłem",
+   "serve": "hot",
+   "time": 30,
+   "cuisine": "polska",
+   "slots": [
+    "K"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 300,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 180,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 10,
+     "r": "F"
+    },
+    {
+     "p": "Mąka ziemniaczana",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ugotowane ziemniaki przeciśnij, zagnieć z mąką ziemniaczaną i częścią twarogu.",
+    "Uformuj wałek, pokrój ukośnie, gotuj 2 min od wypłynięcia.",
+    "Podaj z resztą twarogu i masłem."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-faszerowane": {
+   "name": "Ziemniaki faszerowane twarogiem i szczypiorkiem",
+   "serve": "micro",
+   "time": 40,
+   "cuisine": "polska",
+   "slots": [
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Ziemniaki",
+     "g": 320,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 200,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Jogurt naturalny 0%",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Duże ziemniaki upiecz (40 min w 200°C lub 10 min w mikrofali).",
+    "Przekrój, wydrąż środek, wymieszaj go z twarogiem, jogurtem i szczypiorkiem.",
+    "Nałóż z powrotem, zapiecz 10 min."
+   ],
+   "programs": [
+    "ziemniak-twarog"
+   ]
+  },
+  "pzt-pierogi": {
+   "name": "Pierogi ruskie",
+   "serve": "micro",
+   "time": 60,
+   "cuisine": "polska",
+   "slots": [
+    "K",
+    "W"
+   ],
+   "ingredients": [
+    {
+     "p": "Mąka pszenna",
+     "g": 80,
+     "r": "C"
+    },
+    {
+     "p": "Ziemniaki",
+     "g": 150,
+     "r": "C"
+    },
+    {
+     "p": "Twaróg chudy",
+     "g": 150,
+     "r": "P"
+    },
+    {
+     "p": "Masło 82%",
+     "g": 8,
+     "r": "F"
+    },
+    {
+     "p": "Cebula",
+     "g": 40,
+     "r": "X"
+    }
+   ],
+   "steps": [
+    "Ziemniaki ugotuj i przeciśnij, wymieszaj z twarogiem, pieprzem i połową zeszklonej cebuli.",
+    "Mąkę zagnieć z ciepłą wodą i szczyptą soli, rozwałkuj, wykrawaj krążki i lep pierogi.",
+    "Gotuj 3 min od wypłynięcia. Podaj z cebulką podsmażoną na maśle."
+   ],
+   "tip": "Ulep od razu podwójną porcję – pierogi świetnie się mrożą.",
+   "programs": [
+    "ziemniak-twarog"
    ]
   }
  }

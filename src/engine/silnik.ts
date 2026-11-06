@@ -240,6 +240,12 @@ export function validate(data: Data): string[] {
     if (!data.recipes.serveLabels[r.serve]) errs.push(`przepis ${id}: nieznany sposób podania ${r.serve}`);
   });
   data.chef.exclusions.forEach(e => e.products.forEach(p => { if (!P[p]) errs.push(`wykluczenie ${e.id}: brak produktu ${p}`); }));
+  // Każda dieta z własną pulą ma danie na każdy posiłek obu dni.
+  data.chef.programs.forEach(pr => (Object.values(data.rules.days)).forEach(d => d.slots.forEach(s => {
+    const ok = Object.values(data.recipes.recipes).some(r => !r.shake && r.programs?.includes(pr.id) && r.slots.includes(s.kind) && (!s.portable || r.serve !== 'hot'));
+    if (!ok) errs.push(`dieta ${pr.id}: brak dania na ${s.name} (${s.label})`);
+  })));
+  Object.entries(data.recipes.recipes).forEach(([id, r]) => r.programs?.forEach(x => { if (!data.chef.programs.some(pr => pr.id === x)) errs.push(`przepis ${id}: nieznana dieta ${x}`); }));
   // Każda kuchnia ma danie na każdy typ posiłku z zasad (także „do zabrania”).
   data.chef.cuisines.forEach(c => (Object.values(data.rules.days)).forEach(d => d.slots.forEach(s => {
     const ok = Object.values(data.recipes.recipes).some(r => !r.shake && r.cuisine === c.id && r.slots.includes(s.kind) && (!s.portable || r.serve !== 'hot'));

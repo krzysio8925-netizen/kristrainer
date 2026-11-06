@@ -1,6 +1,6 @@
 {
  "schema": "kris-trainer/chef@1",
- "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspres (czas przygotowania w minutach), gotowe grupy wykluczeń (listy produktów); diets – wykluczenia pokazywane jako wybór diety. Przepisy z shake: true to szejki (cuisine „szejk”) – kucharz wstawia je tylko zamiast wybranych posiłków.",
+ "note": "Słownik kucharza: 10 kuchni do wyboru, tryb ekspres (czas przygotowania w minutach), gotowe grupy wykluczeń (listy produktów); diets – wykluczenia pokazywane jako wybór diety; programs – diety z własną pulą przepisów (przepisy z programs: [id]). Przepisy z shake: true to szejki (cuisine „szejk”) – kucharz wstawia je tylko zamiast wybranych posiłków.",
  "expressMaxMin": 10,
  "cuisines": [
   {
@@ -47,6 +47,13 @@
  "diets": [
   "wege",
   "mieso"
+ ],
+ "programs": [
+  {
+   "id": "ziemniak-twarog",
+   "label": "Ziemniaczano-twarogowa",
+   "description": "Wszystkie posiłki oparte na ziemniakach (lub batatach) i twarogu, z warzywami i niewielką ilością tłuszczu. Kuchnie propozycji nie obowiązują."
+  }
  ],
  "exclusions": [
   {
@@ -121,8 +128,8 @@
    "label": "Wołowina",
    "products": [
     "Wołowina chuda",
-    "Wołowina mielona 95%",
     "Wołowina mielona 97%",
+    "Wołowina mielona 95%",
     "Wołowina mielona 90%"
    ]
   },
@@ -165,6 +172,7 @@
     "Tortilla pełnoziarnista",
     "Chleb pita",
     "Gnocchi ziemniaczane",
+    "Mąka pszenna",
     "Makaron soba",
     "Sos sojowy",
     "Sos ostrygowy",

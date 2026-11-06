@@ -68,8 +68,13 @@ export function ChefPanel({ prefs, menus, day, dayName, disabled, onApply }: {
   useEffect(() => { setDraft(prefs); }, [appliedKey]);
   const dirty = !same(draft, prefs);
   const set = (patch: Partial<MenuPrefs>) => setDraft(d => ({ ...d, ...patch }));
-  const diet = DIETS.find(d => draft.exclude.includes(d.id))?.id ?? '';
-  const setDiet = (id: string) => set({ exclude: [...draft.exclude.filter(x => !D.chef.diets.includes(x)), ...(id ? [id] : [])] });
+  // Dieta: wykluczenia (wege, pescetariańska) albo dieta z własną pulą przepisów (np. ziemniaczano-twarogowa).
+  const program = D.chef.programs.find(x => x.id === draft.program);
+  const diet = program ? program.id : DIETS.find(d => draft.exclude.includes(d.id))?.id ?? '';
+  const setDiet = (id: string) => {
+    const isProgram = D.chef.programs.some(x => x.id === id);
+    set({ exclude: [...draft.exclude.filter(x => !D.chef.diets.includes(x)), ...(id && !isProgram ? [id] : [])], program: isProgram ? id : '' });
+  };
   const themes = menuThemes(draft, D);
   const setPick = (i: number, pick: string) => set({ menuCuisines: draft.menuCuisines.map((c, j) => (j === i ? pick : c)) });
   // „Losuj” od razu losuje nową kuchnię tej propozycji i przelicza (razem z resztą szkicu).
@@ -97,12 +102,14 @@ export function ChefPanel({ prefs, menus, day, dayName, disabled, onApply }: {
         <div className="seg diet" role="group" aria-labelledby="lbl-diet">
           <button type="button" aria-pressed={!diet} disabled={disabled} onClick={() => setDiet('')}>Bez ograniczeń</button>
           {DIETS.map(d => <button key={d.id} type="button" aria-pressed={diet === d.id} disabled={disabled} onClick={() => setDiet(d.id)}>{d.label}</button>)}
+          {D.chef.programs.map(d => <button key={d.id} type="button" aria-pressed={diet === d.id} disabled={disabled} onClick={() => setDiet(d.id)}>{d.label}</button>)}
         </div>
+        {program && <p className="hint">{program.description}</p>}
       </div>
 
       <div className="field">
-        <span className="label">Kuchnia każdej propozycji <em>losowa, miks albo konkretna kuchnia</em></span>
-        <div className="menu-cuisines">
+        <span className="label">Kuchnia każdej propozycji <em>{program ? 'nie dotyczy wybranej diety' : 'losowa, miks albo konkretna kuchnia'}</em></span>
+        {!program && <div className="menu-cuisines">
           {themes.map((t, i) => (
             <div key={i} className="mc">
               <label className="mc-label" htmlFor={`mc-${i}`}>Propozycja {'ABC'[i]}</label>
@@ -120,7 +127,7 @@ export function ChefPanel({ prefs, menus, day, dayName, disabled, onApply }: {
                 </div>)}
               {t.pick === MIX && <div className="mc-roll"><span>dania z dowolnych kuchni, najlepiej trafiające w makro</span></div>}
             </div>))}
-        </div>
+        </div>}
         <button type="button" className="cuisine express" aria-pressed={draft.express} disabled={disabled} onClick={() => set({ express: !draft.express })}>
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.2 1.5 3.5 9h4l-1 5.5L12.5 7h-4l.7-5.5Z" fill="currentColor" /></svg>
           <span>Ekspres<small>maks. oszczędność czasu · dania do {D.chef.expressMaxMin} min we wszystkich propozycjach</small></span></button>

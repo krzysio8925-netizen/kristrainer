@@ -30,6 +30,7 @@ export interface MealRules { principles: string[]; days: Record<Day, { name: str
 
 export interface Recipe {
   name: string; serve: string; time: number; cuisine: string; slots: Kind[]; shake?: boolean;
+  programs?: string[];  // diety z własną pulą przepisów (np. ziemniaczano-twarogowa)
   ingredients: { p: string; g: number; r: Role }[];
   steps: string[]; tip?: string;
 }
@@ -42,7 +43,9 @@ export interface Recipes { serveLabels: Record<string, string>; recipes: Record<
 
 export interface Cuisine { id: string; name: string }
 export interface Exclusion { id: string; label: string; products: string[] }
-export interface ChefData { expressMaxMin: number; cuisines: Cuisine[]; diets: string[]; exclusions: Exclusion[] }
+/** Dieta z własną pulą przepisów: kucharz bierze tylko przepisy oznaczone jej id. */
+export interface Program { id: string; label: string; description: string }
+export interface ChefData { expressMaxMin: number; cuisines: Cuisine[]; diets: string[]; programs: Program[]; exclusions: Exclusion[] }
 
 /** Preferencje do propozycji posiłków (zapisywane w wersji planu). */
 export interface MenuPrefs {
@@ -54,6 +57,7 @@ export interface MenuPrefs {
   like: string[];           // „Lubi” – dowolny tekst
   seed: number;             // „Wymieszaj” – inne propozycje przy tych samych ustawieniach
   shakes: Record<Day, string[]>; // id posiłków dnia zastąpionych szejkiem (maks. 2)
+  program: string;          // dieta z własną pulą przepisów (id) albo ''
   cuisines?: string[];      // stary zapis (lista kuchni) – zamieniany na menuCuisines
 }
 
