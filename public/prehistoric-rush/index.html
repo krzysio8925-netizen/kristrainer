@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prehistoric Rush">
+<meta name="theme-color" content="#1d1410">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+</head>
+<body>
+<!--PAGE-->
+<title>Prehistoric Rush</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@500;700&display=swap">
+<style>
+/* Layout: one full-screen 3D stage; HUD pinned to the top edge, squad status at the bottom, overlays as stone slabs. */
+:root{
+  color-scheme: dark;
+  --cave:#1d1410; --cave-2:#34241a; --bone:#f6ecd6; --lava:#ff6a1f; --amber:#ffc23d;
+  --fern:#62c24c; --blood:#e23a2e; --water:#4fb4ea;
+  --display:'Lilita One','Arial Rounded MT Bold','Trebuchet MS',sans-serif;
+  --body:'Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --gut-l:max(16px, env(safe-area-inset-left, 0px)); --gut-r:max(16px, env(safe-area-inset-right, 0px));
+}
+[hidden]{display:none!important}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{background:var(--cave);color:var(--bone);font-family:var(--body);font-weight:500;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:none}
+#game{position:fixed;inset:0;overflow:hidden;background:var(--cave);touch-action:none}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ol{text-shadow:0 2px 0 var(--cave),0 0 6px rgba(29,20,16,.9)}
+
+/* HUD */
+#hud{position:absolute;inset:0 0 auto 0;padding-top:calc(env(safe-area-inset-top, 0px) + 10px);
+  padding-left:var(--gut-l);padding-right:var(--gut-r);display:flex;flex-direction:column;gap:8px;pointer-events:none}
+#hudrow{display:flex;align-items:center;gap:10px}
+#stage{font-family:var(--display);font-size:20px;letter-spacing:.04em;line-height:1}
+#stage small{display:block;font-family:var(--body);font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.9;margin-top:3px}
+#score{margin-left:auto;font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums;color:var(--amber)}
+.ib{pointer-events:auto;width:40px;height:40px;border-radius:12px;border:2px solid var(--cave);background:var(--bone);color:var(--cave);
+  font-family:var(--display);font-size:16px;display:grid;place-items:center;padding:0;cursor:pointer;box-shadow:0 3px 0 var(--cave)}
+.ib:active{transform:translateY(2px);box-shadow:0 1px 0 var(--cave)}
+.ib:focus-visible,.btn:focus-visible,.card:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+.bar{height:14px;border-radius:8px;background:rgba(29,20,16,.75);border:2px solid var(--cave);overflow:hidden;position:relative}
+.bar i{position:absolute;inset:0;transform-origin:left;background:linear-gradient(var(--amber),var(--lava));transform:scaleX(0)}
+#bossbar i{background:linear-gradient(#ff7a6e,var(--blood))}
+#bossname{font-family:var(--display);font-size:18px;text-align:center;letter-spacing:.06em;color:#ffd9d3}
+#bosswrap{display:flex;flex-direction:column;gap:4px}
+
+#foot{position:absolute;inset:auto 0 0 0;padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);
+  padding-left:var(--gut-l);padding-right:var(--gut-r);display:flex;align-items:flex-end;gap:10px;pointer-events:none}
+#tier{font-family:var(--display);font-size:17px;line-height:1.1}
+#tier small{display:block;font-family:var(--body);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+#tier,#stats{flex:1}
+#count{font-family:var(--display);font-size:30px;line-height:1;color:var(--amber);text-align:center;font-variant-numeric:tabular-nums}
+#count small{display:block;font-family:var(--body);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone)}
+#stats{text-align:right;font-size:12px;letter-spacing:.06em;font-variant-numeric:tabular-nums;line-height:1.5}
+#stats b{font-family:var(--display);font-weight:400;font-size:15px;color:var(--amber)}
+#frenzy{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom, 0px) + 78px);transform:translateX(-50%);
+  font-family:var(--display);font-size:26px;color:var(--lava);letter-spacing:.08em;animation:pulse .35s infinite alternate}
+@keyframes pulse{to{transform:translateX(-50%) scale(1.15)}}
+
+/* world labels */
+#labels,#floats{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lb{position:absolute;left:0;top:0;transform-origin:0 0;white-space:nowrap;text-align:center;font-family:var(--display);will-change:transform}
+.lb div{transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;line-height:1}
+.lb b{font-weight:400;font-size:34px;color:#fff;text-shadow:0 2px 0 var(--cave),0 0 8px rgba(29,20,16,.8)}
+.lb i{font-style:normal;font-size:13px;letter-spacing:.08em;color:var(--bone);background:var(--cave);border-radius:6px;padding:2px 6px;margin-top:2px}
+.lb.neg b{color:#ffd0c8}.lb.sq b{font-size:22px;color:var(--amber)}
+.ft{position:absolute;left:0;top:0;font-family:var(--display);font-size:22px;color:var(--amber);white-space:nowrap;
+  text-shadow:0 2px 0 var(--cave);animation:rise .9s ease-out forwards;pointer-events:none}
+.ft.bad{color:#ff8a7c}.ft.big{font-size:34px;color:#fff}
+@keyframes rise{from{opacity:1;margin-top:0}to{opacity:0;margin-top:-70px}}
+#banner{position:absolute;left:0;right:0;top:30%;text-align:center;font-family:var(--display);font-size:44px;line-height:1.05;
+  padding-left:var(--gut-l);padding-right:var(--gut-r);color:#fff;pointer-events:none;text-wrap:balance;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+#banner small{display:block;font-size:20px;color:var(--amber);letter-spacing:.08em;margin-top:6px}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+#vig{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 90px 30px rgba(226,58,46,.75);opacity:0;transition:opacity .25s}
+
+/* overlays */
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;gap:18px;
+  padding-top:calc(env(safe-area-inset-top, 0px) + 9vh);padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 6vh);
+  padding-left:var(--gut-l);padding-right:var(--gut-r);text-align:center}
+.ov.dim{background:rgba(29,20,16,.72);justify-content:center;padding-top:calc(env(safe-area-inset-top, 0px) + 20px)}
+.logo{font-family:var(--display);font-size:clamp(52px,17vw,96px);line-height:.86;letter-spacing:.01em;color:var(--amber);
+  text-shadow:0 3px 0 var(--lava),0 7px 0 var(--cave),0 10px 18px rgba(0,0,0,.5);transform:rotate(-4deg)}
+.logo span{display:block;color:var(--bone);font-size:1.22em}
+.tag{font-size:14px;letter-spacing:.14em;text-transform:uppercase}
+.grow{flex:1}
+.btn{font-family:var(--display);font-size:30px;letter-spacing:.05em;color:var(--cave);background:linear-gradient(var(--amber),var(--lava));
+  border:3px solid var(--cave);border-radius:18px;padding:14px 44px;box-shadow:0 6px 0 var(--cave);cursor:pointer;min-width:230px}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--cave)}
+.btn.sec{background:var(--bone);font-size:20px;padding:10px 28px}
+.hint{font-size:14px;max-width:30ch;line-height:1.4}
+.best{font-family:var(--display);font-size:18px;color:var(--bone)}
+h2{font-family:var(--display);font-weight:400;font-size:40px;margin:0;line-height:1;color:var(--amber);text-wrap:balance}
+.res{font-family:var(--display);font-size:64px;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.sub{font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+#cardlist{display:flex;flex-direction:column;gap:12px;width:min(100%,360px)}
+.card{display:flex;flex-direction:column;gap:4px;text-align:left;background:var(--bone);color:var(--cave);border:3px solid var(--cave);
+  border-radius:16px;padding:14px 16px;box-shadow:0 5px 0 var(--cave);cursor:pointer;font-family:var(--body)}
+.card:active{transform:translateY(3px);box-shadow:0 2px 0 var(--cave)}
+.card b{font-family:var(--display);font-weight:400;font-size:22px;color:#a23a08}
+.card span{font-size:14px;font-weight:500}
+@media (prefers-reduced-motion: reduce){#banner,#frenzy{animation:none}}
+</style>
+
+<div id="game">
+  <canvas id="c"></canvas>
+  <div id="labels"></div>
+  <div id="floats"></div>
+  <div id="vig"></div>
+
+  <div id="hud" hidden>
+    <div id="hudrow">
+      <button class="ib" id="bpause" aria-label="Pauza">II</button>
+      <div id="stage" class="ol">ETAP 1<small>Dżungla</small></div>
+      <div id="score" class="ol">0</div>
+    </div>
+    <div class="bar" id="progbar"><i></i></div>
+    <div id="bosswrap" hidden>
+      <div id="bossname" class="ol">T-REX</div>
+      <div class="bar" id="bossbar"><i></i></div>
+    </div>
+  </div>
+  <div id="frenzy" class="ol" hidden>SZAŁ!</div>
+  <div id="foot" hidden>
+    <div id="tier" class="ol">Jaskiniowiec<small>Kamień</small></div>
+    <div id="count" class="ol">×1<small>plemię</small></div>
+    <div id="stats" class="ol">SIŁA <b id="sdmg">×1.0</b><br>TEMPO <b id="srate">×1.0</b></div>
+  </div>
+  <div id="banner" class="ol" hidden></div>
+
+  <div class="ov" id="menu">
+    <div class="logo">Prehistoric<span>Rush</span></div>
+    <div class="tag ol">Jeden jaskiniowiec. Jeden kamień. Reszta zależy od ciebie.</div>
+    <div class="grow"></div>
+    <div class="best ol" id="best"></div>
+    <button class="btn" id="bplay">GRAJ</button>
+    <div class="hint ol">Przesuwaj palcem w lewo i prawo. Rzucanie jest automatyczne. Rozbijaj skrzynie, wybieraj bramki, pokonaj bossa.</div>
+    <button class="btn sec" id="bsound">DŹWIĘK: WŁ.</button>
+  </div>
+
+  <div class="ov dim" id="cards" hidden>
+    <h2>Wybierz ulepszenie</h2>
+    <div id="cardlist"></div>
+  </div>
+
+  <div class="ov dim" id="pause" hidden>
+    <h2>Pauza</h2>
+    <button class="btn" id="bresume">WRACAM</button>
+    <button class="btn sec" id="bsound2">DŹWIĘK: WŁ.</button>
+    <button class="btn sec" id="bquit">ZAKOŃCZ BIEG</button>
+  </div>
+
+  <div class="ov dim" id="over" hidden>
+    <h2>Plemię wymarło</h2>
+    <div class="sub">Wynik</div>
+    <div class="res" id="rscore">0</div>
+    <div class="best" id="rinfo"></div>
+    <button class="btn" id="bagain">JESZCZE RAZ</button>
+    <button class="btn sec" id="bmenu">MENU</button>
+  </div>
+</div>
+<script type="module" src="game.js"></script>
+<!--/PAGE-->
+</body>
+</html>

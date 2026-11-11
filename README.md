@@ -54,3 +54,7 @@ Kucharz sam włączy przepis do propozycji. `npm test` sprawdzi spójność dany
 5. Na koniec wyrównuje cały dzień: to, czego jedno danie nie zmieściło, przechodzi na pozostałe posiłki.
 
 Preferencje zapisują się w wersji planu (pole `prefs`), więc PDF zawiera te same propozycje co ekran. Zmiany w panelu kucharza są szkicem – stosuje je przycisk „Przelicz propozycje”; przy każdej pozycji „Lubi” / „Nie je” widać, czy została uwzględniona. „Wymieszaj” daje inne propozycje przy tych samych ustawieniach.
+
+## Prehistoric Rush (gra)
+
+W `public/prehistoric-rush/` leży osobna, samodzielna gra 3D na telefon (pionowy ekran, Three.js, bez budowania i bez płatności). Po publikacji jest pod adresem `…/prehistoric-rush/`; na iPhonie można ją dodać do ekranu początkowego (Udostępnij → Do ekranu początkowego) i grać na pełnym ekranie. Lokalnie: `npx http-server public/prehistoric-rush`.
