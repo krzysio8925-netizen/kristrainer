@@ -1,6 +1,6 @@
 // Prehistoric Rush 2D — pionowa strzelanka: prowadzisz plemię, rozbijasz bonusy, rozwijasz umiejętności, bijesz bossów.
 // Świat ma współrzędne 3D (x w poprzek drogi, z wzdłuż, y w górę), a rysujemy go na płótnie 2D z perspektywą drogi.
-import { sprite, flashOf, glowTex, setRes, BIOME_DECO, OL } from './sprites.js';
+import { sprite, flashOf, glowTex, setRes, BIOME_DECO, OL, loadAll, image } from './sprites.js';
 import { A, sfx } from './audio.js';
 
 // ---------- narzędzia ----------
@@ -89,14 +89,15 @@ function resize() {
 addEventListener('resize', resize);
 
 // ---------- krainy, niebo, otoczenie ----------
+// road/side: numer tekstury podłoża (ground_N); side -1 = trawa malowana kolorem
 const BIOMES = [
-  { name: 'Dżungla', road: ['#e8c48a', '#d8b074'], edge: '#a8784a', side: ['#6cbc44', '#5eaa3a'], top: '#3f9ae0', hor: '#c8eef6', hill: ['#5aa070', '#9fd0c0'], volc: '#7a6e66', sun: '#fff2c0' },
-  { name: 'Pustynia', road: ['#f6dcaa', '#ecce98'], edge: '#c0905a', side: ['#e4b468', '#d8a85c'], top: '#4a9ad8', hor: '#fbe4b8', hill: ['#c0804a', '#f0c890'], volc: '#9a6a4a', sun: '#ffe8b8' },
-  { name: 'Lodowiec', road: ['#e4f0f6', '#d4e4ee'], edge: '#9ab4c8', side: ['#f6fbff', '#e6f2fa'], top: '#5a8ed0', hor: '#e0f0fa', hill: ['#8aa8c8', '#f2fbff'], volc: '#7a8ea0', sun: '#f0f8ff' },
-  { name: 'Wulkan', road: ['#9a786c', '#8a6a60'], edge: '#5a3a30', side: ['#4a3230', '#3e2a28'], top: '#241018', hor: '#c8502e', hill: ['#2a1c1c', '#6a3a30'], volc: '#2a1818', sun: '#ff8a50' },
+  { name: 'Dżungla', tex: 0, sideTex: -1, tint: null, road: ['#e8c48a', '#d8b074'], edge: '#a8784a', side: ['#6cbc44', '#5eaa3a'], top: '#3f9ae0', hor: '#c8eef6', hill: ['#5aa070', '#9fd0c0'], volc: '#7a6e66', sun: '#fff2c0' },
+  { name: 'Pustynia', tex: 1, sideTex: 1, tint: '#ffcf8a', road: ['#f6dcaa', '#ecce98'], edge: '#c0905a', side: ['#e4b468', '#d8a85c'], top: '#4a9ad8', hor: '#fbe4b8', hill: ['#c0804a', '#f0c890'], volc: '#9a6a4a', sun: '#ffe8b8' },
+  { name: 'Lodowiec', tex: 2, sideTex: 2, tint: '#bfe0ff', road: ['#e4f0f6', '#d4e4ee'], edge: '#9ab4c8', side: ['#f6fbff', '#e6f2fa'], top: '#5a8ed0', hor: '#e0f0fa', hill: ['#8aa8c8', '#f2fbff'], volc: '#7a8ea0', sun: '#f0f8ff' },
+  { name: 'Wulkan', tex: 3, sideTex: 3, tint: '#c04a2a', road: ['#9a786c', '#8a6a60'], edge: '#5a3a30', side: ['#4a3230', '#3e2a28'], top: '#241018', hor: '#c8502e', hill: ['#2a1c1c', '#6a3a30'], volc: '#2a1818', sun: '#ff8a50' },
 ];
 let biomeI = 0, B = BIOMES[0], skyCache = null, skyKey = '';
-const decor = [], curbs = [], pebbles = [];
+const decor = [], curbs = [];
 const DECO_LEN = 190;
 function placeDeco(o, z) {
   const sd = Math.random() < 0.5 ? -1 : 1, near = Math.random() < 0.55;
@@ -104,86 +105,68 @@ function placeDeco(o, z) {
 }
 for (let i = 0; i < 64; i++) { const o = {}; placeDeco(o, 12 - (i / 64) * DECO_LEN); decor.push(o); }
 for (let i = 0; i < 70; i++) for (const sd of [-1, 1]) curbs.push({ x: sd * (W + rand(0.2, 0.45)), z: 12 - i * 1.15 + rand(-0.2, 0.2), sc: rand(0.7, 1.3), flip: Math.random() < 0.5 });
-for (let i = 0; i < 70; i++) pebbles.push({ x: rand(-W + 0.2, W - 0.2), z: rand(-90, 12), r: rand(0.05, 0.13), c: Math.random() < 0.5 ? 'rgba(90,60,30,.35)' : 'rgba(255,255,255,.35)' });
 let roadScroll = 0;
 function setBiome(i) {
   i %= BIOMES.length;
   if (i !== biomeI) { biomeI = i; B = BIOMES[i]; for (const o of decor) placeDeco(o, o.z); skyCache = null; }
   return B;
 }
-const clouds = [];
-for (let i = 0; i < 6; i++) clouds.push({ x: rand(0, 1), y: rand(0.15, 0.85), w: rand(0.25, 0.45), sp: rand(0.004, 0.012) });
 function drawSkyCache() {
-  const h = Math.max(4, Math.ceil(CAM.hor + 30));
+  const h = Math.max(4, Math.ceil(CAM.hor + 40)), sky = image('sky');
+  if (!sky) return;
   const cv = document.createElement('canvas'); cv.width = Math.ceil(VW * PR); cv.height = Math.ceil(h * PR);
   const g = cv.getContext('2d'); g.scale(PR, PR);
-  const q = g.createLinearGradient(0, 0, 0, h); q.addColorStop(0, B.top); q.addColorStop(1, B.hor); g.fillStyle = q; g.fillRect(0, 0, VW, h);
-  const sx = VW * 0.78, sy = h * 0.22, sr = Math.min(VW, h) * 0.5;
-  const sq = g.createRadialGradient(sx, sy, 0, sx, sy, sr); sq.addColorStop(0, B.sun); sq.addColorStop(0.12, B.sun); sq.addColorStop(0.13, B.sun + 'aa'); sq.addColorStop(1, B.sun + '00');
-  g.fillStyle = sq; g.fillRect(0, 0, VW, h);
-  const base = CAM.hor + 2;
-  // dalekie wzgórza
-  g.lineJoin = 'round';
-  for (let layer = 0; layer < 2; layer++) {
-    g.beginPath(); g.moveTo(0, base);
-    const n = 9, amp = (layer ? 0.11 : 0.18) * VW;
-    for (let i = 0; i <= n; i++) { const x = (i / n) * VW, y = base - amp * (0.4 + 0.6 * Math.abs(Math.sin(i * 1.7 + layer * 2))); g.lineTo(x, y); }
-    g.lineTo(VW, base); g.closePath();
-    const hq = g.createLinearGradient(0, base - amp, 0, base); hq.addColorStop(0, layer ? B.hill[0] : B.hill[1]); hq.addColorStop(1, B.hor); g.fillStyle = hq; g.fill();
-  }
-  // wulkan
-  const vx = VW * 0.5, vw = VW * 0.26, vh = Math.min(VW * 0.24, base * 0.5);
-  g.beginPath(); g.moveTo(vx - vw, base); g.lineTo(vx - vw * 0.16, base - vh); g.lineTo(vx + vw * 0.16, base - vh); g.lineTo(vx + vw, base); g.closePath();
-  const vq = g.createLinearGradient(0, base - vh, 0, base); vq.addColorStop(0, B.volc); vq.addColorStop(1, B.hor); g.fillStyle = vq; g.fill();
-  g.strokeStyle = 'rgba(38,22,13,.5)'; g.lineWidth = 2; g.stroke();
-  g.beginPath(); g.moveTo(vx - vw * 0.16, base - vh); g.lineTo(vx - vw * 0.1, base - vh + vh * 0.12); g.lineTo(vx, base - vh + vh * 0.05); g.lineTo(vx + vw * 0.09, base - vh + vh * 0.14); g.lineTo(vx + vw * 0.16, base - vh); g.closePath();
-  g.fillStyle = '#ff6a1f'; g.fill();
-  g.strokeStyle = '#ffb020'; g.lineWidth = 3; g.beginPath(); g.moveTo(vx - 2, base - vh + 6); g.quadraticCurveTo(vx - 8, base - vh * 0.6, vx - 4, base - vh * 0.35); g.stroke();
+  // malowane niebo z wulkanem (koncept-art), przycięte tak, by wypełnić szerokość i wysokość
+  const k = Math.max(VW / sky.naturalWidth, h / sky.naturalHeight), w = sky.naturalWidth * k, hh = sky.naturalHeight * k;
+  g.drawImage(sky, (VW - w) / 2, h - hh, w, hh);
+  if (B.tint) { g.globalCompositeOperation = 'multiply'; g.fillStyle = B.tint; g.fillRect(0, 0, VW, h); g.globalCompositeOperation = 'source-over'; }
+  if (biomeI === 2) { g.fillStyle = 'rgba(255,255,255,.28)'; g.fillRect(0, 0, VW, h); }
+  if (biomeI === 3) { g.fillStyle = 'rgba(40,10,10,.25)'; g.fillRect(0, 0, VW, h); }
+  const q = g.createLinearGradient(0, h - 40, 0, h); q.addColorStop(0, B.hor + '00'); q.addColorStop(1, B.hor + 'cc'); g.fillStyle = q; g.fillRect(0, h - 40, VW, 40);
   skyCache = cv; skyKey = biomeI + '|' + VW + '|' + VH;
 }
-function drawBackground(dtv) {
+function drawBackground() {
   if (!skyCache || skyKey !== biomeI + '|' + VW + '|' + VH) drawSkyCache();
-  ctx.drawImage(skyCache, 0, 0, VW, skyCache.height / PR);
-  // chmury
-  ctx.globalAlpha = biomeI === 3 ? 0.35 : 0.85;
-  const ct = glowTex(biomeI === 3 ? '#6a3a34' : '#ffffff');
-  for (const c of clouds) {
-    c.x += c.sp * dtv; if (c.x > 1.3) c.x = -0.3;
-    const cx = c.x * VW, cy = c.y * CAM.hor * 0.7, w = c.w * VW;
-    for (let k = 0; k < 4; k++) ctx.drawImage(ct, cx + (k - 1.5) * w * 0.28 - w * 0.25, cy - w * 0.16 + (k % 2) * w * 0.05, w * 0.5, w * 0.32);
-  }
-  ctx.globalAlpha = 1;
-  // dym z wulkanu
-  const vx = VW * 0.5, vy = CAM.hor + 2 - Math.min(VW * 0.24, (CAM.hor + 2) * 0.5);
-  const smk = glowTex(biomeI === 3 ? '#3a2422' : '#8a8a8a');
-  for (let i = 0; i < 6; i++) { const t = ((G.time * 0.12 + i / 6) % 1), r = 10 + t * 40; ctx.globalAlpha = 0.55 * (1 - t); ctx.drawImage(smk, vx - r + t * 30, vy - t * 90 - r, r * 2, r * 2); }
-  ctx.globalAlpha = 1;
+  ctx.fillStyle = B.top; ctx.fillRect(-VW, -VH, VW * 3, CAM.hor + VH + 40);
+  if (skyCache) ctx.drawImage(skyCache, 0, 0, VW, skyCache.height / PR);
 }
+const TEX_LEN = 15.6;                 // długość kafla tekstury drogi w świecie
 function drawGround() {
-  const top = CAM.hor;
-  ctx.fillStyle = B.side[0]; ctx.fillRect(0, top, VW, VH - top);
-  // pasy trawy i drogi przewijane z ruchem
-  const step = 3, z0 = Math.floor((-110 + roadScroll) / step) * step - roadScroll;
-  for (let z = z0; z < CAM.z - 1.3; z += step) {
-    const za = z, zb = Math.min(CAM.z - 1.25, z + step);
-    if (!pj(0, 0, za)) continue; const ya = PJ.y, sa = PJ.s;
-    pj(0, 0, zb); const yb = PJ.y, sb = PJ.s;
-    const odd = (Math.round((z + roadScroll) / step) & 1) === 1;
-    if (odd) { ctx.fillStyle = B.side[1]; ctx.fillRect(0, ya, VW, yb - ya + 0.5); }
-    const xa = VW / 2 - CAM.x * sa, xb = VW / 2 - CAM.x * sb;
-    ctx.fillStyle = B.road[odd ? 1 : 0];
-    ctx.beginPath(); ctx.moveTo(xa - (W + 0.15) * sa, ya); ctx.lineTo(xa + (W + 0.15) * sa, ya); ctx.lineTo(xb + (W + 0.15) * sb, yb + 0.5); ctx.lineTo(xb - (W + 0.15) * sb, yb + 0.5); ctx.closePath(); ctx.fill();
+  const top = CAM.hor, road = image('ground_' + B.tex), side = B.sideTex >= 0 ? image('ground_' + B.sideTex) : null;
+  ctx.fillStyle = B.side[0]; ctx.fillRect(-VW, top, VW * 3, VH * 2);
+  // trawa: przewijane pasy w dwóch odcieniach
+  if (!side) {
+    const step = 3, z0 = Math.floor((-110 + roadScroll) / step) * step - roadScroll;
+    ctx.fillStyle = B.side[1];
+    for (let z = z0; z < CAM.z - 1.3; z += step) {
+      if ((Math.round((z + roadScroll) / step) & 1) !== 1 || !pj(0, 0, z)) continue;
+      const ya = PJ.y; pj(0, 0, Math.min(CAM.z - 1.25, z + step));
+      ctx.fillRect(-VW, ya, VW * 3, PJ.y - ya + 0.5);
+    }
   }
-  // brzegi drogi i koleiny
-  ctx.strokeStyle = B.edge; ctx.lineCap = 'butt';
-  for (const ex of [-W - 0.15, W + 0.15, -W * 0.45, W * 0.45]) {
-    const wide = Math.abs(ex) > W;
-    pj(ex, 0, -110); const x1 = PJ.x, y1 = PJ.y; pj(ex, 0, CAM.z - 1.3); const x2 = PJ.x, y2 = PJ.y;
-    ctx.globalAlpha = wide ? 0.7 : 0.18; ctx.lineWidth = wide ? 3 : 10;
-    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  // droga (i boki pustyni, śniegu, wulkanu) rysowana wierszami z tekstury, z perspektywą
+  if (road) {
+    const tw = road.naturalWidth, th = road.naturalHeight, bh = 2, hw = W + 0.35;
+    for (let y = Math.floor(top) + 1; y < VH + 40; y += bh) {
+      const d = CAM.f * CAM.h / (y - top); if (d > 140) continue;
+      const z = CAM.z - d, s = CAM.f / d, xc = VW / 2 - CAM.x * s;
+      let v = ((z - roadScroll) / TEX_LEN) % 1; if (v < 0) v += 1;
+      const row = Math.min(th - 1, Math.floor(v * th));
+      if (side) ctx.drawImage(side, 0, row, tw, 1, -VW, y, VW * 3, bh + 0.5);
+      ctx.drawImage(road, 0, row, tw, 1, xc - hw * s, y, hw * 2 * s, bh + 0.5);
+    }
   }
-  ctx.globalAlpha = 1;
-  for (const p of pebbles) if (pj(p.x, 0, p.z) && PJ.s > 6) { ctx.fillStyle = p.c; ctx.beginPath(); ctx.ellipse(PJ.x, PJ.y, p.r * PJ.s, p.r * PJ.s * 0.45, 0, 0, TAU); ctx.fill(); }
+  // przyciemnione pobocza i miękka krawędź drogi
+  const P1 = {}, P2 = {};
+  for (const sd of [-1, 1]) {
+    if (!pj(sd * (W + 0.35), 0, -130, P1) || !pj(sd * (W + 0.35), 0, CAM.z - 1.3, P2)) continue;
+    ctx.fillStyle = side ? 'rgba(40,20,10,.16)' : 'rgba(0,0,0,0)';
+    ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.lineTo(sd * VW * 3, P2.y); ctx.lineTo(sd * VW * 3, P1.y); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(60,35,15,.35)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
+  }
+  // mgiełka przy horyzoncie
+  const q = ctx.createLinearGradient(0, top - 30, 0, top + 90); q.addColorStop(0, B.hor + '00'); q.addColorStop(0.25, B.hor + 'ee'); q.addColorStop(1, B.hor + '00');
+  ctx.fillStyle = q; ctx.fillRect(-VW, top - 30, VW * 3, 120);
 }
 
 // ---------- efekty: odłamki, poświaty, dym, pierścienie, pioruny ----------
@@ -228,7 +211,7 @@ function makeFx(n, additive) {
         if (p.life <= 0 || !pj(p.x, p.y, p.z)) continue;
         const t = Math.max(0, p.life / p.max), r = (p.s1 + (p.s0 - p.s1) * t) * PJ.s * 0.6;
         if (r < 0.5) continue;
-        ctx.globalAlpha = p.a * Math.min(1, t * 2.2);
+        ctx.globalAlpha = p.a * Math.min(1, t * 2.2) * (additive ? 0.75 : 1);
         ctx.drawImage(glowTex(p.c), PJ.x - r, PJ.y - r, r * 2, r * 2);
       }
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
@@ -311,7 +294,7 @@ const BOSSES = [
   { name: 'CHOMPER T-REX', color: 0xc8481c, rx: 1.5, h: 5.6, minion: 'raptor' },
   { name: 'GRG OLBRZYM', color: 0x5a2e1c, rx: 1.3, h: 6.2, minion: 'brute', volley: 3 },
   { name: 'MAMUT BOJOWY', color: 0x8a6a4a, rx: 1.9, h: 6.4, minion: 'shield', volley: 5 },
-  { name: 'TRICERATOPS', color: 0x6a7a52, rx: 1.8, h: 4.4, minion: 'tiger' },
+  { name: 'PTERODAKTYL BOMBOWIEC', color: 0xd86a2a, rx: 1.7, h: 3.6, minion: 'ptero', volley: 4, fly: true },
 ];
 const pl = (n, a, b, c) => (n === 1 ? a : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? b : c);
 // umiejętności zdobywane w trakcie biegu
@@ -344,7 +327,7 @@ const xpNeed = (l) => 6 + l * 5;
 const members = [];
 for (let i = 0; i < MAXN; i++) {
   const r = i === 0 ? 0 : 0.44 * Math.sqrt(i), a = i * 2.39996;
-  members.push({ ox: Math.cos(a) * r, oz: Math.sin(a) * r * 0.9 + r * 0.35, x: 0, z: 0, throwT: 0, ph: rand(0, 6.28), pop: 0, tilt: 0, on: false });
+  members.push({ ox: Math.cos(a) * r, oz: Math.sin(a) * r * 0.9 + r * 0.35, x: 0, z: 0, throwT: 0, ph: rand(0, 6.28), pop: 0, tilt: 0, on: false, flip: i > 0 && Math.random() < 0.35 });
 }
 const squadR = () => 0.44 * Math.sqrt(Math.max(0, Math.min(G.n, MAXN) - 1)) + 0.3;
 const NB = 260, bullets = [];
@@ -411,7 +394,7 @@ function banner(main, sub = '', t = 1.8) {
 // ---------- spawnowanie ----------
 function spawnEnemy(type, x, z, hpMul = 1) {
   const d = ENEMY[type];
-  const e = { type, d, spr: 'enemy_' + type, x: clamp(x, -W + d.rx, W - d.rx), z, hp: Math.ceil(d.hp * G.S * hpMul), rx: d.rx, rz: d.rz, speed: d.speed * rand(0.9, 1.1), t: rand(0, 6), flash: 0, punch: 0, x0: x, dead: false, throwT: rand(0, 1.4), thrown: false, healT: rand(0.8, 1.8), y: 0 };
+  const e = { type, d, spr: 'enemy_' + (type === 'brute' && Math.random() < 0.4 ? 'thug' : type), x: clamp(x, -W + d.rx, W - d.rx), z, hp: Math.ceil(d.hp * G.S * hpMul), rx: d.rx, rz: d.rz, speed: d.speed * rand(0.9, 1.1), t: rand(0, 6), flash: 0, punch: 0, x0: x, dead: false, throwT: rand(0, 1.4), thrown: false, healT: rand(0.8, 1.8), y: 0 };
   e.maxhp = e.hp;
   enemies.push(e);
   return e;
@@ -644,7 +627,7 @@ function updateBullets(dt) {
       break;
     }
     if (dead) b.on = false;
-    else if (T.trail || b.boom) glow.emit(b.x, b.y, b.z + 0.3, rand(-0.5, 0.5), rand(0, 1), 4, 0.22, b.boom ? 0.8 : 1.1, 0, b.boom ? 0xff5a10 : T.trail, 0.8);
+    else if ((T.trail || b.boom) && Math.random() < 0.5) glow.emit(b.x, b.y, b.z + 0.3, rand(-0.5, 0.5), rand(0, 1), 4, 0.2, b.boom ? 0.7 : 0.8, 0, b.boom ? 0xff5a10 : T.trail, 0.6);
   }
 }
 function clearBullets() { for (const b of bullets) b.on = false; }
@@ -693,7 +676,7 @@ function updateSkills(dt) {
   auraOn = al > 0;
   if (al) {
     const r = 2.2 + al * 0.35;
-    for (let i = 0; i < 2; i++) { const a = rand(0, 6.28); glow.emit(G.px + Math.cos(a) * r, 0.15, 0.6 + Math.sin(a) * r, 0, rand(1.5, 3.5), 0, rand(0.3, 0.55), 1.1, 0, Math.random() < 0.5 ? 0xff5a10 : 0xffb020, 0.9); }
+    for (let i = 0; i < 2; i++) { const a = rand(0, 6.28); glow.emit(G.px + Math.cos(a) * r, 0.15, 0.6 + Math.sin(a) * r, 0, rand(1.5, 3), 0, rand(0.25, 0.45), 0.7, 0, Math.random() < 0.5 ? 0xff5a10 : 0xffb020, 0.55); }
     G.auraT -= dt;
     if (G.auraT <= 0) { G.auraT = 0.25; const d = Math.max(dpsNow() * 0.07 * al, 0.6 * G.S * al); for (const e of enemies) if (!e.dead && Math.hypot(e.x - G.px, e.z - 0.6) < r + e.rx) { damage(e, d, null); glow.emit(e.x, 1, e.z, 0, 2, 0, 0.25, 1.6, 0, 0xff7a1a, 0.8); } }
   }
@@ -896,10 +879,9 @@ function applyGate(g) {
   G.score += 15;
 }
 function scroll(d) {
-  roadScroll = (roadScroll + d) % 6;
+  roadScroll = (roadScroll + d) % (TEX_LEN * 30);
   for (const o of decor) { o.z += d; if (o.z > CAM.z - 1) placeDeco(o, o.z - DECO_LEN); }
   for (const c of curbs) { c.z += d; if (c.z > CAM.z - 1) c.z -= 70 * 1.15; }
-  for (const p of pebbles) { p.z += d; if (p.z > CAM.z - 1) { p.z -= 102; p.x = rand(-W + 0.2, W - 0.2); } }
 }
 let dustT = 0, running = true;
 function updateSquad(dt, run) {
@@ -924,22 +906,17 @@ function updateSquad(dt, run) {
 
 // ---------- rysowanie świata ----------
 // sprite postawiony stopami w punkcie świata (x, y, z); sc = dodatkowa skala, rot = przechył wokół stóp
-function drawSpr(kind, ph, x, y, z, sc = 1, opt = null) {
+function drawSpr(kind, x, y, z, sc = 1, opt = null) {
   if (!pj(x, y, z)) return false;
-  const s = sprite(kind, ph, opt && opt.biome);
+  const s = sprite(kind); if (!s) return true;
   const k = PJ.s * s.worldH / s.h * sc;
   const w = s.w * k, h = s.h * k;
-  if (PJ.x + w < -50 || PJ.x - w > VW + 50 || PJ.y - h > VH + 50) return true;
+  if (PJ.x + w < -60 || PJ.x - w > VW + 60 || PJ.y - h > VH + 60) return true;
   const img = opt && opt.flash ? flashOf(s) : s.img;
-  if (opt && (opt.rot || opt.flip || opt.sy)) {
-    ctx.save(); ctx.translate(PJ.x, PJ.y); if (opt.rot) ctx.rotate(opt.rot); ctx.scale(opt.flip ? -1 : 1, opt.sy || 1);
-    if (opt.alpha !== undefined) ctx.globalAlpha = opt.alpha;
-    ctx.drawImage(img, -w / 2, -s.ay * k, w, h); ctx.restore();
-  } else {
-    if (opt && opt.alpha !== undefined) ctx.globalAlpha = opt.alpha;
-    ctx.drawImage(img, PJ.x - w / 2, PJ.y - s.ay * k, w, h);
-    ctx.globalAlpha = 1;
-  }
+  ctx.save(); ctx.translate(PJ.x, PJ.y);
+  if (opt) { if (opt.rot) ctx.rotate(opt.rot); ctx.scale((opt.flip ? -1 : 1) * (opt.sx || 1), opt.sy || 1); if (opt.alpha !== undefined) ctx.globalAlpha = opt.alpha; }
+  ctx.drawImage(img, -w / 2, -s.ay * k, w, h);
+  ctx.restore();
   return true;
 }
 function shadow(x, z, r, a = 0.25) {
@@ -992,8 +969,8 @@ function drawGate(g) {
   ctx.fillStyle = `rgba(255,255,255,${g.alpha * 0.25})`;
   for (let i = 1; i < 6; i++) ctx.fillRect(cx - hw, cy - hh + (i / 6) * hh * 2, hw * 2, Math.max(1, s * 0.04));
   ctx.strokeStyle = `rgba(255,255,255,${Math.min(1, g.alpha * 1.4)})`; ctx.lineWidth = Math.max(1.5, s * 0.06); ctx.strokeRect(cx - hw, cy - hh, hw * 2, hh * 2);
-  drawSpr('gate', 0, g.x0 + 0.2, 0, g.z, 1, g.side ? { flip: true } : null);
-  drawSpr('gate', 0, g.x1 - 0.2, 0, g.z, 1, g.side ? null : { flip: true });
+  drawSpr('gate', g.x0 + 0.3, 0, g.z, 1, { flip: true });
+  drawSpr('gate', g.x1 - 0.3, 0, g.z, 1);
 }
 function drawHazardsGround() {
   for (const h of hazards) {
@@ -1039,33 +1016,39 @@ function drawWorld() {
   for (const d of list) {
     const o = d.o;
     switch (d.k) {
-      case 1: drawSpr(o.kind, G.time * 1.5 % 1, o.x, 0, o.z, o.sc, { biome: biomeI, flip: o.flip }); break;
-      case 2: drawSpr('curb', 0, o.x, 0, o.z, o.sc, { biome: biomeI, flip: o.flip }); break;
+      case 1: drawSpr(o.kind, o.x, 0, o.z, o.sc, { flip: o.flip }); break;
+      case 2: drawSpr('curb', o.x, 0, o.z, o.sc, { flip: o.flip }); break;
       case 3: {
         if (o.isBoss) {
-          const ph = o.moving ? o.t * 0.9 : o.t * 0.25;
-          drawSpr(o.spr, ph, o.x, o.y - o.sink, o.z, (o.B.h / sprite(o.spr).worldH) * (1 + o.punch * 0.04), { rot: o.rot + o.lean, sy: 1 });
-          if (o.flash > 0 || o.punch > 0.5) drawSpr(o.spr, ph, o.x, o.y - o.sink, o.z, (o.B.h / sprite(o.spr).worldH) * (1 + o.punch * 0.04), { rot: o.rot + o.lean, flash: true, alpha: 0.35 });
-        } else drawSpr(o.spr, o.t * o.d.an, o.x, o.y, o.z, 1 + o.punch * 0.18, o.flash > 0 ? { flash: true } : null);
+          const fly = o.B.fly ? 2.2 + Math.sin(o.t * 2.2) * 0.4 : 0, wob = Math.sin(o.t * (o.moving ? 5.5 : 2)) * 0.035;
+          const opt = { rot: o.rot + o.lean + wob, flip: G.px < o.x - 0.3, sy: 1 - Math.abs(Math.sin(o.t * 5.5)) * 0.03 * (o.moving ? 1 : 0) };
+          const sc = (o.B.h / (sprite(o.spr) || { worldH: 1 }).worldH) * (1 + o.punch * 0.04);
+          if (fly) shadow(o.x, o.z, 1.6, 0.2);
+          drawSpr(o.spr, o.x, o.y + fly - o.sink, o.z, sc, opt);
+          if (o.flash > 0) { opt.flash = true; opt.alpha = 0.45; drawSpr(o.spr, o.x, o.y + fly - o.sink, o.z, sc, opt); }
+        } else {
+          const ph = o.t * o.d.an * TAU, bob = o.d.fly ? 0 : Math.abs(Math.sin(ph)) * 0.12;
+          drawSpr(o.spr, o.x, o.y + bob, o.z, 1 + o.punch * 0.18, { flash: o.flash > 0, flip: G.px < o.x - 0.2, rot: Math.sin(ph) * (o.d.fly ? 0.12 : 0.07), sy: 1 - Math.abs(Math.cos(ph)) * 0.04 });
+        }
         break;
       }
-      case 4: drawSpr(o.kind, o.t, o.x, 0, o.z, 1 + o.punch * 0.14, o.flash > 0 ? { flash: true } : (o.kind === 'egg' ? { rot: Math.sin(o.t * 5) * 0.06 } : null)); break;
+      case 4: drawSpr(o.kind, o.x, 0, o.z, 1 + o.punch * 0.14, o.flash > 0 ? { flash: true } : (o.kind === 'egg' || o.kind === 'lava' ? { rot: Math.sin(o.t * 5) * 0.05 } : null)); break;
       case 5: drawGate(o); break;
       case 6: {
-        const y = running ? Math.abs(Math.sin(o.ph)) * 0.08 : 0, sc = 1 + o.pop * 0.5;
-        if (!drawSpr('cave_' + ti, running ? o.ph / TAU : 0, o.x, y, o.z, sc, o.tilt ? { rot: o.tilt * 0.6 } : null)) break;
-        // ręka z bronią: przy rzucie skraca się (leci do przodu)
-        const spr = sprite('cave_' + ti, 0), k = PJ.s * spr.worldH / spr.h * sc, arm = sprite('arm_' + ti, 0);
-        const ak = k * (arm.worldH / arm.h) / (spr.worldH / spr.h);
-        ctx.save(); ctx.translate(PJ.x + 18 * k, PJ.y - 72 * k); ctx.rotate(0.25 + o.tilt * 0.6 - o.throwT * 0.3); ctx.scale(1, 1 - o.throwT * 0.6);
-        ctx.drawImage(arm.img, -arm.w / 2 * ak, -arm.ay * ak, arm.w * ak, arm.h * ak); ctx.restore();
+        // bieg: podskok, kołysanie, przy rzucie krótki zamach do przodu
+        const y = running ? Math.abs(Math.sin(o.ph)) * 0.12 : 0, sc = 1 + o.pop * 0.5;
+        drawSpr('cave_' + ti, o.x, y, o.z, sc, { rot: o.tilt * 0.6 + (running ? Math.sin(o.ph) * 0.07 : 0) - o.throwT * 0.12 * (o.flip ? -1 : 1), flip: o.flip, sy: 1 - o.throwT * 0.08 - (running ? Math.abs(Math.cos(o.ph)) * 0.04 : 0) });
         break;
       }
-      case 7: drawSpr('pet', o.ph, o.x, 0, o.z, 1, o.state === 'back' ? { flip: true } : null); break;
+      case 7: drawSpr('pet', o.x, Math.abs(Math.sin(o.ph * 6)) * 0.1, o.z, 1, { flip: o.state === 'back', rot: Math.sin(o.ph * 6) * 0.08 }); break;
       case 8: drawBullet(o); break;
       case 9: drawSpear(o); break;
-      case 10: drawSpr('rock', 0, o.rx, o.ry - 0.7, o.rz, 1, { rot: G.time * 6 }); break;
-      case 11: drawSpr('meteor', 0, o.px, o.py, o.pz, 1.3); break;
+      case 10: drawSpr('rock', o.rx, o.ry - 0.6, o.rz, 1, { rot: G.time * 6 }); break;
+      case 11: {
+        if (pj(o.px, o.py, o.pz)) { const r = PJ.s * 1.6; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(glowTex('#ff7a1a'), PJ.x - r, PJ.y - r * 1.4, r * 2, r * 2); ctx.globalCompositeOperation = 'source-over'; }
+        drawSpr('meteor', o.px, o.py - 0.6, o.pz, 1, { rot: G.time * 5 });
+        break;
+      }
     }
   }
   drawDebris();
@@ -1316,7 +1299,7 @@ function frame(now) {
   camT.fx += (fx - camT.fx) * k; camT.fy += (fy - camT.fy) * k; camT.tx += (tx - camT.tx) * k; camT.ty += (ty - camT.ty) * k;
   ctx.translate(rand(-sh, sh) * 6, rand(-sh, sh) * 6);
   ctx.translate(camT.tx, camT.ty); ctx.scale(CAM.zoom, CAM.zoom); ctx.translate(-camT.fx, -camT.fy);
-  drawBackground(frozen ? 0 : raw);
+  drawBackground();
   drawWorld();
   updateHud();
   if (CAM.zoom !== 1) relabel();
@@ -1324,6 +1307,7 @@ function frame(now) {
 // napisy DOM nie znają zbliżenia płótna — przy zbliżeniu po prostu je chowamy
 function relabel() { if (Math.abs(CAM.zoom - 1) > 0.05) for (const L of labelEls) L.el.hidden = true; }
 resize();
+loadAll(() => { skyCache = null; });
 soundUi(); toMenu();
 members[0].on = true;
 window.__pr = { G, enemies, crates, gates, hazards, spears, newRun, gain, meta, renderMeta, setBiome, A, sfx, spawnEnemy, spawnBoss, spawnGates, spawnCrates, spawnWave, buildStage, setTier, addPeople };
