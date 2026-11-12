@@ -74,39 +74,71 @@ const mir = (g, c, p, sc, r = Z3, an) => [
   [g, c, [-p[0], p[1], p[2]], sc, [r[0], -r[1], -r[2]], an && [-an[0], an[1], an[2], -an[3], an[4], an[5]]],
 ];
 
-// ---------- materiał postaci: animacja w shaderze + światło konturowe ----------
+// ---------- materiał postaci: kreskówkowe cieniowanie (3 tony) + animacja w shaderze + światło konturowe ----------
 export const U = { uTime: { value: 0 }, uRim: { value: new THREE.Color(0x9fc4dc) } };
+const toneTex = (() => {
+  const t = new THREE.DataTexture(new Uint8Array([120, 200, 255]), 3, 1, THREE.RedFormat);
+  t.minFilter = t.magFilter = THREE.NearestFilter; t.needsUpdate = true; return t;
+})();
+const rotGL = (v) => `if (aSwing.y < 0.5) ${v}.yz = prM * ${v}.yz; else if (aSwing.y < 1.5) ${v}.xz = prM * ${v}.xz; else ${v}.xy = prM * ${v}.xy;`;
+const swingGL = `float prA = aSwing.x * sin(uTime * uFreq + modelMatrix[3].x * 2.3 + aSwing.z);
+        float prC = cos(prA), prS = sin(prA);
+        mat2 prM = mat2(prC, prS, -prS, prC);`;
 export function charMat(freq, opts = {}) {
-  const m = new THREE.MeshLambertMaterial({ vertexColors: true, ...opts });
+  const m = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: toneTex, ...opts });
   const fq = { value: freq };
   m.userData.freq = fq;
   m.onBeforeCompile = (sh) => {
     sh.uniforms.uTime = U.uTime; sh.uniforms.uRim = U.uRim; sh.uniforms.uFreq = fq;
-    const rot = (v) => `if (aSwing.y < 0.5) ${v}.yz = prM * ${v}.yz; else if (aSwing.y < 1.5) ${v}.xz = prM * ${v}.xz; else ${v}.xy = prM * ${v}.xy;`;
     sh.vertexShader = 'attribute vec3 aPivot;\nattribute vec3 aSwing;\nuniform float uTime;\nuniform float uFreq;\n' + sh.vertexShader
       .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
-        float prA = aSwing.x * sin(uTime * uFreq + modelMatrix[3].x * 2.3 + aSwing.z);
-        float prC = cos(prA), prS = sin(prA);
-        mat2 prM = mat2(prC, prS, -prS, prC);
-        ${rot('objectNormal')}`)
+        ${swingGL}
+        ${rotGL('objectNormal')}`)
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         vec3 prR = transformed - aPivot;
-        ${rot('prR')}
+        ${rotGL('prR')}
         transformed = aPivot + prR;`);
     sh.fragmentShader = 'uniform vec3 uRim;\n' + sh.fragmentShader.replace('#include <opaque_fragment>', `
         float prRim = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 3.0);
-        outgoingLight += uRim * prRim * 0.55;
+        outgoingLight += uRim * step(0.45, prRim) * 0.32;
         #include <opaque_fragment>`);
   };
-  m.customProgramCacheKey = () => 'prchar';
+  m.customProgramCacheKey = () => 'prtoon';
   return m;
+}
+// czarny kontur jak w rysunkowych grafikach: odwrócona, napompowana kopia siatki (ta sama animacja co postać)
+const outlineCache = new Map();
+export function outlineMat(base, width = 0.035) {
+  const fq = base.userData.freq || { value: 0 }, key = base.uuid + '|' + width;
+  if (outlineCache.has(key)) return outlineCache.get(key);
+  const m = new THREE.MeshBasicMaterial({ color: 0x1d120c, side: THREE.BackSide });
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uTime = U.uTime; sh.uniforms.uFreq = fq; sh.uniforms.uOut = { value: width };
+    sh.vertexShader = 'attribute vec3 aPivot;\nattribute vec3 aSwing;\nuniform float uTime;\nuniform float uFreq;\nuniform float uOut;\n' + sh.vertexShader
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        ${swingGL}
+        vec3 prR = transformed - aPivot;
+        ${rotGL('prR')}
+        vec3 prN = normal;
+        ${rotGL('prN')}
+        transformed = aPivot + prR + normalize(prN) * uOut;`);
+  };
+  m.customProgramCacheKey = () => 'proutline';
+  outlineCache.set(key, m);
+  return m;
+}
+export function addOutline(mesh, width = 0.035, base = mesh.material) {
+  const o = new THREE.Mesh(mesh.geometry, outlineMat(base, width));
+  o.castShadow = false; o.frustumCulled = mesh.frustumCulled; o.name = 'outline';
+  mesh.add(o); mesh.userData.outline = o;
+  return o;
 }
 
 // ---------- jaskiniowiec ----------
-const SKIN = [0xc07f52, 0xe6ad7c], SKIND = 0xb4744a, HAIR = 0x2a1810, BONE = [0xd9cdb0, 0xfbf5e4], STONE = [0x6f6c66, 0xa5a199], WOOD = [0x6e4521, 0x9a6a36], DARK = 0x16100c;
+const SKIN = [0xd68a5a, 0xf7c08e], SKIND = 0xc77a4c, HAIR = 0x5c3318, LEO = [0xc86e18, 0xf2ad44], SPOT = 0x4a2610, BONE = [0xd9cdb0, 0xfbf5e4], STONE = [0x6f6c66, 0xa5a199], WOOD = [0x6e4521, 0x9a6a36], DARK = 0x16100c;
 export const TIER_COUNT = 6;
 function cavemanBody(t) {
-  const fur = [[0x5e3717, 0x8a5a2b], [0x5e3717, 0x8a5a2b], [0x6e4a22, 0xa5753a], [0xb86a1c, 0xe8a23a], [0x35602c, 0x5f9a48], [0x40265e, 0x7a4fa8]][t];
+  const fur = t === 5 ? [0x8a8278, 0xe4dccf] : LEO;
   const leg = (sx, a) => [
     [CAP, SKIN, [sx * 0.17, 0.3, 0], [0.21, 0.29, 0.21], Z3, [sx * 0.17, 0.6, 0, a, 0, 0]],
     [s, SKIND, [sx * 0.17, 0.07, 0.07], [0.24, 0.14, 0.36], Z3, [sx * 0.17, 0.6, 0, a, 0, 0]],
@@ -130,6 +162,10 @@ function cavemanBody(t) {
     [s, SKIN, [0.37, 1.14, 0], 0.26],
   ];
   for (let i = 0; i < 7; i++) { const a = i * 0.9; p.push([CONE, fur[0], [Math.cos(a) * 0.27, 0.44, Math.sin(a) * 0.2], [0.2, 0.22, 0.2], [Math.PI, 0, 0]]); }
+  if (t < 5) {                                                     // cętki skóry lamparta (przepaska i pas przez ramię)
+    for (let i = 0; i < 10; i++) { const a = i * 0.63 + (i % 2) * 0.3, y = 0.58 + (i % 3) * 0.07; p.push([s, SPOT, [Math.cos(a) * 0.32, y, Math.sin(a) * 0.255], [0.075, 0.06, 0.075]]); }
+    for (let i = 0; i < 3; i++) p.push([s, SPOT, [0.2 - i * 0.12, 1.24 - i * 0.16, 0.24], [0.06, 0.05, 0.04]], [s, SPOT, [0.16 - i * 0.12, 1.18 - i * 0.16, -0.23], [0.06, 0.05, 0.04]]);
+  }
   for (let i = 0; i < 5; i++) p.push([CONE, HAIR, [(i - 2) * 0.13, 1.84 - Math.abs(i - 2) * 0.05, -0.26], [0.16, 0.3, 0.16], [-1.1, 0, (2 - i) * 0.25]]);
   if (t === 1) p.push([TOR, 0xc8371f, [0, 1.7, 0], [0.62, 0.62, 0.5], [HP, 0, 0]], [BOX, 0xc8371f, [0.2, 1.62, -0.36], [0.08, 0.3, 0.04], [0.4, 0, 0.2]]);
   if (t === 2) { p.push([TOR, BONE[1], [0, 1.2, 0.03], [0.56, 0.5, 0.5], [1.25, 0, 0]]); for (let i = -1; i <= 1; i++) p.push([CONE, BONE, [i * 0.13, 1.08, 0.27], [0.07, 0.16, 0.07], [Math.PI, 0, 0]]); }
@@ -168,7 +204,60 @@ export const bulletGeo = [
 ];
 
 // ---------- wrogowie (patrzą w +z) ----------
-function raptorParts(c = [0x2f7a2c, 0x62b848], belly = [0xd9c06a, 0xf2e2a0], crest = 0xe24a2a, dark = 0x1f5a22) {
+// wrogie plemię: ciemna skóra, czarne futra, kościane hełmy (brute = włócznik, shield = tarczownik, shaman = szaman, chief = Grg)
+const ESKIN = [0x5a2e1c, 0x8e5034], ESKIND = 0x4a2416, EHAIR = 0x15100c, EFUR = [0x231c18, 0x4c423a];
+function tribalParts(kind) {
+  const chief = kind === 'chief', shaman = kind === 'shaman';
+  const leg = (sx, a) => [
+    [CAP, ESKIN, [sx * 0.19, 0.3, 0], [0.24, 0.3, 0.24], Z3, [sx * 0.19, 0.6, 0, a, 0, 0]],
+    [s, ESKIND, [sx * 0.19, 0.07, 0.08], [0.27, 0.15, 0.38], Z3, [sx * 0.19, 0.6, 0, a, 0, 0]],
+  ];
+  const fur = shaman ? [0x5e5850, 0xb4ac9e] : EFUR;
+  const p = [
+    ...leg(-1, 0.8), ...leg(1, -0.8),
+    [S, fur, [0, 0.68, 0], [0.74, 0.52, 0.58]],
+    [S, ESKIN, [0, 1.04, 0.01], [0.76, 0.68, 0.54]],
+    ...mir(s, ESKIND, [0.15, 1.14, 0.24], [0.2, 0.13, 0.06]),
+    [CAP, fur, [-0.04, 1.04, 0], [0.22, 0.4, 0.56], [0, 0, -0.78]],
+    [S, ESKIN, [0, 1.56, 0.04], 0.62],
+    [S, EHAIR, [0, 1.66, -0.1], [0.72, 0.6, 0.68]],
+    [S, shaman ? [0xc8c0b4, 0xffffff] : EHAIR, [0, 1.34, 0.21], [0.52, 0.38, 0.32]],
+    ...mir(CAP, EHAIR, [0.12, 1.69, 0.29], [0.06, 0.13, 0.06], [0, 0, HP + 0.45]),
+    ...mir(s, 0xfff0c8, [0.13, 1.59, 0.29], 0.12), ...mir(s, 0xb81a10, [0.13, 1.59, 0.335], 0.055),
+    [s, ESKIND, [0, 1.5, 0.34], 0.15],
+    ...mir(s, ESKIN, [0.31, 1.55, 0], [0.1, 0.16, 0.14]),
+    [s, ESKIN, [-0.42, 1.18, 0], 0.27],
+    [CAP, ESKIN, [-0.45, 0.94, 0.02], [0.2, 0.28, 0.2], [0, 0, -0.15], [-0.42, 1.2, 0, 0.6, 0, 0]],
+    [s, ESKIND, [-0.5, 0.64, 0.04], 0.22, Z3, [-0.42, 1.2, 0, 0.6, 0, 0]],
+  ];
+  for (let i = 0; i < 7; i++) { const a = i * 0.9; p.push([CONE, fur[0], [Math.cos(a) * 0.3, 0.45, Math.sin(a) * 0.23], [0.22, 0.24, 0.22], [Math.PI, 0, 0]]); }
+  for (let i = 0; i < 5; i++) p.push([CONE, EHAIR, [(i - 2) * 0.14, 1.86 - Math.abs(i - 2) * 0.05, -0.28], [0.18, 0.32, 0.18], [-1.1, 0, (2 - i) * 0.25]]);
+  for (let i = 0; i < 5; i++) p.push([CONE, BONE, [(i - 2) * 0.09, 1.2 - Math.abs(i - 2) * 0.025, 0.3], [0.05, 0.12, 0.05], [Math.PI - 0.3, 0, 0]]);
+  // prawa ręka uniesiona z bronią
+  const arm = [0.42, 1.2, 0, chief ? 0.5 : 0.25, 0, 1.6];
+  p.push([s, ESKIN, [0.42, 1.18, 0], 0.27], [CAP, ESKIN, [0.48, 1.32, 0.12], [0.19, 0.26, 0.19], [-0.6, 0, -0.2], arm], [s, ESKIND, [0.52, 1.52, 0.3], 0.22, Z3, arm]);
+  if (kind === 'brute') p.push([CYL, WOOD, [0.52, 1.6, 0.3], [0.06, 2.0, 0.06], [0.15, 0, 0], arm], [CONE, STONE, [0.52, 2.72, 0.47], [0.17, 0.36, 0.1], [0.15, 0, 0], arm], [CYL, 0xc8371f, [0.52, 2.46, 0.43], [0.09, 0.1, 0.09], [0.15, 0, 0], arm],
+    [S, BONE, [0, 1.74, 0.06], [0.66, 0.42, 0.62]], ...mir(s, DARK, [0.13, 1.72, 0.34], [0.12, 0.1, 0.06]), ...mir(CONE, BONE, [0.32, 1.98, 0], [0.1, 0.34, 0.1], [0, 0, -0.5]));
+  if (kind === 'shield') {
+    p.push([CYL, WOOD, [0.52, 1.5, 0.3], [0.1, 0.9, 0.1], [0.4, 0, 0], arm], [S, STONE, [0.52, 1.95, 0.48], [0.36, 0.3, 0.3], Z3, arm]);
+    p.push([S, [0x3f5e1c, 0x8aa848], [0, 1.0, 0.58], [1.15, 1.3, 0.42]], [TOR, [0x2f4a14, 0x5a7a2a], [0, 1.0, 0.6], [1.12, 1.26, 0.6]]);
+    for (const [x, y] of [[0, 1.0], [-0.24, 1.22], [0.24, 1.22], [-0.24, 0.78], [0.24, 0.78], [0, 1.42], [0, 0.58]]) p.push([CYL, [0x4c6e22, 0x9ab858], [x, y, 0.76], [0.2, 0.05, 0.2], [HP, 0, 0]]);
+  }
+  if (shaman) {
+    p.push([CYL, WOOD, [0.52, 1.5, 0.3], [0.06, 2.2, 0.06], Z3, arm], [ICO, [0x3aa8ff, 0xd8f6ff], [0.52, 2.78, 0.3], [0.26, 0.5, 0.26], Z3, arm], [TOR, BONE[1], [0.52, 2.5, 0.3], [0.2, 0.2, 0.3], [HP, 0, 0], arm]);
+    p.push([S, BONE, [0, 1.74, 0.08], [0.64, 0.5, 0.62]], [CONE, BONE, [0, 1.62, 0.52], [0.24, 0.6, 0.2], [HP + 0.25, 0, 0]], ...mir(s, DARK, [0.15, 1.74, 0.34], [0.13, 0.12, 0.06]),
+      [S, fur, [0, 1.25, -0.16], [0.9, 0.8, 0.42]], ...mir(s, fur, [0.36, 1.32, 0], [0.4, 0.3, 0.44]));
+  }
+  if (chief) {
+    p.push([CYL, WOOD, [0.52, 1.92, 0.36], [0.16, 1.5, 0.16], [0.15, 0, 0], arm], [CAP, WOOD, [0.52, 2.62, 0.47], [0.28, 0.4, 0.28], [0.15, 0, 0], arm]);
+    for (let i = 0; i < 6; i++) { const a = i * 1.05, y = 2.45 + (i % 3) * 0.2; p.push([CONE, BONE, [0.52 + Math.cos(a) * 0.3, y, 0.45 + Math.sin(a) * 0.3], [0.09, 0.26, 0.09], [Math.sin(a) * HP, 0, -Math.cos(a) * HP], arm]); }
+    p.push([S, BONE, [0, 1.76, 0.06], [0.72, 0.5, 0.68]], [CONE, BONE, [0, 1.62, 0.42], [0.36, 0.3, 0.2], [HP, 0, 0]], ...mir(s, DARK, [0.15, 1.74, 0.35], [0.14, 0.12, 0.06]));
+    for (const sx of [-1, 1]) for (let i = 0; i < 3; i++) p.push([CAP, BONE, [sx * (0.38 + i * 0.12), 1.95 + i * i * 0.07, 0.02], [0.11 - i * 0.025, 0.14, 0.11 - i * 0.025], [0, 0, -sx * (0.6 + i * 0.5)]]);
+    p.push(...mir(S, EFUR, [0.42, 1.32, -0.02], [0.52, 0.4, 0.56]), [S, BONE, [0, 0.72, 0.3], [0.26, 0.22, 0.12]], ...mir(s, DARK, [0.06, 0.74, 0.36], 0.06));
+  }
+  return p;
+}
+function raptorParts(c = [0xb03c14, 0xf07a34], belly = [0xe8c890, 0xfff0c8], crest = 0x8a1a0c, dark = 0x6a1c0a) {
   const tailA = [0, 0.92, -0.45, 0.3, 1, 0], legA = (sx, a) => [sx * 0.27, 0.86, -0.08, a, 0, 0];
   const p = [
     [S, [belly[0], c[1]], [0, 0.9, -0.02], [0.58, 0.62, 1.18], [-0.2, 0, 0]],
@@ -183,7 +272,7 @@ function raptorParts(c = [0x2f7a2c, 0x62b848], belly = [0xd9c06a, 0xf2e2a0], cre
     ...mir(CAP, c, [0.25, 0.98, 0.44], [0.09, 0.15, 0.09], [0.95, 0, 0]), ...mir(CONE, BONE, [0.25, 0.86, 0.6], [0.06, 0.14, 0.06], [2.2, 0, 0]),
   ];
   for (let i = 0; i < 4; i++) p.push([CONE, BONE, [(i - 1.5) * 0.07, 1.4, 1.18 - Math.abs(i - 1.5) * 0.03], [0.05, 0.1, 0.05], [Math.PI, 0, 0]]);
-  for (let i = 0; i < 4; i++) p.push([s, dark, [0, 1.19 - i * 0.03, 0.28 - i * 0.26], [0.42 - i * 0.03, 0.08, 0.13]]);
+  for (let i = 0; i < 5; i++) p.push([s, dark, [0, 1.19 - i * 0.04, 0.4 - i * 0.24], [0.5 - i * 0.03, 0.1, 0.09]]);
   for (let i = 0; i < 3; i++) p.push([CONE, [crest, 0xffc23d], [0, 1.8 - i * 0.07, 0.62 - i * 0.14], [0.09, 0.36 - i * 0.05, 0.14], [-0.7 - i * 0.2, 0, 0]]);
   for (const sx of [-1, 1]) {
     const a = legA(sx, sx * 0.75);
@@ -230,16 +319,28 @@ function mammothParts(c = [0x5a3a1e, 0x8a5c36], crown = false) {
   const legs = [[0.52, 0.5, 0.4], [-0.52, 0.5, -0.4], [0.52, -0.85, -0.4], [-0.52, -0.85, 0.4]];
   for (const [x, z, a] of legs) { const an = [x, 1.1, z, a, 0, 0]; p.push([CYL, d, [x, 0.5, z], [0.5, 1.0, 0.5], Z3, an]); for (let k = -1; k <= 1; k++) p.push([s, BONE[0], [x + k * 0.15, 0.08, z + 0.22], [0.13, 0.14, 0.1], Z3, an]); }
   if (crown) {
-    p.push([CYL, [0xd99a1a, 0xffd04a], [0, 3.0, 1.05], [0.8, 0.24, 0.8]], ...mir(s, 0xd9342a, [0.5, 2.3, 1.55], [0.3, 0.07, 0.07]), [s, 0xd9342a, [0, 2.5, 1.7], [0.08, 0.4, 0.06]]);
-    for (let i = 0; i < 6; i++) { const a = i * 1.047; p.push([CONE, [0xd99a1a, 0xffe07a], [Math.cos(a) * 0.34, 3.26, 1.05 + Math.sin(a) * 0.34], [0.2, 0.36, 0.2]]); }
-    p.push([s, 0xd9342a, [0, 3.02, 1.46], 0.14]);
+    p.push([S, BONE, [0, 2.45, 1.45], [1.05, 0.95, 0.6]], ...mir(s, DARK, [0.26, 2.42, 1.72], [0.22, 0.18, 0.08]), [CONE, BONE, [0, 2.95, 1.5], [0.18, 0.5, 0.18], [0.3, 0, 0]],
+      ...mir(CONE, BONE, [0.48, 2.85, 1.4], [0.14, 0.5, 0.14], [0.2, 0, -0.6]));
+    p.push(...mir(BOX, [0x8a2a14, 0xc84a28], [0.9, 2.2, -0.3], [0.12, 1.2, 1.9], [0, 0, 0.25]), [BOX, [0x8a2a14, 0xc84a28], [0, 2.86, -0.3], [1.5, 0.12, 1.9]]);
+    for (const sx of [-1, 1]) for (let i = 0; i < 3; i++) p.push([BOX, 0x2a7a8a, [sx * 0.98, 2.1, -0.9 + i * 0.6], [0.04, 0.24, 0.24], [0.78, 0, sx * 0.25]], [BOX, 0xf3e2c0, [sx * 0.98, 1.72, -0.9 + i * 0.6], [0.04, 0.1, 0.4], [0, 0, sx * 0.25]]);
+    p.push([BOX, WOOD, [0, 3.05, -0.3], [1.4, 0.18, 1.5]]);
+    for (const x of [-0.62, 0.62]) for (const z of [-0.95, 0.35]) p.push([CYL, WOOD, [x, 3.4, z], [0.1, 0.8, 0.1]]);
+    for (const x of [-0.62, 0.62]) p.push([CYL, WOOD, [x, 3.55, -0.3], [0.08, 1.4, 0.08], [HP, 0, 0]]);
+    p.push([CYL, WOOD, [0, 3.55, 0.35], [0.08, 1.3, 0.08], [0, 0, HP]], [CYL, WOOD, [0, 3.55, -0.95], [0.08, 1.3, 0.08], [0, 0, HP]]);
+    p.push([S, EFUR, [0, 3.35, -0.3], [0.5, 0.4, 0.5]], [S, ESKIN, [0, 3.65, -0.28], [0.5, 0.5, 0.42]], [S, ESKIN, [0, 4.08, -0.24], 0.44], [S, EHAIR, [0, 4.16, -0.32], [0.5, 0.44, 0.48]],
+      [S, BONE, [0, 4.22, -0.24], [0.48, 0.3, 0.46]], ...mir(s, 0xfff0c8, [0.1, 4.08, -0.03], 0.08),
+      [TOR, WOOD[1], [0.32, 3.8, 0.0], [0.9, 0.9, 0.5], [0, HP, 0]], [CYL, BONE[1], [0.32, 3.8, 0.0], [0.012, 0.86, 0.012]]);
   }
   return p;
 }
 function pteroParts() {
-  const c = [0x5a3a8a, 0x9a6ac8], w = [0xc87ac0, 0xf0b8e0];
+  const c = [0xa8401a, 0xec8236], w = [0xd86a2a, 0xf8b878];
   const p = [
-    [S, [0xe8c8e8, 0x8a5ab0], Z3, [0.42, 0.36, 0.95]],
+    [S, [0xf0d0a0, 0xb8481c], Z3, [0.42, 0.36, 0.95]],
+    // jeździec z wrogiego plemienia
+    [S, EFUR, [0, 0.3, -0.12], [0.34, 0.24, 0.3]], [S, ESKIN, [0, 0.5, -0.1], [0.32, 0.34, 0.26]], [S, ESKIN, [0, 0.8, -0.06], 0.3],
+    [S, EHAIR, [0, 0.86, -0.12], [0.34, 0.3, 0.32]], [S, EHAIR, [0, 0.72, 0.06], [0.24, 0.16, 0.14]], ...mir(s, 0xfff0c8, [0.07, 0.82, 0.08], 0.06),
+    [ICO, STONE, [0.22, 0.86, 0.02], 0.26], [CAP, ESKIN, [0.2, 0.62, -0.02], [0.08, 0.16, 0.08], [0, 0, -0.5]],
     [CAP, c, [0, 0.14, 0.42], [0.16, 0.16, 0.16], [0.9, 0, 0]],
     [S, c, [0, 0.24, 0.62], [0.32, 0.3, 0.4]],
     [CONE, [0xe8a020, 0xffd86a], [0, 0.22, 1.12], [0.14, 0.76, 0.12], [HP, 0, 0]],
@@ -257,7 +358,7 @@ function pteroParts() {
   return p;
 }
 function trexParts() {
-  const c = [0x3f5a22, 0x6a8a3a], b = [0xb8a058, 0xe6d590], d = [0x2f4218, 0x48642a], st = 0x26380f;
+  const c = [0xa03812, 0xe8682c], b = [0xe0b880, 0xf8e4bc], d = [0x7a2a0e, 0xb8481c], st = 0x5a1806;
   const jaw = [0, 3.62, 1.2, 0.2, 0, 0.8], tail = [0, 2.1, -1.4, 0.22, 1, 0];
   const p = [
     [S, [b[0], c[1]], [0, 2.35, -0.2], [1.9, 2.0, 3.1], [-0.3, 0, 0]],
@@ -281,7 +382,9 @@ function trexParts() {
     p.push([CONE, BONE, [sx * 0.4, 3.56, 1.7 + i * 0.24], [0.09, 0.2, 0.09], Z3, jaw]);
   }
   for (let i = -2; i <= 2; i++) p.push([CONE, BONE, [i * 0.18, 3.64, 3.16], [0.1, 0.24, 0.1], [Math.PI, 0, 0]]);
-  for (let i = 0; i < 9; i++) p.push([CONE, d, [0, 3.72 - i * 0.2 - (i > 5 ? (i - 5) * 0.12 : 0), 0.6 - i * 0.52], [0.26, 0.5 - i * 0.02, 0.4], [-0.5, 0, 0]]);
+  for (let i = 0; i < 9; i++) if (i < 2 || i > 4) p.push([CONE, BONE, [0, 3.72 - i * 0.2 - (i > 5 ? (i - 5) * 0.12 : 0), 0.6 - i * 0.52], [0.26, 0.55 - i * 0.02, 0.36], [-0.5, 0, 0]]);
+  p.push([BOX, [0x4a2a14, 0x8a5a2e], [0, 3.28, -0.6], [1.3, 0.26, 1.3], [-0.3, 0, 0]], [BOX, [0x6e4a22, 0xa5753a], [0, 3.48, -0.44], [0.9, 0.3, 0.9], [-0.3, 0, 0]],
+    [CAP, BONE, [0, 3.62, -0.08], [0.1, 0.4, 0.1], [0, 0, HP]], [TOR, 0x4a2a14, [0, 2.4, -0.4], [2.0, 2.2, 0.6], [0, HP, 0.3]], [TOR, 0x4a2a14, [0, 3.7, 1.7], [1.5, 1.2, 0.5], [0.4, HP, 0]]);
   for (let i = 0; i < 6; i++) p.push(...mir(CAP, st, [0.72 - (i > 3 ? 0.1 : 0), 2.95 - i * 0.13, 0.5 - i * 0.48], [0.1, 0.34, 0.2], [0, 0, 0.5]));
   for (const sx of [-1, 1]) {
     const a = [sx * 0.66, 2.1, -0.1, sx * 0.5, 0, 0];
@@ -291,15 +394,15 @@ function trexParts() {
   return p;
 }
 function triceParts() {
-  const c = [0x8a4a1c, 0xc87a3a], b = [0xd9b86a, 0xf0d9a0], d = [0x5c2f10, 0x7a3f1c];
+  const c = [0x56603e, 0x8e9a6e], b = [0xc8b890, 0xece0c0], d = [0x3c4428, 0x5c6644];
   const p = [
     [S, [b[0], c[1]], [0, 1.55, -0.4], [2.3, 2.0, 3.3]],
     [CONE, c, [0, 1.35, -2.5], [0.9, 2.0, 0.9], [-1.7, 0, 0], [0, 1.4, -1.6, 0.3, 1, 0]],
     [CYL, d, [0, 2.3, 1.15], [2.9, 0.22, 2.9], [1.25, 0, 0]],
-    [CYL, [0xe8a03a, 0xf3d27a], [0, 2.26, 1.24], [2.3, 0.22, 2.3], [1.25, 0, 0]],
+    [CYL, [0xb8a878, 0xe0d0a4], [0, 2.26, 1.24], [2.3, 0.22, 2.3], [1.25, 0, 0]],
     [CYL, 0xc8371f, [0, 2.24, 1.3], [1.3, 0.22, 1.3], [1.25, 0, 0]],
     [S, c, [0, 1.6, 1.85], [1.25, 1.2, 1.6]],
-    [CONE, [0xd9b86a, 0x8a4a1c], [0, 1.3, 2.8], [0.8, 0.8, 0.7], [1.75, 0, 0]],
+    [CONE, [0xc8b890, 0x56603e], [0, 1.3, 2.8], [0.8, 0.8, 0.7], [1.75, 0, 0]],
     [S, b, [0, 1.22, 2.3], [0.9, 0.4, 1.0], Z3, [0, 1.3, 1.8, 0.12, 0, 1]],
     ...mir(CONE, BONE, [0.44, 2.5, 2.25], [0.26, 1.7, 0.26], [0.95, 0, -0.12]),
     [CONE, BONE, [0, 1.95, 2.85], [0.24, 0.7, 0.24], [0.6, 0, 0]],
@@ -311,10 +414,11 @@ function triceParts() {
   for (const [x, z, a] of legs) { const an = [x, 1.1, z, a, 0, 0]; p.push([CYL, d, [x, 0.52, z], [0.6, 1.05, 0.6], Z3, an]); for (let k = -1; k <= 1; k++) p.push([s, BONE[0], [x + k * 0.18, 0.08, z + 0.28], [0.15, 0.16, 0.12], Z3, an]); }
   return p;
 }
-export const enemyGeo = { raptor: merged(raptorParts()), tiger: merged(tigerParts()), mammoth: merged(mammothParts()), ptero: merged(pteroParts()) };
+export const enemyGeo = { raptor: merged(raptorParts()), tiger: merged(tigerParts()), mammoth: merged(mammothParts()), ptero: merged(pteroParts()),
+  brute: merged(tribalParts('brute')), shield: merged(tribalParts('shield')), shaman: merged(tribalParts('shaman')) };
 export const petGeo = merged([...raptorParts([0x1f5a8a, 0x48a8d8], [0xe8e0c0, 0xfff6dc], 0xffc23d, 0x163f66),
   [TOR, BONE[1], [0, 1.2, 0.42], [0.42, 0.42, 0.5], [1.0, 0, 0]], [S, [0x6e4521, 0x9a6a36], [0, 1.2, -0.05], [0.5, 0.2, 0.5]]]);
-export const bossGeo = [merged(trexParts()), merged(mammothParts([0x6a5a48, 0xa08a6a], true)), merged(triceParts())];
+export const bossGeo = [merged(trexParts()), merged(tribalParts('chief')), merged(mammothParts([0x5a3a1e, 0x8e6038], true)), merged(triceParts())];
 
 // ---------- bonusy, bramki, głazy ----------
 const PL = [0x8a5a2b, 0xb8823f], PD = [0x5a3a18, 0x6e4a22];
@@ -348,9 +452,37 @@ export const gateGeo = (() => {
   p.push(...mir(ICO, STONE, [hw, 0.2, 0], [0.7, 0.5, 0.7]), ...mir(CAP, WOOD, [hw - 0.4, 2.62, 0], [0.06, 0.2, 0.06]));
   return merged(p);
 })();
+export const meatGeo = (() => {                                    // „mięso zdrowia”: bonus z ludźmi
+  const p = [[CYL, [0x4a3214, 0x6e4a22], [0, 0.08, 0], [1.5, 0.16, 1.5]],
+    [S, [0x8a1a14, 0xd8443a], [0, 0.85, 0], [1.25, 1.05, 1.0], [0, 0, 0.5]], [S, [0xb8302a, 0xf0645a], [-0.12, 0.98, 0.12], [0.9, 0.7, 0.8], [0, 0, 0.5]],
+    [S, [0xe8d0b0, 0xfff4e4], [0.06, 0.92, 0.42], [0.9, 0.7, 0.2], [0, 0, 0.5]], [S, [0xb8302a, 0xe85a50], [0.06, 0.92, 0.5], [0.7, 0.52, 0.1], [0, 0, 0.5]],
+    [CAP, BONE, [0.62, 1.45, 0], [0.16, 0.5, 0.16], [0, 0, -1.05]], ...[[0.98, 1.72, 0.1], [0.92, 1.82, -0.12]].map((q) => [s, BONE[1], q, 0.26])];
+  return merged(p);
+})();
 export const rockGeo = merged([[new THREE.IcosahedronGeometry(0.5, 1), [0x3a302c, 0x7a726a], Z3, 2.0], [ICO, 0x5a524c, [0.5, 0.4, 0.3], 1.0], [ICO, 0xff7a1a, [-0.4, -0.3, 0.5], 0.5], [ICO, 0xffb020, [0.3, -0.5, -0.4], 0.4]]);
 
 // ---------- krajobraz: fragmenty zależne od krainy ----------
+function baobab() {                                               // „drzewo prehistoryczne” z koncept-artu: pękaty pień, płaskie korony
+  const T = [0x7a4a26, 0xb07a48], L = [0x4e8a24, 0x9ccc48], h = rand(3.4, 4.4);
+  const p = [[S, T, [0, h * 0.42, 0], [1.9, h * 0.9, 1.9]], [CYL, T, [0, h * 0.9, 0], [0.7, h * 0.4, 0.7]],
+    [S, [0x5a3418, 0x7a4a26], [0.3, h * 0.45, 0.82], [0.3, 0.42, 0.12]], [S, [0x5a3418, 0x7a4a26], [-0.4, h * 0.3, 0.8], [0.22, 0.3, 0.1]]];
+  for (let i = 0; i < 4; i++) { const a = i * 1.57 + 0.4; p.push([CAP, T, [Math.cos(a) * 0.55, h * 1.12, Math.sin(a) * 0.55], [0.18, 0.35, 0.18], [Math.sin(a) * 0.7, 0, -Math.cos(a) * 0.7]]); }
+  p.push([S, L, [0, h * 1.32, 0], [2.6, 1.0, 2.4], Z3, [0, h, 0, 0.03, 2, 0]], [S, L, [1.1, h * 1.22, 0.4], [1.7, 0.8, 1.6], Z3, [0, h, 0, 0.03, 2, 1]], [S, L, [-1.0, h * 1.2, -0.3], [1.6, 0.8, 1.5], Z3, [0, h, 0, 0.03, 2, 2]],
+    [S, [0x6aa830, 0xb8e060], [0.2, h * 1.45, 0.2], [1.6, 0.6, 1.4], Z3, [0, h, 0, 0.03, 2, 0]]);
+  return merged(p);
+}
+function rockWall() {                                             // „skalna bariera”: warstwy płaskich głazów
+  const C = [0x6e6a64, 0xb4b0a8], p = [];
+  for (let i = 0; i < 5; i++) p.push([BOX, C, [rand(-0.6, 0.6), 0.4 + i * 0.55, rand(-0.3, 0.3)], [2.4 - i * 0.3, 0.7 + rand(0, 0.4), 1.4 - i * 0.12], [rand(-0.12, 0.12), rand(-0.4, 0.4), rand(-0.15, 0.15)]]);
+  p.push([BOX, C, [1.1, 1.6, 0], [0.6, 3.2, 0.9], [0, 0.3, -0.12]], [S, [0x4e8a24, 0x7ab840], [-0.4, 2.85, 0], [1.2, 0.3, 0.8]]);
+  return merged(p);
+}
+function tuskArch() {                                             // wielkie kły i czaszka przy drodze
+  const p = [];
+  for (const sx of [-1, 1]) for (let i = 0; i < 5; i++) p.push([CAP, BONE, [sx * (0.9 - i * i * 0.05), 0.3 + i * 0.62, 0], [0.34 - i * 0.05, 0.38, 0.34 - i * 0.05], [0, 0, sx * (0.08 - i * 0.24)]]);
+  p.push([S, BONE, [0, 0.45, 0.6], [1.2, 0.8, 1.3]], ...mir(s, DARK, [0.28, 0.55, 1.18], [0.24, 0.2, 0.12]), [S, [0x4e8a24, 0x7ab840], [0, 0.06, 0.2], [2.6, 0.2, 2.0]]);
+  return merged(p);
+}
 function decoSet(b) {
   const G1 = [0x2f7a2c, 0x62b848], G2 = [0x1f5a22, 0x4faa3f];
   if (b === 0) {
@@ -365,7 +497,7 @@ function decoSet(b) {
     const bush = merged([[S, G1, [0, 0.5, 0], [1.5, 1.1, 1.3]], [S, G2, [0.6, 0.4, 0.3], [1.0, 0.8, 0.9]], [S, G1, [-0.5, 0.6, -0.3], [0.9, 0.9, 0.9]], [s, 0xf05a9a, [0.2, 1.0, 0.4], 0.2], [s, 0xffd23a, [-0.5, 0.95, 0.2], 0.16], [s, 0xf05a9a, [0.7, 0.7, 0.5], 0.16]]);
     const rock = merged([[ICO, [0x6a665e, 0x9a968c], [0, 0.5, 0], [1.9, 1.3, 1.6]], [ICO, [0x5a564e, 0x8a867c], [1.0, 0.3, 0.4], 0.8], [S, G1, [-0.1, 1.05, 0], [1.1, 0.3, 0.9]]]);
     const shroom = merged([[CAP, [0xd9cfa8, 0xfff8e2], [0, 0.4, 0], [0.3, 0.4, 0.3]], [S, [0xb81a10, 0xe84a2a], [0, 0.9, 0], [1.2, 0.6, 1.2]], [s, 0xffffff, [0.3, 1.1, 0.2], 0.16], [s, 0xffffff, [-0.26, 1.1, -0.16], 0.14], [s, 0xffffff, [0, 1.19, -0.02], 0.12]]);
-    return { list: [palm, palm, palm, fern, fern, bush, bush, rock, shroom], curb: [0x6a665e, 0x9a968c], patch: 0x4a8a34 };
+    return { list: [palm, palm, baobab(), baobab(), fern, fern, bush, rockWall(), rock, shroom, tuskArch()], curb: [0x6a665e, 0x9a968c], patch: 0x4a8a34 };
   }
   if (b === 1) {
     const C1 = [0x3a7a3a, 0x6aa85a];
@@ -374,7 +506,7 @@ function decoSet(b) {
     const ribs = merged([[CAP, BONE, [0, 0.22, 0], [0.2, 1.4, 0.2], [HP, 0, 0]], ...[-1, -0.5, 0, 0.5, 1].flatMap((z) => mir(CONE, BONE, [0.5, 0.7, z], [0.13, 1.4, 0.13], [0, 0, 0.45])), [S, BONE, [0, 0.45, 1.75], [0.6, 0.5, 0.7]], ...mir(s, DARK, [0.14, 0.52, 2.05], 0.12)]);
     const dry = merged(Array.from({ length: 8 }, (_, i) => { const a = i * 0.8; return [CONE, [0x6e4a22, 0xb8925a], [Math.cos(a) * 0.26, 0.42, Math.sin(a) * 0.26], [0.06, 0.95, 0.06], [Math.sin(a) * 0.7, 0, -Math.cos(a) * 0.7]]; }));
     const rock = merged([[ICO, [0xa8743a, 0xd9a86a], [0, 0.4, 0], [1.6, 1.0, 1.3]], [ICO, [0x9a6a32, 0xc8985a], [0.8, 0.25, 0.3], 0.7]]);
-    return { list: [cactus, cactus, mesa, ribs, dry, dry, rock, rock], curb: [0xa8743a, 0xd9a86a], patch: 0xc8924a };
+    return { list: [cactus, cactus, mesa, ribs, dry, baobab(), rock, rockWall(), tuskArch()], curb: [0xa8743a, 0xd9a86a], patch: 0xc8924a };
   }
   if (b === 2) {
     const pine = merged([[CYL, [0x4a3214, 0x6e4a22], [0, 0.5, 0], [0.3, 1.0, 0.3]], [CONE, [0x1f5a3a, 0xe8f6ff], [0, 1.5, 0], [2.0, 1.6, 2.0]], [CONE, [0x266a44, 0xf2fbff], [0, 2.5, 0], [1.5, 1.4, 1.5]], [CONE, [0x2f7a50, 0xffffff], [0, 3.4, 0], [1.0, 1.3, 1.0]]]);

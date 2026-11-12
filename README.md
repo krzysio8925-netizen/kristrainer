@@ -57,4 +57,4 @@ Preferencje zapisują się w wersji planu (pole `prefs`), więc PDF zawiera te s
 
 ## Prehistoric Rush (gra)
 
-W `public/prehistoric-rush/` leży osobna, samodzielna gra 3D na telefon (pionowy ekran, Three.js, bez budowania i bez płatności). Po publikacji jest pod adresem `…/prehistoric-rush/`; na iPhonie można ją dodać do ekranu początkowego (Udostępnij → Do ekranu początkowego) i grać na pełnym ekranie. Lokalnie: `npx http-server public/prehistoric-rush`.
+W `public/prehistoric-rush/` leży osobna, samodzielna gra 3D na telefon (pionowy ekran, Three.js, bez budowania i bez płatności). Styl graficzny opiera się na koncept-artach: kreskówkowe cieniowanie z czarnym konturem, plemię w skórach lamparta, wrogie plemię (włócznicy rzucający włóczniami, tarczownicy z żółwią skorupą, szaman leczący wrogów) i bossowie: Chomper T-Rex, Grg Olbrzym, Mamut Bojowy i Triceratops. Pociski przelatują przez bramki z bonusami – ładują je i lecą dalej. Po publikacji jest pod adresem `…/prehistoric-rush/`; na iPhonie można ją dodać do ekranu początkowego (Udostępnij → Do ekranu początkowego) i grać na pełnym ekranie. Lokalnie: `npx http-server public/prehistoric-rush`.

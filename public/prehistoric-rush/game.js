@@ -1,6 +1,6 @@
 // Prehistoric Rush — pionowa strzelanka 3D: prowadzisz plemię, rozbijasz bonusy, rozwijasz umiejętności, bijesz bossów.
 import * as THREE from './three.module.min.js';
-import { W, U, charMat, merged, bodyGeo, armGeo, bulletGeo, enemyGeo, petGeo, bossGeo, crateGeo, eggGeo, lavaGeo, gateGeo, rockGeo, buildChunk, buildBackdrop, CHUNK } from './models.js';
+import { W, U, charMat, merged, addOutline, outlineMat, bodyGeo, armGeo, bulletGeo, enemyGeo, petGeo, bossGeo, crateGeo, eggGeo, lavaGeo, meatGeo, gateGeo, rockGeo, buildChunk, buildBackdrop, CHUNK } from './models.js';
 import { A, sfx } from './audio.js';
 
 // ---------- narzędzia ----------
@@ -145,7 +145,7 @@ const sideMat = new THREE.MeshLambertMaterial({ map: sideTex });
 const side = new THREE.Mesh(new THREE.PlaneGeometry(260, 180).rotateX(-Math.PI / 2), sideMat);
 side.position.set(0, -0.04, -75); side.receiveShadow = true; scene.add(side);
 const envMat = charMat(1.4);
-const chunks = [0, 1, 2].map((i) => { const m = new THREE.Mesh(new THREE.BufferGeometry(), envMat); m.position.z = 10 - i * CHUNK; m.castShadow = true; m.frustumCulled = false; scene.add(m); return m; });
+const chunks = [0, 1, 2].map((i) => { const m = new THREE.Mesh(new THREE.BufferGeometry(), envMat); m.position.z = 10 - i * CHUNK; m.castShadow = true; m.frustumCulled = false; addOutline(m, 0.045); scene.add(m); return m; });
 const backdrop = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ vertexColors: true, fog: false }));
 backdrop.position.set(0, -4, -215); backdrop.frustumCulled = false; scene.add(backdrop);
 const BIOMES = [
@@ -165,7 +165,7 @@ function setBiome(i) {
   sun.color.set(b.sun); hemi.color.set(b.hor).lerp(_c.set(0xffffff), 0.5); hemi.groundColor.set(b.ground);
   U.uRim.value.set(b.rim);
   cloudMat.color.set(i === 3 ? 0x6a3a34 : 0xffffff); sunSprite.material.color.set(i === 3 ? 0xff7a40 : 0xfff2c0);
-  for (const c of chunks) { c.geometry.dispose(); c.geometry = buildChunk(i); }
+  for (const c of chunks) { c.geometry.dispose(); c.geometry = c.userData.outline.geometry = buildChunk(i); }
   backdrop.geometry.dispose(); backdrop.geometry = buildBackdrop(i);
   return b;
 }
@@ -273,15 +273,19 @@ const TIERS = [
 const playerMat = charMat(13), enemyMat = charMat(12), bigMat = charMat(5.5);
 const FLASH = new THREE.MeshBasicMaterial({ color: 0xffffff });
 const ENEMY = {
-  raptor: { geo: enemyGeo.raptor, mat: enemyMat, hp: 2, rx: 0.45, rz: 0.75, speed: 3.2, kills: 1, score: 10, xp: 1, home: 0.5, color: 0x4c9a3c, bob: 12 },
-  tiger: { geo: enemyGeo.tiger, mat: enemyMat, hp: 7, rx: 0.55, rz: 0.95, speed: 6.5, kills: 2, score: 30, xp: 3, home: 2.4, color: 0xe08a2e, bob: 15 },
-  mammoth: { geo: enemyGeo.mammoth, mat: bigMat, hp: 42, rx: 1.05, rz: 1.6, speed: 0.4, kills: 5, score: 120, xp: 10, home: 0.3, color: 0x7a4f2e, bob: 5.5, label: true },
-  ptero: { geo: enemyGeo.ptero, mat: enemyMat, hp: 3, rx: 0.75, rz: 0.6, speed: 5, kills: 1, score: 20, xp: 2, home: 0, color: 0x8a5ab0, bob: 0, fly: true },
+  raptor: { geo: enemyGeo.raptor, mat: enemyMat, hp: 3, rx: 0.45, rz: 0.75, speed: 3.9, kills: 1, score: 10, xp: 1, home: 0.7, color: 0xd0581e, bob: 12 },
+  tiger: { geo: enemyGeo.tiger, mat: enemyMat, hp: 9, rx: 0.55, rz: 0.95, speed: 7.4, kills: 2, score: 30, xp: 3, home: 2.8, color: 0xe08a2e, bob: 15 },
+  mammoth: { geo: enemyGeo.mammoth, mat: bigMat, hp: 55, rx: 1.05, rz: 1.6, speed: 0.6, kills: 6, score: 120, xp: 10, home: 0.4, color: 0x7a4f2e, bob: 5.5, label: true, ol: 0.05 },
+  ptero: { geo: enemyGeo.ptero, mat: enemyMat, hp: 4, rx: 0.75, rz: 0.6, speed: 5.6, kills: 1, score: 20, xp: 2, home: 0, color: 0xd86a2a, bob: 0, fly: true },
+  brute: { geo: enemyGeo.brute, mat: enemyMat, hp: 5, rx: 0.5, rz: 0.5, speed: 3.0, kills: 2, score: 25, xp: 2, home: 0.7, color: 0x5a2e1c, bob: 12, thrower: true },
+  shield: { geo: enemyGeo.shield, mat: enemyMat, hp: 16, rx: 0.65, rz: 0.6, speed: 1.9, kills: 2, score: 40, xp: 4, home: 0.5, color: 0x5a7a2a, bob: 10, block: true, label: true },
+  shaman: { geo: enemyGeo.shaman, mat: enemyMat, hp: 9, rx: 0.5, rz: 0.5, speed: 2.0, kills: 1, score: 60, xp: 5, home: 0, color: 0x3aa8ff, bob: 9, healer: true, label: true },
 };
 const BOSSES = [
-  { name: 'T-REX', geo: bossGeo[0], color: 0x5a7a34, rx: 1.5, scale: 1.25, h: 4.2 },
-  { name: 'KRÓL MAMUTÓW', geo: bossGeo[1], color: 0x8a6a4a, rx: 1.9, scale: 2.0, h: 3 },
-  { name: 'TRICERATOPS', geo: bossGeo[2], color: 0xb5652e, rx: 1.8, scale: 1.4, h: 2.6 },
+  { name: 'CHOMPER T-REX', geo: bossGeo[0], color: 0xc8481c, rx: 1.5, scale: 1.25, h: 4.2, minion: 'raptor' },
+  { name: 'GRG OLBRZYM', geo: bossGeo[1], color: 0x5a2e1c, rx: 1.3, scale: 2.7, h: 2.2, minion: 'brute', volley: 3 },
+  { name: 'MAMUT BOJOWY', geo: bossGeo[2], color: 0x8a6a4a, rx: 1.9, scale: 1.9, h: 3.6, minion: 'shield', volley: 5 },
+  { name: 'TRICERATOPS', geo: bossGeo[3], color: 0x6a7a52, rx: 1.8, scale: 1.4, h: 2.6, minion: 'tiger' },
 ];
 const pl = (n, a, b, c) => (n === 1 ? a : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? b : c);
 // umiejętności zdobywane w trakcie biegu
@@ -306,8 +310,8 @@ const G = {
   revived: false, inv: 0, meteorT: 3, boltT: 1, auraT: 0, shotN: 0, afterBoss: false, kills: 0, hitstop: 0,
 };
 const sk = (id) => G.sk[id] || 0;
-const enemies = [], crates = [], gates = [], hazards = [], meteors = [], pets = [];
-const scaleOf = (s) => (s <= 6 ? [1, 3, 8, 18, 36, 66][s - 1] : 66 * Math.pow(1.9, s - 6));
+const enemies = [], crates = [], gates = [], hazards = [], meteors = [], pets = [], spears = [];
+const scaleOf = (s) => (s <= 6 ? [1, 3.2, 9, 21, 42, 80][s - 1] : 80 * Math.pow(2, s - 6));
 const xpNeed = (l) => 6 + l * 5;
 
 // --- plemię gracza ---
@@ -317,6 +321,7 @@ for (let i = 0; i < MAXN; i++) {
   const grp = new THREE.Group();
   const body = new THREE.Mesh(bodyGeo[0], playerMat), arm = new THREE.Mesh(armGeo[0], playerMat);
   body.castShadow = arm.castShadow = true;
+  addOutline(body, 0.035); addOutline(arm, 0.035);
   arm.position.set(0.37, 1.14, 0); arm.rotation.x = 2.4;
   grp.add(body, arm); grp.rotation.y = Math.PI; grp.scale.setScalar(0.8); grp.visible = false;
   const r = i === 0 ? 0 : 0.44 * Math.sqrt(i), a = i * 2.39996;
@@ -328,12 +333,15 @@ const bulletMat = new THREE.MeshLambertMaterial({ vertexColors: true });
 const NB = 260;
 const bulletMesh = new THREE.InstancedMesh(bulletGeo[0], bulletMat, NB);
 bulletMesh.frustumCulled = false; bulletMesh.castShadow = true; scene.add(bulletMesh);
+const bulletOutline = new THREE.InstancedMesh(bulletGeo[0], outlineMat(bulletMat, 0.05), NB);
+bulletOutline.instanceMatrix = bulletMesh.instanceMatrix; bulletOutline.frustumCulled = false; scene.add(bulletOutline);
 const bullets = [];
-for (let i = 0; i < NB; i++) { bullets.push({ on: false, x: 0, y: 0, z: 0, vx: 0, vz: 0, dmg: 0, pierce: 0, crit: false, spin: 0, boom: false, last: null }); bulletMesh.setColorAt(i, _c.set(0xffffff)); }
+for (let i = 0; i < NB; i++) { bullets.push({ on: false, x: 0, y: 0, z: 0, vx: 0, vz: 0, dmg: 0, pierce: 0, crit: false, spin: 0, boom: false, last: null, gate: null }); bulletMesh.setColorAt(i, _c.set(0xffffff)); }
 function setTier(t) {
   G.tier = t;
   const ti = Math.min(t, TIERS.length - 1), T = TIERS[ti];
-  for (const m of members) { m.body.geometry = bodyGeo[ti]; m.arm.geometry = armGeo[ti]; }
+  for (const m of members) { m.body.geometry = m.body.userData.outline.geometry = bodyGeo[ti]; m.arm.geometry = m.arm.userData.outline.geometry = armGeo[ti]; }
+  bulletOutline.geometry = bulletGeo[ti];
   bulletMesh.geometry = bulletGeo[ti]; bulletMat.emissive.set(ti === 5 ? 0xa03a00 : 0x000000);
   $('tier').innerHTML = `${T.name}<small>${T.weapon}${t > 5 ? ' +' + (t - 5) : ''}</small>`;
 }
@@ -399,18 +407,20 @@ function banner(main, sub = '', t = 1.8) {
 // ---------- spawnowanie ----------
 function spawnEnemy(type, x, z, hpMul = 1) {
   const d = ENEMY[type];
-  const mesh = new THREE.Mesh(d.geo, d.mat); mesh.castShadow = true;
-  const e = { type, d, mesh, mat: d.mat, x: clamp(x, -W + d.rx, W - d.rx), z, hp: Math.ceil(d.hp * G.S * hpMul), rx: d.rx, rz: d.rz, speed: d.speed * rand(0.9, 1.1), t: rand(0, 6), flash: 0, punch: 0, x0: x, dead: false };
+  const mesh = new THREE.Mesh(d.geo, d.mat); mesh.castShadow = true; addOutline(mesh, d.ol || 0.035);
+  const e = { type, d, mesh, mat: d.mat, x: clamp(x, -W + d.rx, W - d.rx), z, hp: Math.ceil(d.hp * G.S * hpMul), rx: d.rx, rz: d.rz, speed: d.speed * rand(0.9, 1.1), t: rand(0, 6), flash: 0, punch: 0, x0: x, dead: false, throwT: rand(0, 1.4), thrown: false, healT: rand(0.8, 1.8) };
   e.maxhp = e.hp;
   mesh.position.set(e.x, 0, z); scene.add(mesh); enemies.push(e);
   return e;
 }
 function spawnWave(prog) {
-  const s = G.stage, budget = 2 + s * 1.6 + prog * (2 + s);
+  const s = G.stage, budget = (3 + s * 2 + prog * (3 + s * 1.2)) * (s === 1 && prog < 0.3 ? 0.6 : 1);
   const opts = ['line', 'swarm', 'column'];
-  if (s >= 2 || prog > 0.6) opts.push('pack');
-  if (s >= 2) opts.push('pack', 'ptero', 'mammoth');
-  if (s >= 3) opts.push('mammoth', 'mixed');
+  if (prog > 0.25 || s >= 2) opts.push('tribe');
+  if (s >= 2 || prog > 0.5) opts.push('pack', 'ptero');
+  if (s >= 2) opts.push('pack', 'mammoth', 'shieldwall', 'tribe');
+  if (s >= 3) opts.push('mammoth', 'mixed', 'shaman', 'shieldwall');
+  if (s === 1 && prog > 0.6) opts.push('shaman');
   const kind = pick(opts), z = SPAWN_Z;
   if (s === 1 && prog < 0.1) { spawnEnemy('raptor', -1.2, z); spawnEnemy('raptor', 1.4, z - 3); return; }
   if (kind === 'line') {
@@ -423,6 +433,17 @@ function spawnWave(prog) {
   } else if (kind === 'column') {
     const x = rand(-W + 1, W - 1), k = clamp(Math.round(3 + budget / 2), 3, 9);
     for (let i = 0; i < k; i++) spawnEnemy('raptor', x + Math.sin(i) * 0.5, z - i * 1.7);
+  } else if (kind === 'tribe') {                              // wrogie plemię: włócznicy rzucają we mnie włóczniami
+    const k = clamp(Math.round(budget / 3), 2, 7);
+    for (let i = 0; i < k; i++) spawnEnemy('brute', -W + 0.7 + ((i + 0.5) / k) * (W * 2 - 1.4), z - (i % 2) * 2.5);
+  } else if (kind === 'shieldwall') {                         // tarczownicy z przodu, włócznicy za nimi
+    const k = clamp(Math.round(budget / 6), 2, 4);
+    for (let i = 0; i < k; i++) spawnEnemy('shield', -W + 1 + (i / Math.max(1, k - 1)) * (W * 2 - 2), z);
+    for (let i = 0; i < k; i++) spawnEnemy('brute', rand(-W + 0.7, W - 0.7), z - 3 - i * 1.5);
+  } else if (kind === 'shaman') {                             // szaman leczy wszystkich wokół – zabij go pierwszego
+    spawnEnemy('shaman', rand(-1.5, 1.5), z - 4);
+    if (s >= 2) spawnEnemy('shield', rand(-1, 1), z);
+    for (let i = 0; i < Math.min(8, Math.round(budget / 2)); i++) spawnEnemy(i % 3 ? 'raptor' : 'brute', rand(-W + 0.6, W - 0.6), z - rand(0, 8));
   } else if (kind === 'pack') {
     const k = clamp(Math.round(budget / 4), 1, 5);
     for (let i = 0; i < k; i++) spawnEnemy('tiger', rand(-W + 0.8, W - 0.8), z - i * 2.5);
@@ -450,18 +471,18 @@ function spawnCrates(prog) {
       else { kind = 'lava'; geo = lavaGeo; reward = { t: 'boom' }; text = 'WYBUCH'; hpMul = 0.6; }
     } else {
       const r = Math.random();
-      if (r < 0.45) { const v = randi(2, 4); reward = { t: 'people', v }; text = `+${v} LUDZI`; }
+      if (r < 0.45) { const v = randi(2, 4); reward = { t: 'people', v }; text = `+${v} LUDZI`; kind = 'meat'; geo = meatGeo; }
       else if (r < 0.73) { reward = { t: 'rate', v: 0.05 }; text = 'TEMPO +5%'; }
       else { reward = { t: 'dmg', v: 0.07 }; text = 'SIŁA +7%'; }
     }
-    const mesh = new THREE.Mesh(geo, enemyMat); mesh.castShadow = true;
-    const hp = Math.ceil(9 * G.S * (1 + prog * 0.8) * hpMul);
+    const mesh = new THREE.Mesh(geo, enemyMat); mesh.castShadow = true; addOutline(mesh, 0.04);
+    const hp = Math.ceil(12 * G.S * (1 + prog) * hpMul);
     const c = { kind, mesh, x, z: SPAWN_Z, hp, reward, text, rx: 0.8, rz: 0.8, punch: 0, flash: 0, t: rand(0, 6) };
     mesh.position.set(x, 0, c.z); mesh.rotation.y = rand(-0.3, 0.3); scene.add(mesh); crates.push(c);
   });
   if (special >= 0 && crates[crates.length - k + special].kind === 'lava') {
     const lx = xs[special];
-    for (let i = 0; i < 6 + G.stage; i++) spawnEnemy('raptor', clamp(lx + rand(-2.2, 2.2), -W + 0.6, W - 0.6), SPAWN_Z + rand(2, 7));
+    for (let i = 0; i < 8 + G.stage * 2; i++) spawnEnemy('raptor', clamp(lx + rand(-2.2, 2.2), -W + 0.6, W - 0.6), SPAWN_Z + rand(2, 7));
   }
 }
 function gateText(g) {
@@ -476,8 +497,8 @@ function spawnGates(prog) {
     const r = Math.random();
     if (G.stage === 1 && prog === 0) return { kind: 'add', v: good ? 3 : 2 };
     if (good && G.n < 10) return { kind: 'add', v: randi(2, 4) };
-    if (!good && r < 0.55) return { kind: 'add', v: -randi(2, 3 + Math.min(G.stage, 5)) };
-    if (r < 0.12 && G.n <= 8) return { kind: 'mult', v: 2 };
+    if (!good && r < 0.7) return { kind: 'add', v: -randi(3, 4 + Math.min(G.stage * 2, 10)) };
+    if (r < 0.1 && G.n <= 6) return { kind: 'mult', v: 2 };
     if (r < 0.62) return { kind: 'add', v: randi(2, 4) };
     return { kind: Math.random() < 0.5 ? 'rate' : 'dmg', v: randi(2, 5) };
   };
@@ -488,9 +509,9 @@ function spawnGates(prog) {
     const mat = new THREE.MeshBasicMaterial({ map: panelTex, transparent: true, opacity: 0.62, side: THREE.DoubleSide, depthWrite: false });
     const mesh = new THREE.Group();
     const panel = new THREE.Mesh(gatePanelGeo, mat); panel.position.y = 1.35;
-    const frame = new THREE.Mesh(gateGeo, enemyMat); frame.castShadow = true;
+    const frame = new THREE.Mesh(gateGeo, enemyMat); frame.castShadow = true; addOutline(frame, 0.04);
     mesh.add(panel, frame);
-    const g = { ...d, mesh, mat, x, x0: x - W / 2, x1: x + W / 2, z: SPAWN_Z, acc: 0, step: Math.max(4 * G.S * (1 + prog), dpsNow() * 0.3), max: d.kind === 'add' ? (d.v < 0 ? 2 : d.v + 4) : d.v + 6, pair, used: false, punch: 0 };
+    const g = { ...d, mesh, mat, x, x0: x - W / 2, x1: x + W / 2, z: SPAWN_Z, acc: 0, step: Math.max(6 * G.S * (1 + prog), dpsNow() * 0.45), max: d.kind === 'add' ? (d.v < 0 ? 1 : d.v + 3) : d.v + 5, pair, used: false, punch: 0 };
     mesh.position.set(x, 0, g.z); scene.add(mesh); gates.push(g);
     paintGate(g);
   });
@@ -501,12 +522,12 @@ function paintGate(g) { g.mat.color.set(g.kind === 'add' && g.v < 0 ? 0xff3a2a :
 function spawnBoss() {
   const idx = (G.stage - 1) % BOSSES.length, B = BOSSES[idx];
   const mat = charMat(5.5);
-  const mesh = new THREE.Mesh(B.geo, mat); mesh.castShadow = true;
-  const hp = Math.round(480 * G.S);
+  const mesh = new THREE.Mesh(B.geo, mat); mesh.castShadow = true; addOutline(mesh, 0.1 / B.scale);
+  const hp = Math.round(650 * G.S);
   const b = { isBoss: true, B, mesh, mat, x: 0, z: -44, hp, maxhp: hp, rx: B.rx, rz: 1.9, state: 'intro', t: 0, atk: 1.2, flash: 0, punch: 0, dead: false, atkI: 0, tx: 0, sc: B.scale, step: 0 };
   mesh.scale.setScalar(b.sc); mesh.position.set(0, 0, b.z); scene.add(mesh);
   enemies.push(b); G.boss = b;
-  $('bossname').textContent = B.name + (G.stage > 3 ? ' ' + 'I'.repeat(Math.min(3, Math.floor((G.stage - 1) / 3)) + 1) : '');
+  $('bossname').textContent = B.name + (G.stage > BOSSES.length ? ' ' + 'I'.repeat(Math.min(3, Math.floor((G.stage - 1) / BOSSES.length)) + 1) : '');
   $('bosswrap').hidden = false; $('progwrap').hidden = true;
   G.mode = 'bossintro'; G.modeT = 2.7; clearBullets();
   $('game').classList.add('cine'); $('bossplate').innerHTML = `<small>BOSS · ETAP ${G.stage}</small>${$('bossname').textContent}`; $('bossplate').hidden = false;
@@ -514,14 +535,15 @@ function spawnBoss() {
 }
 function buildStage() {
   const s = G.stage;
-  G.S = scaleOf(s); G.speed = Math.min(14, 9.5 + s * 0.5);
+  G.S = scaleOf(s); G.speed = Math.min(15, 10 + s * 0.55);
   const ev = []; let d = 12;
-  const segs = 14 + Math.min(s, 6) * 2;
+  const segs = 16 + Math.min(s, 6) * 2;
   for (let i = 0; i < segs; i++) {
     const prog = i / segs;
     ev.push({ d, kind: i % 4 === 0 ? 'gates' : i % 4 === 2 ? 'crates' : 'wave', prog });
     if (i % 4 === 2 && i > 2) ev.push({ d: d + 9, kind: 'wave', prog });
-    d += 19;
+    if (i % 4 === 0 && i > 0) ev.push({ d: d + 10, kind: 'wave', prog });
+    d += 18;
   }
   d += 26; ev.push({ d, kind: 'boss' });
   G.events = ev; G.evi = 0; G.dist = 0; G.bossDist = d; G.boss = null;
@@ -540,7 +562,7 @@ function fireBullet(m, T, dmg, ang) {
     b.on = true; b.x = m.x + 0.25; b.y = 1.3; b.z = m.z - 0.5;
     b.vx = Math.sin(ang) * T.speed; b.vz = -Math.cos(ang) * T.speed;
     b.crit = Math.random() < G.crit; b.dmg = dmg * (b.crit ? 3 : 1);
-    b.pierce = T.pierce + G.pierce; b.spin = rand(0, 6); b.last = null;
+    b.pierce = T.pierce + G.pierce; b.spin = rand(0, 6); b.last = null; b.gate = null;
     const bl = sk('boom'); b.boom = bl > 0 && (++G.shotN % (7 - bl) === 0);
     bulletMesh.setColorAt(i, _c.set(b.boom ? 0xff7a2a : b.crit ? 0xfff0a0 : 0xffffff));
     return;
@@ -587,7 +609,7 @@ function killEnemy(e) {
 }
 function breakCrate(c) {
   scene.remove(c.mesh); c.dead = true;
-  const col = c.kind === 'egg' ? 0xf3ecd2 : c.kind === 'lava' ? 0x3a2f2c : 0xa8743a;
+  const col = c.kind === 'egg' ? 0xf3ecd2 : c.kind === 'lava' ? 0x3a2f2c : c.kind === 'meat' ? 0xd8443a : 0xa8743a;
   burst(c.x, 0.8, c.z, col, 16, 7, 0.3); sparks(c.x, 1, c.z, 0xffe6a0, 10, 7, 0.5); flashAt(c.x, 1, c.z, 0xffe6a0, 5, 0.2); ring(c.x, c.z, 0.4, 3, 0.35, 0xffe6a0);
   const r = c.reward; addScore(25); addXp(2);
   if (r.t === 'people') addPeople(r.v);
@@ -612,11 +634,12 @@ function updateBullets(dt) {
     b.x += b.vx * dt; b.z += b.vz * dt; b.spin += dt * 14;
     let dead = b.z < -RANGE || Math.abs(b.x) > W + 0.5;
     const pad = (pz - b.z) * 0.5 + 0.1;
-    if (!dead) for (const g of gates) {                         // bramki łapią pociski i rosną
-      if (g.used || g.pair.done || g.kind === 'mult' || b.x < g.x0 || b.x > g.x1 || b.z > g.z + pad || b.z < g.z - pad - 0.4) continue;
-      g.acc += b.dmg; g.punch = 1;
-      while (g.acc >= g.step && g.v < g.max) { g.acc -= g.step; g.step *= 1.25; g.v += 1; paintGate(g); sparks(b.x, 1.4, g.z + 0.2, 0xffffff, 3, 3, 0.4); }
-      dead = true; break;
+    if (!dead) for (const g of gates) {                         // pocisk ładuje bramkę i leci dalej (raz na bramkę)
+      if (g === b.gate || g.used || g.pair.done || g.kind === 'mult' || b.x < g.x0 || b.x > g.x1 || b.z > g.z + pad || b.z < g.z - pad - 0.4) continue;
+      g.acc += b.dmg; g.punch = 1; b.gate = g;
+      glow.emit(b.x, b.y, g.z, 0, 0, 0, 0.12, 0.9, 0.2, 0xbfe8ff, 0.6);
+      while (g.acc >= g.step && g.v < g.max) { g.acc -= g.step; g.step *= 1.3; g.v += 1; paintGate(g); sparks(b.x, 1.4, g.z + 0.2, 0xffffff, 3, 3, 0.4); }
+      break;
     }
     if (!dead) for (const c of crates) {
       if (c.dead || Math.abs(b.x - c.x) > c.rx || Math.abs(b.z - c.z) > c.rz + pad) continue;
@@ -630,7 +653,7 @@ function updateBullets(dt) {
       glow.emit(b.x, b.y, b.z + 0.3, 0, 0, 0, 0.1, 1.1, 0.2, 0xffffff, 0.7);
       if (T.splash) { sparks(b.x, 1, b.z, 0xff7a1a, 3, 3, 0.5); splash(e.x, e.z, T.splash, b.dmg * 0.5, e); }
       if (b.boom) { explode(b.x, 1, b.z, 0.55); splash(e.x, e.z, 2.2, b.dmg * 0.7, e); sfx.hit(); }
-      if (b.pierce > 0 && !e.isBoss) { b.pierce--; b.last = e; } else dead = true;
+      if (b.pierce > 0 && !e.isBoss && !e.d.block) { b.pierce--; b.last = e; } else dead = true;
       break;
     }
     if (dead) b.on = false;
@@ -657,7 +680,7 @@ auraRing.visible = false; scene.add(auraRing);
 function syncPets() {
   const l = sk('pet'), want = l === 0 ? 0 : l < 3 ? 1 : l < 5 ? 2 : 3;
   while (pets.length < want) {
-    const mesh = new THREE.Mesh(petGeo, playerMat); mesh.castShadow = true; mesh.rotation.y = Math.PI; scene.add(mesh);
+    const mesh = new THREE.Mesh(petGeo, playerMat); mesh.castShadow = true; mesh.rotation.y = Math.PI; addOutline(mesh, 0.035); scene.add(mesh);
     const i = pets.length;
     pets.push({ mesh, side: [1, -1, 0][i], x: 0, z: 1, state: 'follow', t: 1 + i * 1.1, hit: new Set(), tx: 0 });
     flashAt(G.px, 1, 0, 0x8fd0ff, 5, 0.4);
@@ -761,6 +784,31 @@ function updateHazards(dt) {
     }
   }
 }
+// --- włócznie wrogów: lecą tam, gdzie plemię było w chwili rzutu – zrób unik ---
+const spearMat = charMat(0), spearGeo = bulletGeo[2];
+function throwSpear(x, z, tx, speed = 17, y = 1.6) {
+  const mesh = new THREE.Mesh(spearGeo, spearMat); mesh.scale.setScalar(1.25); addOutline(mesh, 0.04);
+  const sp = G.speed * (G.boss ? 0.45 : 1) + speed, tt = Math.max(0.6, -z / sp);
+  const s = { mesh, x, z, y, y0: y, z0: Math.min(-1, z), vx: (tx - x) / tt, sp, hit: false };
+  mesh.position.set(x, y, z); scene.add(mesh); spears.push(s);
+  flashAt(x, y, z, 0xff5a3a, 2, 0.2);
+}
+function updateSpears(dt) {
+  const R = squadR();
+  for (let i = spears.length - 1; i >= 0; i--) {
+    const s = spears[i];
+    s.x += s.vx * dt; s.z += s.sp * dt; s.y = 1.0 + (s.y0 - 1.0) * clamp(s.z / s.z0, 0, 1);
+    s.mesh.position.set(s.x, s.y, s.z); s.mesh.rotation.set(0, Math.PI + Math.atan2(s.vx, s.sp), 0);
+    if (Math.random() < 0.6) glow.emit(s.x, s.y, s.z - 0.6, 0, 0, -2, 0.25, 0.9, 0, 0xff4a2a, 0.8);
+    if (!s.hit && s.z > -0.6 && s.z < R + 0.6) {
+      let k = 0; const n = Math.min(G.n, MAXN);
+      for (let j = 0; j < n; j++) if (Math.abs(members[j].x - s.x) < 0.55 && Math.abs(members[j].z - s.z) < 0.9) k++;
+      if (k) { s.hit = true; sparks(s.x, 1, s.z, 0xff5a3a, 8, 5, 0.5); loseMembers(Math.min(k, 1 + Math.floor(G.stage / 3))); scene.remove(s.mesh); spears.splice(i, 1); continue; }
+    }
+    if (s.z > 9) { scene.remove(s.mesh); spears.splice(i, 1); }
+  }
+}
+function clearSpears() { for (const s of spears) scene.remove(s.mesh); spears.length = 0; }
 function clearHazards() { for (const h of hazards) { scene.remove(h.ring); if (h.rock) scene.remove(h.rock); } hazards.length = 0; }
 function bossPose(b, moving) {
   b.mesh.position.set(b.x, Math.abs(Math.sin(b.t * 2.75)) * 0.22 * (moving ? 1 : 0.4), b.z);
@@ -780,15 +828,16 @@ function updateBoss(b, dt) {
     if (b.atk <= 0) {
       const a = b.atkI++ % 4;
       if (a === 0 || a === 2) {
-        const delay = Math.max(0.75, 1.25 - s * 0.05), k = 1 + (s >= 2 ? 1 : 0) + (s >= 4 ? 1 : 0);
+        const delay = Math.max(0.7, 1.15 - s * 0.05), k = 2 + (s >= 3 ? 1 : 0) + (s >= 5 ? 1 : 0);
         hazard('rock', G.px, delay, b);
         for (let i = 1; i < k; i++) hazard('rock', clamp(G.px + (i % 2 ? 1 : -1) * rand(2.2, 3.4), -W + 1, W - 1), delay + i * 0.25, b);
         b.punch = 1; sfx.bad();
-        b.atk = Math.max(1.3, 2.5 - s * 0.12);
+        b.atk = Math.max(1.1, 2.2 - s * 0.12);
       } else if (a === 1) {
-        const k = Math.min(9, 3 + s);
-        for (let i = 0; i < k; i++) spawnEnemy(s >= 4 && i % 3 === 0 ? 'tiger' : 'raptor', rand(-W + 0.6, W - 0.6), -30 - rand(0, 8), 0.7);
-        sfx.roar(); b.punch = 1; b.atk = Math.max(1.6, 2.8 - s * 0.12); ring(b.x, b.z, 1, 9, 0.5, 0xff5a3a);
+        const k = Math.min(10, 4 + s), mn = b.B.minion;
+        for (let i = 0; i < k; i++) spawnEnemy(mn !== 'raptor' && i % 3 ? 'raptor' : mn, rand(-W + 0.6, W - 0.6), -30 - rand(0, 8), 0.7);
+        if (b.B.volley) for (let i = 0; i < b.B.volley + Math.min(s, 4); i++) setTimeout(() => { if (G.boss === b && !b.dead && G.mode === 'play') throwSpear(b.x, b.z + 1.5, clamp(G.px + rand(-2.6, 2.6), -W + 0.4, W - 0.4), 15, b.B.h * b.sc * 0.8); }, i * 220);
+        sfx.roar(); b.punch = 1; b.atk = Math.max(1.4, 2.5 - s * 0.12); ring(b.x, b.z, 1, 9, 0.5, 0xff5a3a);
       } else {
         b.state = 'tele'; b.st = Math.max(0.7, 1.15 - s * 0.05); b.tx = clamp(G.px, -W + 1.4, W - 1.4);
         hazard('lane', b.tx, b.st, b); sfx.roar();
@@ -816,7 +865,7 @@ function updateBoss(b, dt) {
 function bossDown(b) {
   b.dead = true; G.mode = 'bossdead'; G.modeT = 2.2; G.ts = 0.3;
   G.score += 500 * G.stage; G.shake = 0.9; sfx.boom(); sfx.win(); addXp(12);
-  clearHazards();
+  clearHazards(); clearSpears();
   for (const e of enemies) if (!e.isBoss && !e.dead) killEnemy(e);
   banner('POKONANY!', '+' + 500 * G.stage + ' pkt', 2);
   A.music('none');
@@ -845,6 +894,19 @@ function updateWorld(dt) {
     if (e.hp <= 0) { killEnemy(e); enemies.splice(i, 1); continue; }
     e.t += dt;
     e.z += (sp + e.speed) * dt;
+    if (e.d.thrower && !e.thrown && e.z > -30 && e.z < -13 && G.mode === 'play') {
+      e.throwT -= dt;
+      if (e.throwT <= 0) { e.thrown = true; e.punch = 1; throwSpear(e.x + 0.4, e.z + 0.6, G.px + rand(-0.4, 0.4)); }
+    }
+    if (e.d.healer && e.z > -50) {
+      e.healT -= dt;
+      if (e.healT <= 0) {
+        e.healT = 2.2; let any = false;
+        for (const o of enemies) if (o !== e && !o.dead && !o.isBoss && o.hp < o.maxhp && Math.hypot(o.x - e.x, o.z - e.z) < 5) { o.hp = Math.min(o.maxhp, o.hp + o.maxhp * 0.35); any = true; glow.emit(o.x, 1.4, o.z, 0, 2, 0, 0.5, 1.6, 0, 0x5ac8ff, 0.9); }
+        if (any) { ring(e.x, e.z, 0.5, 5, 0.5, 0x5ac8ff); sparks(e.x, 2.6, e.z, 0x8fd8ff, 6, 4, 0.5); }
+      }
+      if (Math.random() < 0.3) glow.emit(e.x + 0.5, 2.7, e.z, 0, 0.6, 0, 0.4, 0.9, 0, 0x5ac8ff, 0.9);
+    }
     if (e.d.fly) e.x = clamp(e.x0 + Math.sin(e.t * 1.6) * (W - 1), -W + 0.7, W - 0.7);
     else if (e.z > -32 && e.z < -1) e.x += clamp(G.px - e.x, -e.d.home * dt, e.d.home * dt);
     const m = e.mesh;
@@ -876,7 +938,7 @@ function updateWorld(dt) {
     if (g.pair.done) g.mat.opacity *= 0.85; else g.mat.opacity = 0.55 + Math.sin(G.time * 4 + g.x) * 0.1;
     if (g.z > 9) { scene.remove(g.mesh); g.mat.dispose(); gates.splice(i, 1); }
   }
-  updateHazards(dt);
+  updateHazards(dt); updateSpears(dt);
 }
 function applyGate(g) {
   const col = g.kind === 'add' && g.v < 0 ? 0xff3a2a : 0x8fd0ff;
@@ -942,7 +1004,7 @@ function updateHud() {
   if (G.mode === 'play' || G.mode === 'bossdead') {
     for (const g of gates) if (!g.pair.done) { const [a, b] = gateText(g); label(g.x, 1.5, g.z, a, b, g.kind === 'add' && g.v < 0 ? 'neg' : ''); }
     for (const c of crates) if (!c.dead) label(c.x, 2.5, c.z, Math.ceil(c.hp), c.text, '');
-    for (const e of enemies) if (e.d && e.d.label && !e.dead) label(e.x, 3.7, e.z, Math.ceil(e.hp), '', 'neg');
+    for (const e of enemies) if (e.d && e.d.label && !e.dead) label(e.x, e.type === 'mammoth' ? 3.7 : 2.9, e.z, Math.ceil(e.hp), e.d.healer ? 'SZAMAN' : '', 'neg');
   }
   for (let i = labelN; i < labelEls.length; i++) if (!labelEls[i].el.hidden) labelEls[i].el.hidden = true;
 }
@@ -954,7 +1016,7 @@ function clearWorld() {
   for (const c of crates) scene.remove(c.mesh); crates.length = 0;
   for (const g of gates) scene.remove(g.mesh); gates.length = 0;
   for (const m of meteors) scene.remove(m.mesh); meteors.length = 0;
-  clearHazards(); clearBullets();
+  clearHazards(); clearBullets(); clearSpears();
   $('game').classList.remove('cine'); show('bossplate', false);
 }
 function flash() { const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
@@ -1104,7 +1166,7 @@ function adaptQuality(raw) {
   if (frameN < 90) return;
   const avg = accT / frameN; frameN = 0; accT = 0;
   if (avg > 0.024 && document.visibilityState === 'visible') slowN++; else slowN = 0;
-  if (slowN >= 2 && quality < 2) { quality++; slowN = 0; if (quality === 2) { sun.shadow.mapSize.set(1024, 1024); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } } resize(); }
+  if (slowN >= 2 && quality < 2) { quality++; slowN = 0; if (quality === 2) { for (const c of chunks) c.userData.outline.visible = false; sun.shadow.mapSize.set(1024, 1024); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } } resize(); }
 }
 function frame(now) {
   requestAnimationFrame(frame);
@@ -1169,5 +1231,5 @@ function frame(now) {
 }
 soundUi(); toMenu();
 members[0].grp.visible = true;
-window.__pr = { G, enemies, crates, gates, hazards, newRun, gain, meta, renderMeta, renderer, setBiome, A, sfx };
+window.__pr = { G, enemies, crates, gates, hazards, spears, newRun, gain, meta, renderMeta, renderer, setBiome, A, sfx, spawnEnemy, spawnBoss, spawnGates, spawnCrates, spawnWave, buildStage, setTier, addPeople };
 requestAnimationFrame(frame);
