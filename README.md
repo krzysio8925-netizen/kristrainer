@@ -60,3 +60,10 @@ Preferencje zapisują się w wersji planu (pole `prefs`), więc PDF zawiera te s
 W `public/prehistoric-rush/` leży osobna, samodzielna gra 2D na telefon (pionowy ekran, płótno Canvas, bez bibliotek, bez budowania i bez płatności). Po publikacji jest pod adresem `…/prehistoric-rush/`; na iPhonie można ją dodać do ekranu początkowego (Udostępnij → Do ekranu początkowego) i grać na pełnym ekranie. Lokalnie: `npx http-server public/prehistoric-rush`.
 
 Grafiki postaci, bossów i otoczenia (`img/*.webp`) pochodzą z koncept-artów i z obrazów wygenerowanych w ich stylu (Artificial Studio, Seedream 4.0), z wyciętym tłem. `sprites.js` wczytuje pliki, a `game.js` rysuje świat na płótnie 2D z perspektywą drogi (droga z malowanej tekstury, wiersz po wierszu) i dodaje ruch: podskoki, kołysanie, błyski trafień. Bossowie: Chomper T-Rex, Grg Olbrzym, Mamut Bojowy i Pterodaktyl Bombowiec. Pociski przelatują przez bramki z bonusami – ładują je i lecą dalej.
+
+## Astra Lancer (gra)
+
+W `public/astra-lancer/` leży druga samodzielna gra na telefon: pionowa strzelanka kosmiczna w stylu anime-mecha (formacje wrogów, nurkowania, bossowie co 5 fal), z trzema poziomami trudności, hangarem (4 statki do kupienia, ulepszenia), poziomem pilota i drzewkiem umiejętności. Canvas 2D, grafika i dźwięk generowane w kodzie, bez bibliotek i bez płatności. Po publikacji: `…/astra-lancer/` (na iPhonie: Udostępnij → Do ekranu początkowego). Lokalnie: `npx http-server public` i `/astra-lancer/`.
+
+Projekt gry, opis mechanik i instrukcja przeniesienia na iOS (Capacitor / SpriteKit): `docs/astra-lancer.md`. Testy rozwoju: `scripts/astra-lancer.test.mjs` (uruchamiane w `npm test`).
+

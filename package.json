@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/copy-vendor.mjs && vite",
     "build": "node scripts/copy-vendor.mjs && tsc -b && vite build",
-    "test": "node --experimental-strip-types src/engine/silnik.test.ts",
+    "test": "node --experimental-strip-types src/engine/silnik.test.ts && node scripts/astra-lancer.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Astra Lancer">
+<meta name="theme-color" content="#0b0624">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+</head>
+<body>
+<!--PAGE-->
+<title>Astra Lancer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Exo+2:wght@500;600;700;800&display=swap">
+<style>
+/* Układ: jedna pionowa kolumna gry (płótno 2D na pełny ekran telefonu, na komputerze wyśrodkowana),
+   nad nią warstwy HTML: HUD, menu, hangar, umiejętności, pauza, wynik – kanciaste neonowe panele w stylu anime-UI. */
+:root{
+  color-scheme: dark;
+  --bg:#0b0624; --bg-2:#1a0b3a; --ink:#140b2e; --panel:rgba(22,12,52,.86); --panel-2:rgba(40,22,86,.9);
+  --text:#f4f0ff; --muted:#b6a8d8; --pink:#ff3d8b; --pink-2:#ff7ad9; --cyan:#2fd8ff; --mint:#3cffd0; --gold:#ffcf3d; --red:#ff3d5e; --violet:#7b3cff;
+  --display:'Chakra Petch','Arial Narrow',system-ui,sans-serif;
+  --body:'Exo 2',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
+  --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
+  --cut:12px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{background:radial-gradient(ellipse at 50% 120%,#3a0b4a,var(--bg) 60%);color:var(--text);font-family:var(--body);font-weight:600;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+#game{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:min(100vw,calc(100dvh * .62));overflow:hidden;background:var(--bg);
+  box-shadow:0 0 0 1px rgba(47,216,255,.15),0 0 80px rgba(123,60,255,.35)}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.ic{width:1em;height:1em;fill:currentColor;flex:none}
+.num{font-variant-numeric:tabular-nums}
+
+/* HUD */
+#hud{position:absolute;inset:0;pointer-events:none}
+#hudTop{position:absolute;left:0;right:0;top:0;padding:calc(var(--st) + 10px) var(--gr) 22px var(--gl);display:flex;align-items:flex-start;gap:10px;
+  background:linear-gradient(rgba(11,6,36,.75),rgba(11,6,36,0))}
+#hWave{font-family:var(--display);font-size:12px;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase}
+#hScore{font-family:var(--display);font-style:italic;font-weight:700;font-size:28px;line-height:1;text-shadow:0 2px 0 var(--ink),0 0 12px rgba(255,61,139,.6)}
+#hCred{margin-left:auto;display:flex;align-items:center;gap:5px;font-family:var(--display);font-size:18px;color:var(--mint);padding-top:6px}
+.ib{pointer-events:auto;width:44px;height:44px;display:grid;place-items:center;font-size:20px;background:var(--panel);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);box-shadow:inset 0 0 0 1px rgba(47,216,255,.5)}
+.ib:active{transform:scale(.94)}
+#bossBar{position:absolute;left:var(--gl);right:var(--gr);top:calc(var(--st) + 66px);text-align:center}
+#bossBar b{font-family:var(--display);font-style:italic;font-size:13px;letter-spacing:.18em;color:var(--pink-2);text-shadow:0 1px 0 var(--ink)}
+.bar{height:10px;background:rgba(20,11,46,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);transform:skewX(-20deg);margin-top:4px;overflow:hidden}
+.bar>i{display:block;height:100%;width:100%;transform-origin:left;transition:transform .15s;background:linear-gradient(90deg,var(--pink),var(--gold))}
+#hudBot{position:absolute;left:0;right:0;bottom:0;padding:24px var(--gr) calc(var(--sb) + 14px) var(--gl);display:flex;align-items:flex-end;gap:10px;
+  background:linear-gradient(rgba(11,6,36,0),rgba(11,6,36,.7))}
+#hull{display:flex;gap:4px}
+#hull i{width:16px;height:12px;transform:skewX(-20deg);background:var(--mint);box-shadow:0 0 8px rgba(60,255,208,.6)}
+#hull i.off{background:rgba(255,255,255,.12);box-shadow:none}
+#hull i.sh{background:var(--cyan)}
+#hInfo{display:flex;gap:12px;margin-top:6px;font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+#hInfo b{color:var(--text);font-family:var(--display)}
+#spBtn{pointer-events:auto;margin-left:auto;width:78px;height:78px;border-radius:50%;position:relative;display:grid;place-items:center;
+  background:conic-gradient(var(--pink) calc(var(--ch,0) * 1turn),rgba(255,255,255,.12) 0);transition:filter .2s}
+#spBtn::before{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--panel)}
+#spBtn span{position:relative;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.06em;text-align:center;line-height:1.1;color:var(--muted);max-width:58px}
+#spBtn .ic{position:relative;font-size:24px;display:block;margin:0 auto 2px;color:var(--muted)}
+#spBtn.ready{filter:drop-shadow(0 0 12px var(--pink));animation:pulse .8s infinite alternate}
+#spBtn.ready span,#spBtn.ready .ic{color:#fff}
+@keyframes pulse{to{transform:scale(1.06)}}
+#hurt{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 90px rgba(255,30,80,.85);opacity:0;transition:opacity .4s}
+#hurt.on{opacity:1;transition:none}
+
+/* Ekrany */
+.screen{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;
+  padding:calc(var(--st) + 16px) var(--gr) calc(var(--sb) + 20px) var(--gl);display:flex;flex-direction:column;gap:14px;
+  background:linear-gradient(rgba(11,6,36,.35),rgba(11,6,36,.8))}
+.screen.center{justify-content:center}
+.panel{background:var(--panel);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));
+  box-shadow:inset 0 0 0 1px rgba(47,216,255,.35);padding:14px;position:relative}
+.panel::after{content:"";position:absolute;right:0;top:0;width:34px;height:3px;background:var(--pink)}
+.head{display:flex;align-items:center;gap:10px}
+.head h2{margin:0;font-family:var(--display);font-style:italic;font-size:26px;letter-spacing:.04em;text-transform:uppercase;text-shadow:0 0 14px rgba(47,216,255,.5)}
+.head .wallet{margin-left:auto}
+.wallet{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:18px;color:var(--mint);background:var(--panel);padding:6px 12px;
+  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;font-family:var(--display);font-style:italic;font-weight:700;
+  font-size:19px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:linear-gradient(100deg,var(--pink),var(--violet));
+  clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%);text-shadow:0 2px 0 rgba(20,11,46,.5);transition:transform .1s,filter .2s}
+.btn:active{transform:scale(.97)}
+.btn.alt{background:linear-gradient(100deg,#2b1a66,#3d2690);box-shadow:inset 0 0 0 1px rgba(47,216,255,.5)}
+.btn.cy{background:linear-gradient(100deg,#11a7d6,#2fd8ff);color:var(--ink);text-shadow:none}
+.btn.small{min-height:40px;font-size:15px;padding:0 14px}
+.btn[disabled]{filter:grayscale(1) brightness(.6);cursor:default}
+.back{width:44px;height:44px;flex:none}
+
+/* Menu główne */
+#title{justify-content:space-between;background:linear-gradient(rgba(11,6,36,0) 30%,rgba(11,6,36,.85))}
+.logo{text-align:center;margin-top:10px}
+.logo h1{margin:0;font-family:var(--display);font-style:italic;font-weight:700;font-size:clamp(40px,13vw,58px);line-height:.92;letter-spacing:.02em;
+  background:linear-gradient(#fff 30%,#7af0ff 60%,#ff7ad9);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3px 0 var(--ink)) drop-shadow(0 0 18px rgba(255,61,139,.55))}
+.logo p{margin:8px 0 0;font-size:12px;letter-spacing:.42em;color:var(--pink-2);text-transform:uppercase}
+.hero{display:flex;align-items:flex-end;justify-content:center;gap:4px;flex:1;min-height:180px;position:relative}
+#pilotC{width:min(56vw,230px);aspect-ratio:200/220;max-height:32dvh}
+.pcard{display:flex;align-items:center;gap:12px}
+.lvl{width:52px;height:52px;flex:none;display:grid;place-items:center;font-family:var(--display);font-size:22px;font-weight:700;color:var(--ink);
+  background:linear-gradient(var(--gold),#ff9a3c);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.pcard .grow{flex:1;min-width:0}
+.pcard small{display:block;font-size:12px;color:var(--muted);letter-spacing:.06em}
+.xpbar{height:9px;margin-top:6px;background:rgba(255,255,255,.1);transform:skewX(-20deg);overflow:hidden}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--mint));transform-origin:left;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.menu{display:grid;gap:10px}
+.menu .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--gold);color:var(--ink);font-size:13px;font-style:normal;font-family:var(--body);font-weight:800}
+.toggles{display:flex;justify-content:center;gap:10px}
+
+/* Trudność */
+.dcard{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;text-align:left;width:100%;--cut:16px;transition:transform .1s}
+.dcard:active{transform:scale(.98)}
+.dcard .tier{grid-row:span 3;width:54px;height:54px;display:grid;place-items:center;font-family:var(--display);font-size:24px;font-weight:700;color:var(--ink);
+  clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.dcard h3{margin:0;font-family:var(--display);font-style:italic;font-size:24px;text-transform:uppercase;letter-spacing:.04em}
+.dcard h3 small{font-size:13px;color:var(--muted);letter-spacing:.12em;margin-left:6px;font-style:normal}
+.dcard p{margin:0;font-size:14px;color:var(--muted);font-weight:500}
+.dcard .meta{display:flex;gap:14px;font-size:12px;color:var(--text);letter-spacing:.06em;text-transform:uppercase}
+.dcard .meta b{color:var(--gold)}
+.dcard.easy .tier{background:var(--mint)} .dcard.normal .tier{background:var(--cyan)} .dcard.hard .tier{background:var(--pink);color:#fff}
+.dcard.hard{box-shadow:inset 0 0 0 1px rgba(255,61,139,.7)}
+.curship{display:flex;align-items:center;gap:12px}
+.curship canvas{width:56px;height:62px}
+.curship .grow{flex:1}
+.curship small{display:block;color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.curship b{font-family:var(--display);font-size:20px;font-style:italic}
+
+/* Hangar */
+.shipview{display:flex;align-items:center;gap:6px}
+.shipview .nav{width:44px;height:64px;font-size:26px;display:grid;place-items:center;background:var(--panel);flex:none;
+  clip-path:polygon(30% 0,100% 0,70% 100%,0 100%)}
+#shipC{flex:1;min-width:0;height:200px}
+.shipname{text-align:center}
+.shipname h3{margin:0;font-family:var(--display);font-style:italic;font-size:30px;letter-spacing:.04em;text-transform:uppercase}
+.shipname small{color:var(--pink-2);letter-spacing:.2em;text-transform:uppercase;font-size:12px}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.dots i{width:18px;height:4px;background:rgba(255,255,255,.2);transform:skewX(-20deg)}
+.dots i.on{background:var(--pink)}
+.desc{margin:0 0 10px;font-size:14px;color:var(--muted);font-weight:500;line-height:1.4}
+.stat{display:grid;grid-template-columns:110px 1fr 46px;align-items:center;gap:10px;font-size:13px;margin:6px 0}
+.stat span{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+.stat b{text-align:right;font-family:var(--display)}
+.sbar{height:8px;background:rgba(255,255,255,.1);transform:skewX(-20deg);position:relative;overflow:hidden}
+.sbar i{position:absolute;inset:0;transform-origin:left;background:linear-gradient(90deg,var(--cyan),var(--mint))}
+.sbar i.up{background:var(--gold);opacity:.55}
+.upg{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,.08)}
+.upg:first-of-type{border-top:0}
+.upg h4{margin:0;font-family:var(--display);font-size:16px;text-transform:uppercase;letter-spacing:.04em}
+.upg p{margin:0;font-size:12px;color:var(--muted);font-weight:500}
+.pips{display:flex;gap:3px;margin-top:5px}
+.pips i{width:14px;height:6px;background:rgba(255,255,255,.15);transform:skewX(-20deg)}
+.pips i.on{background:var(--gold);box-shadow:0 0 6px rgba(255,207,61,.6)}
+.upg .btn{grid-row:span 2;min-width:96px}
+.sec-t{margin:0 0 6px;font-family:var(--display);font-size:13px;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase}
+
+/* Umiejętności */
+.points{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:15px}
+.points b{font-size:22px;color:var(--gold)}
+.branch{display:grid;gap:8px}
+.skill{display:grid;grid-template-columns:44px 1fr auto;gap:2px 12px;align-items:center;padding:10px 12px;--cut:10px}
+.skill .sic{grid-row:span 3;width:44px;height:44px;display:grid;place-items:center;font-size:22px;color:var(--ink);
+  clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.skill.atak .sic{background:var(--pink)} .skill.obrona .sic{background:var(--cyan)} .skill.taktyka .sic{background:var(--gold)}
+.skill .sic{grid-column:1;grid-row:1 / span 3}
+.skill h4,.skill p{grid-column:2}
+.skill .plus{align-self:center}
+.skill .plus,.skill .lock{grid-column:3;grid-row:1 / span 3}
+#spBtn em{font-style:normal}
+.skill h4{margin:0;font-family:var(--display);font-size:16px;text-transform:uppercase;letter-spacing:.04em}
+.skill p{margin:0;font-size:12px;color:var(--muted);font-weight:500}
+.skill p.next{color:var(--mint)}
+.skill .plus{grid-row:span 3;width:46px;height:46px;font-size:26px;font-family:var(--display);background:linear-gradient(var(--gold),#ff9a3c);color:var(--ink);
+  clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.skill .plus[disabled]{background:rgba(255,255,255,.12);color:var(--muted);cursor:default}
+.skill.locked{opacity:.55}
+.skill .lock{grid-row:span 3;font-size:11px;color:var(--muted);text-align:center;max-width:60px;text-transform:uppercase;letter-spacing:.06em}
+
+/* Pauza i wynik */
+.dlg{display:grid;gap:12px;text-align:center}
+.dlg h2{margin:0;font-family:var(--display);font-style:italic;font-size:34px;text-transform:uppercase;letter-spacing:.04em}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left}
+.res div{background:rgba(255,255,255,.05);padding:8px 10px}
+.res small{display:block;font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.res b{font-family:var(--display);font-size:22px}
+.res .wide{grid-column:span 2}
+.gain{display:flex;justify-content:center;gap:18px;font-family:var(--display);font-size:22px}
+.gain .cr{color:var(--mint)} .gain .xp{color:var(--gold)}
+.lvup{font-family:var(--display);font-style:italic;font-size:20px;color:var(--gold);animation:pulse .6s infinite alternate}
+.newbest{color:var(--pink-2);font-family:var(--display);letter-spacing:.2em;font-size:13px}
+.toast{position:absolute;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--panel-2);padding:10px 18px;font-size:14px;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);pointer-events:none;transition:opacity .3s;white-space:nowrap}
+.help{font-size:12px;color:var(--muted);text-align:center;font-weight:500;line-height:1.5}
+@media (prefers-reduced-motion:reduce){#spBtn.ready,.lvup{animation:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="M12 2l7 7-7 13L5 9z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8 2-2-6-6 6-6z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3zM15 8a5 5 0 010 8l1.4 1.4a7 7 0 000-10.8zM17.8 5.2a9 9 0 010 13.6l1.4 1.4a11 11 0 000-16.4z"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 3v11.3A3.5 3.5 0 1011 17V7h8V3z"/></symbol>
+  <symbol id="i-gun" viewBox="0 0 24 24"><path d="M11 2h2v6h3l-2 6h-1v8h-2v-8h-1L8 8h3z"/></symbol>
+  <symbol id="i-crit" viewBox="0 0 24 24"><path d="M11 2h2v5h-2zM11 17h2v5h-2zM2 11h5v2H2zM17 11h5v2h-5zM12 8a4 4 0 110 8 4 4 0 010-8z"/></symbol>
+  <symbol id="i-ammo" viewBox="0 0 24 24"><path d="M5 9l2-6 2 6v12H5zM10 9l2-6 2 6v12h-4zM15 9l2-6 2 6v12h-4z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V5z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21l-1.5-1.3C5 15 2 12.2 2 8.5 2 5.4 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.4 22 8.5c0 3.7-3 6.5-8.5 11.2z"/></symbol>
+  <symbol id="i-magnet" viewBox="0 0 24 24"><path d="M4 3h5v8a3 3 0 006 0V3h5v8a8 8 0 01-16 0zM4 5v2h5V5zM15 5v2h5V5z"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zm-1 4v1.1C9.3 7.5 8 8.7 8 10.3c0 1.9 1.5 2.6 3.6 3.1 1.6.4 2 .8 2 1.4 0 .6-.6 1.1-1.7 1.1-1.2 0-2-.5-2.2-1.4H7.9c.2 1.8 1.4 2.9 3.1 3.3V19h2v-1.2c1.8-.4 2.9-1.5 2.9-3.1 0-2.1-1.7-2.8-3.6-3.2-1.6-.4-2-.7-2-1.3 0-.5.5-1 1.5-1s1.6.5 1.7 1.2h1.9c-.1-1.5-1.1-2.7-2.9-3.1V6z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21l2-7.5L2 9h7z"/></symbol>
+  <symbol id="i-ship" viewBox="0 0 24 24"><path d="M12 1l3 9 7 6v2l-7-2-1 4h-4l-1-4-7 2v-2l7-6z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0110 0v3h2v12H5V10zm2 0h6V7a3 3 0 00-6 0z"/></symbol>
+</svg>
+
+<div id="game">
+  <canvas id="c"></canvas>
+  <div id="hurt"></div>
+
+  <div id="hud" hidden>
+    <div id="hudTop">
+      <div><div id="hWave">Fala 1</div><div id="hScore" class="num">0</div></div>
+      <div id="hCred" class="num"><svg class="ic"><use href="#i-gem"/></svg><span>0</span></div>
+      <button class="ib" id="pauseBtn" aria-label="Pauza"><svg class="ic"><use href="#i-pause"/></svg></button>
+    </div>
+    <div id="bossBar" hidden><b id="bossName">BOSS</b><div class="bar"><i id="bossHp"></i></div></div>
+    <div id="hudBot">
+      <div>
+        <div id="hull"></div>
+        <div id="hInfo"><span>Życia <b id="hLives">3</b></span><span>Broń <b id="hGun">1</b></span><span id="hCombo" hidden>Combo <b>0</b></span></div>
+      </div>
+      <button id="spBtn" aria-label="Umiejętność specjalna"><span><svg class="ic"><use href="#i-bolt"/></svg><em id="spName">Nova</em></span></button>
+    </div>
+  </div>
+
+  <!-- Menu główne -->
+  <section class="screen" id="title">
+    <div class="logo"><h1>ASTRA<br>LANCER</h1><p>Eskadra Gwiezdnych Lanc</p></div>
+    <div class="hero"><canvas id="pilotC"></canvas></div>
+    <div class="menu">
+      <div class="panel pcard">
+        <div class="lvl" id="tLvl">1</div>
+        <div class="grow"><small>Pilotka Aoi • <span id="tXpTxt">0 / 120 XP</span></small><div class="xpbar"><i id="tXp"></i></div></div>
+        <div class="wallet num"><svg class="ic"><use href="#i-gem"/></svg><span id="tCred">0</span></div>
+      </div>
+      <button class="btn" id="playBtn">Start misji</button>
+      <div class="row">
+        <button class="btn alt" id="hangarBtn"><svg class="ic"><use href="#i-ship"/></svg>Hangar</button>
+        <button class="btn alt" id="skillsBtn"><svg class="ic"><use href="#i-star"/></svg>Pilot <i class="badge" id="ptsBadge" hidden>0</i></button>
+      </div>
+      <div class="toggles">
+        <button class="ib" id="sndBtn" aria-label="Dźwięk"><svg class="ic"><use href="#i-sound"/></svg></button>
+        <button class="ib" id="musBtn" aria-label="Muzyka"><svg class="ic"><use href="#i-music"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wybór trudności -->
+  <section class="screen" id="diff" hidden>
+    <div class="head"><button class="ib back" data-go="title" aria-label="Wróć"><svg class="ic"><use href="#i-back"/></svg></button><h2>Poziom trudności</h2></div>
+    <div class="panel curship"><canvas id="curShipC" width="112" height="124"></canvas><div class="grow"><small>Twój statek</small><b id="curShipName">Sora-01</b></div><button class="btn small alt" data-go="hangar">Zmień</button></div>
+    <div id="diffList" class="menu"></div>
+    <p class="help">Sterowanie: przeciągnij palcem w dowolnym miejscu ekranu – statek strzela sam. Przycisk w rogu odpala umiejętność specjalną. Na komputerze: strzałki/WASD, spacja – specjalna, P – pauza.</p>
+  </section>
+
+  <!-- Hangar -->
+  <section class="screen" id="hangar" hidden>
+    <div class="head"><button class="ib back" data-go="title" aria-label="Wróć"><svg class="ic"><use href="#i-back"/></svg></button><h2>Hangar</h2>
+      <div class="wallet num"><svg class="ic"><use href="#i-gem"/></svg><span class="credOut">0</span></div></div>
+    <div class="shipview"><button class="nav" id="prevShip" aria-label="Poprzedni statek">‹</button><canvas id="shipC"></canvas><button class="nav" id="nextShip" aria-label="Następny statek">›</button></div>
+    <div class="shipname"><h3 id="shName">Sora-01</h3><small id="shRole">Uniwersalny</small><div class="dots" id="shDots"></div></div>
+    <div class="panel"><p class="desc" id="shDesc"></p><div id="shStats"></div></div>
+    <button class="btn" id="shAction">Wybierz</button>
+    <div class="panel" id="upgPanel"><p class="sec-t">Ulepszenia statku</p><div id="upgList"></div></div>
+  </section>
+
+  <!-- Umiejętności -->
+  <section class="screen" id="skills" hidden>
+    <div class="head"><button class="ib back" data-go="title" aria-label="Wróć"><svg class="ic"><use href="#i-back"/></svg></button><h2>Pilot</h2>
+      <div class="points">Punkty <b id="skPts">0</b></div></div>
+    <div class="panel pcard"><div class="lvl" id="skLvl">1</div><div class="grow"><small>Doświadczenie • <span id="skXpTxt"></span></small><div class="xpbar"><i id="skXp"></i></div></div></div>
+    <div id="skillList" class="menu"></div>
+    <button class="btn small alt" id="skReset">Resetuj drzewko (zwrot punktów)</button>
+  </section>
+
+  <!-- Pauza -->
+  <section class="screen center" id="pause" hidden>
+    <div class="panel dlg">
+      <h2>Pauza</h2>
+      <button class="btn" id="resumeBtn">Wznów</button>
+      <div class="toggles"><button class="ib" id="sndBtn2" aria-label="Dźwięk"><svg class="ic"><use href="#i-sound"/></svg></button><button class="ib" id="musBtn2" aria-label="Muzyka"><svg class="ic"><use href="#i-music"/></svg></button></div>
+      <button class="btn alt" id="quitBtn">Zakończ lot</button>
+      <p class="help">Zdobyte kredyty i doświadczenie zostają.</p>
+    </div>
+  </section>
+
+  <!-- Wynik -->
+  <section class="screen center" id="result" hidden>
+    <div class="panel dlg">
+      <h2 id="rTitle">Misja zakończona</h2>
+      <div class="newbest" id="rBest" hidden>NOWY REKORD!</div>
+      <div class="res">
+        <div class="wide"><small>Wynik</small><b id="rScore" class="num">0</b></div>
+        <div><small>Fala</small><b id="rWave">0</b></div>
+        <div><small>Zestrzelenia</small><b id="rKills">0</b></div>
+        <div><small>Max combo</small><b id="rCombo">0</b></div>
+        <div><small>Bossowie</small><b id="rBoss">0</b></div>
+      </div>
+      <div class="gain"><span class="cr">+<span id="rCred">0</span> <svg class="ic"><use href="#i-gem"/></svg></span><span class="xp">+<span id="rXp">0</span> XP</span></div>
+      <div class="pcard"><div class="lvl" id="rLvl">1</div><div class="grow"><small id="rXpTxt"></small><div class="xpbar"><i id="rXpBar"></i></div></div></div>
+      <div class="lvup" id="rLvup" hidden></div>
+      <button class="btn" id="againBtn">Jeszcze raz</button>
+      <div class="menu row" style="grid-template-columns:1fr 1fr"><button class="btn alt small" data-go="hangar">Hangar</button><button class="btn alt small" id="rSkills">Pilot</button></div>
+      <button class="btn alt small" data-go="title">Menu</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+</div>
+<script type="module" src="main.js"></script>
+<!--/PAGE-->
+</body>
+</html>
